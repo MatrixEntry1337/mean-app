@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require("mongoose");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -24,6 +25,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+
+//schema for database
+require('./models/kmm.js');
+
+//connect to mongodb using mongoose
+mongoose.connect('mongodb://localhost:27017/KyleMeanDatabase', function(err){
+  if(err)
+    console.log('Connection to the MongoDB database could not be established');
+  else
+    console.log('Connection to the MongoDB database was successful');
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
