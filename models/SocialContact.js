@@ -1,10 +1,7 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var objectId = Schema.ObjectId;
 
-var SocialContactSchema = new Schema({
-    socialContact: objectId,
-    ref: 'User;,
+var SocialContactSchema = new mongoose.Schema({
+    socialContact: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     socialSite: String,
     socialName: String,
     notes: String

@@ -27,7 +27,12 @@ app.use('/', routes);
 app.use('/users', users);
 
 //schema for database
-require('./models/kmm.js');
+require('./models/User.js');
+require('./models/Comment.js');
+require('./models/Notification.js');
+require('./models/Skill.js');
+require('./models/SocialContact.js');
+require('./models/Test.js');
 
 //connect to mongodb using mongoose
 mongoose.connect('mongodb://localhost:27017/KyleMeanDatabase', function(err){
