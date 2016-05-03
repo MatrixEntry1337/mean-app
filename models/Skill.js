@@ -6,4 +6,4 @@ var SkillSchema = new mongoose.Schema({
     skillLevel: Number
 });
 
-module.exports = mongoose.model('Skill', SkillSchema);
+mongoose.model('Skill', SkillSchema);

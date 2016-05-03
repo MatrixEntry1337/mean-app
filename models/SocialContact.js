@@ -7,4 +7,4 @@ var SocialContactSchema = new mongoose.Schema({
     notes: String
 });
 
-module.exports = mongoose.model('SocialContact', SocialContactSchema);
+mongoose.model('SocialContact', SocialContactSchema);

@@ -4,8 +4,28 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
 var mongoose = require("mongoose");
 
+//Mongoose Models
+require('./models/User');
+require('./models/Comment');
+require('./models/Post');
+require('./models/Notification');
+require('./models/Skill');
+require('./models/SocialContact');
+require('./models/Test');
+
+//connect to mongodb using mongoose
+mongoose.connect('mongodb://localhost:27017/KyleMeanDatabase', function(err){
+  if(err)
+    console.log('Connection to the MongoDB database could not be established');
+  else
+    console.log('Connection to the MongoDB database was successful');
+});
+
+
+//Routes
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -25,22 +45,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-
-//schema for database
-require('./models/User.js');
-require('./models/Comment.js');
-require('./models/Notification.js');
-require('./models/Skill.js');
-require('./models/SocialContact.js');
-require('./models/Test.js');
-
-//connect to mongodb using mongoose
-mongoose.connect('mongodb://localhost:27017/KyleMeanDatabase', function(err){
-  if(err)
-    console.log('Connection to the MongoDB database could not be established');
-  else
-    console.log('Connection to the MongoDB database was successful');
-});
 
 
 // catch 404 and forward to error handler
