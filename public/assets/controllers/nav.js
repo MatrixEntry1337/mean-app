@@ -1,4 +1,4 @@
-app.controller('NavBarController', ['$scope', 
+app.controller('navBarController', ['$scope', 
 function($scope) {
     $scope.menuContents = [
         { title : "Main 1", subtitles: [
