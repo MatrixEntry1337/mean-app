@@ -1,0 +1,12 @@
+var mongoose = require('mongoose');
+
+var DiscussionSchema = new mongoose.SChema({
+   title: { type: String, required: true },
+   date: { type: Date, default: Date.now },
+   description: { type: String, required: true },
+   content: { type: String, required: true },
+   upvote: { type: Number, default: 0 },
+   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiscussionComments'}]
+});
+
+mongoose.model( 'Discussion', DiscussionSchema );

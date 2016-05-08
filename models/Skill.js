@@ -1,9 +1,8 @@
 var mongoose = require("mongoose");
 
 var SkillSchema = new mongoose.Schema({
-    skill: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    skillName: String,
-    skillLevel: Number
+    skillName: { type: String, required: true },
+    skillLevel: { type: Number, required: true }
 });
 
 mongoose.model('Skill', SkillSchema);

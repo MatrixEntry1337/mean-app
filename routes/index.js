@@ -3,13 +3,34 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Kyle\'s-Mean-Application' });
 });
 
 //API for Comments and Post
 var mongoose = require('mongoose');
+var User = mongoose.model('User');
 var Comment = mongoose.model('Comment');
 var Post = mongoose.model('Post');
+
+//Get users 
+router.get('/users', function(req, res, next) {
+  User.find(function(err, users){
+    if(err){ return next(err); }
+
+    res.json(users);
+  });
+});
+
+//Send users
+router.post('/users', function(req, res, next) {
+  var user = new User(req.body);
+
+  user.save(function(err, user){
+    if(err){ return next(err); }
+
+    res.json(user);
+  });
+});
 
 //Get posts
 router.get('/posts', function(req, res, next) {

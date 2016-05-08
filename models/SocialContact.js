@@ -1,10 +1,9 @@
 var mongoose = require('mongoose');
 
 var SocialContactSchema = new mongoose.Schema({
-    socialContact: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    socialSite: String,
-    socialName: String,
-    notes: String
+    socialSite: { type: String, required: true },
+    socialName: { type: String, required: true },
+    notes: { type: String }
 });
 
 mongoose.model('SocialContact', SocialContactSchema);

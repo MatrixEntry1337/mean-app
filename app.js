@@ -10,11 +10,14 @@ var mongoose = require("mongoose");
 //Mongoose Models
 require('./models/User');
 require('./models/Comment');
-require('./models/Post');
+require('./models/Project');
+require('./models/Education');
+require('./models/Note');
+require('./models/Event');
+require('./models/Experience');
 require('./models/Notification');
 require('./models/Skill');
 require('./models/SocialContact');
-require('./models/Test');
 
 //connect to mongodb using mongoose
 mongoose.connect('mongodb://localhost:27017/KyleMeanDatabase', function(err){
