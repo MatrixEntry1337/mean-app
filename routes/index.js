@@ -9,8 +9,8 @@ router.get('/', function(req, res, next) {
 //API for Comments and Post
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-var Comment = mongoose.model('Comment');
-var Post = mongoose.model('Post');
+var UserComment = mongoose.model('UserComment');
+var Post = mongoose.model('Discussion');
 
 //Get users 
 router.get('/users', function(req, res, next) {

@@ -14,11 +14,11 @@ var UserSchema = new mongoose.Schema({
     dateJoined: { type: Date, default: Date.now },
     contacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     experiences: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Experience' }],
-    education: [{ typoe: mongoose.Schema.Types.ObjectId, ref: 'Education' }],
+    education: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Education' }],
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserComment' }],
-    socialContacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SocialCointact'}],
+    socialContacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SocialContact'}],
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
     notes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Note' }]
 });

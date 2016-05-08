@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var DiscussionSchema = new mongoose.SChema({
+var DiscussionSchema = new mongoose.Schema({
    title: { type: String, required: true },
    date: { type: Date, default: Date.now },
    description: { type: String, required: true },

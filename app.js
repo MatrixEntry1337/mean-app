@@ -9,13 +9,15 @@ var mongoose = require("mongoose");
 
 //Mongoose Models
 require('./models/User');
-require('./models/Comment');
+require('./models/UserComment');
 require('./models/Project');
+require('./models/ProjectComment');
+require('./models/Discussion');
+require('./models/DiscussionComment');
 require('./models/Education');
 require('./models/Note');
 require('./models/Event');
 require('./models/Experience');
-require('./models/Notification');
 require('./models/Skill');
 require('./models/SocialContact');
 
