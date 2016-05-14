@@ -5,7 +5,8 @@ var EducationSchema = new mongoose.Schema({
     program: { type: String, required: true },
     start: { type: String, required: true },
     end: { type: String, required: true },
-    description: { type: String }
+    description: { type: String },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 mongoose.model( 'Education', EducationSchema );

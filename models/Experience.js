@@ -5,7 +5,8 @@ var ExperienceSchema = new mongoose.Schema({
     role: { type: String, rewuired: true },
     start: { type: String, required: true },
     end: { type: String, required: true },
-    description: { type: String, required: true }
+    description: { type: String, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 mongoose.model( 'Experience', ExperienceSchema );

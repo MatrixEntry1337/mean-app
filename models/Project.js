@@ -8,6 +8,7 @@ var ProjectSchema = new mongoose.Schema({
   content: { type: String, required: true },
   upvotes: { type: Number, default: 0 },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProjectComment' }],
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 ProjectSchema.methods.upvote = function(cb) {

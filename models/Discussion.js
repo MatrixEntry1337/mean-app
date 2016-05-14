@@ -6,7 +6,8 @@ var DiscussionSchema = new mongoose.Schema({
    description: { type: String, required: true },
    content: { type: String, required: true },
    upvote: { type: Number, default: 0 },
-   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiscussionComments'}]
+   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiscussionComments' }],
+   user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 mongoose.model( 'Discussion', DiscussionSchema );
