@@ -123,6 +123,14 @@ router.get('/overall/:user', function(req, res, next) {
   });
 });
 
+//Update user password
+router.put('/overall/:user/updatePassword', function(req, res, next){
+  req.user.update(req.body, function(err, user){
+    if(err){ return next(err); }
+    res.json(user);
+  });
+});
+
 //Create new user
 router.post('/new-user', function(req, res, next){
   var user = new User(req.body);
@@ -142,6 +150,32 @@ router.post('/overall/:user/newDiscussion', function(req, res, next){
     if(err){ return next(err); }
     req.user.discussions.push(discussion);
     res.json(discussion);
+  });
+});
+
+//Remove discussion
+router.delete('/overall/:user/:discussion/delete', function(res, req, next){
+  var discussion = req.discussion;
+  req.user.discussions.pull(discussion, function(err, data){
+    if(err){ return next(err); }
+    res.json(data);
+  });
+  
+  req.discussion.remove(function(err, data){
+    if(err){ return next(err); }
+    res.json(data);
+  });
+});
+
+//Create new project
+router.post('/overall/:user/newProject', function(req, res, next){
+  var project = new Project(req.body);
+  project.user = req.user;
+  
+  project.save(function(err, project){
+    if(err){ return next(err); }
+    req.user.projects.push(project);
+    req.json(project);
   });
 });
 
