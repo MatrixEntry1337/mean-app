@@ -7,7 +7,7 @@ var DiscussionSchema = new mongoose.Schema({
    content: { type: String, required: true },
    upvote: { type: Number, default: 0 },
    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiscussionComments' }],
-   user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model( 'Discussion', DiscussionSchema );
+module.exports = mongoose.model( 'Discussion', DiscussionSchema );

@@ -7,4 +7,4 @@ var SocialContactSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model('SocialContact', SocialContactSchema);
+module.exports = mongoose.model('SocialContact', SocialContactSchema);

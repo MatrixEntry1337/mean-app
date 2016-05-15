@@ -6,4 +6,4 @@ var SkillSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model('Skill', SkillSchema);
+module.exports = mongoose.model('Skill', SkillSchema);

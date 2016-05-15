@@ -4,7 +4,8 @@ var ProjectCommentSchema = mongoose.Schema({
     text: { type: String, required: true },
     date: { type: Date, default: Date.now },
     upvote: { type: Number, default: 0},
-    project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' }
+    project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model('ProjectComment', ProjectCommentSchema);
+module.exports = mongoose.model('ProjectComment', ProjectCommentSchema);

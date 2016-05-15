@@ -6,4 +6,4 @@ var testSchema = new mongoose.Schema({
     testNotes: String,
 });
 
-mongoose.model('Test', testSchema);
+module.exports = mongoose.model('Test', testSchema);

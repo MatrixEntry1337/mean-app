@@ -7,4 +7,4 @@ var NoteSchema = new mongoose.Schema({
    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model( 'Note', NoteSchema );
+module.exports = mongoose.model( 'Note', NoteSchema );

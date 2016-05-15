@@ -9,4 +9,4 @@ var EducationSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model( 'Education', EducationSchema );
+module.exports = mongoose.model( 'Education', EducationSchema );

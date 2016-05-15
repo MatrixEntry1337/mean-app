@@ -16,4 +16,4 @@ ProjectSchema.methods.upvote = function(cb) {
   this.save(cb);
 };
 
-mongoose.model('Project', ProjectSchema);
+module.exports = mongoose.model('Project', ProjectSchema);

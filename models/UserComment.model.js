@@ -12,4 +12,4 @@ UserCommentSchema.methods.upvote = function(cb) {
   this.save(cb);
 };
 
-mongoose.model('UserComment', UserCommentSchema);
+module.exports = mongoose.model('UserComment', UserCommentSchema);

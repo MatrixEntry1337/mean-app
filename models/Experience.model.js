@@ -9,4 +9,4 @@ var ExperienceSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-mongoose.model( 'Experience', ExperienceSchema );
+module.exports = mongoose.model( 'Experience', ExperienceSchema );

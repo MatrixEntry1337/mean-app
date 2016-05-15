@@ -22,18 +22,17 @@ var Note = mongoose.model('Note');
 var Event = mongoose.model('Event');
 
 //Param
-router.param('user', function(req, res, next, id){
-  var query = User.findById(id);
+router.param('user', function(req, res, next, user){
+  var query = User.findById(user);
   
   query.exec(function(err, user){
-    if(err){ return next(err); } 
+    if(err){ return res.send('An error occured'); } 
     if(!user){ return next(new Error('user can\'t be found')); }
     
     req.user = user;
     return next();
   });
 });
-
 
 router.param('discussion', function(req, res, next, id){
   var query = Discussion.findById(id);
@@ -120,7 +119,7 @@ router.get('/overall/:user', function(req, res, next) {
   req.user.populate('notes events contacts discussions', function(err, user){
     if(err){ return next(err); }
     
-    res.json(user);
+    res.json(req.user);
   });
 });
 
@@ -134,29 +133,15 @@ router.post('/new-user', function(req, res, next){
   });
 });
 
-
 //Create new discussion
-router.post('/new-discussion', function(req, res, next){
+router.post('/overall/:user/newDiscussion', function(req, res, next){
   var discussion = new Discussion(req.body);
+  discussion.user = req.user;
   
   discussion.save(function(err, discussion){
     if(err){ return next(err); }
+    req.user.discussions.push(discussion);
     res.json(discussion);
-  });
-});
-
-router.post('/link', function(req, res, next){
-  var _id = '57369801eb80896d362b9cb1';
-  var query = User.findById(_id);
-  
-  query.exec(function(err, user){
-    if(err){ return next(err); }
-    user.firstName = 'Robert';
-    user.save(function(err){
-      if(err){ return next(err); }
-      console.log('Successfully saved');
-    });
-    res.json(user);
   });
 });
 
