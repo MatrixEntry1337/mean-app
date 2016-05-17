@@ -4,11 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var passport = require('passport');
 
-var mongoose = require("mongoose");
 
 //Mongoose Models
-var User = require('./models/User.model');
+var Contact = require('./models/Contact.model');
 var Comment = require('./models/UserComment.model');
 var Project = require('./models/Project.model');
 var ProjectComment = require('./models/ProjectComment.model');
@@ -20,6 +21,10 @@ var Event = require('./models/Event.model');
 var Experience = require('./models/Experience.model');
 var Skill = require('./models/Skill.model');
 var SocialContact = require('./models/SocialContact.model');
+var User = require('./models/User.model');
+
+//Passport config
+var passConfig = require('./config/passport');
 
 //connect to mongodb using mongoose
 mongoose.connect('mongodb://localhost:27017/MEANDB', function(err){
@@ -51,6 +56,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
+//Initialize passport
+app.use(passport.initialize());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

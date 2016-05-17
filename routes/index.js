@@ -1,15 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var passport = require('passport');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Kyle\'s-Mean-Application' });
 });
 
-//API for Comments and Post
+//Mongoose Models
 var User = mongoose.model('User');
 var UserComment = mongoose.model('UserComment');
+var Contact = mongoose.model('Contact');
 var SocialContact = mongoose.model('SocialContact');
 var Discussion = mongoose.model('Discussion');
 var DiscussionComment = mongoose.model('DiscussionComment');
@@ -22,8 +24,8 @@ var Note = mongoose.model('Note');
 var Event = mongoose.model('Event');
 
 //Param
-router.param('user', function(req, res, next, user){
-  var query = User.findById(user);
+router.param('user', function(req, res, next, id){
+  var query = User.findById(id);
   
   query.exec(function(err, user){
     if(err){ return res.send('An error occured'); } 
@@ -95,7 +97,7 @@ router.param('note', function(req, res, next, id){
   });
 });
 
-//Get All users
+///////Get All users/////////
 router.get('/users', function(req, res, next) {
    User.find(function(err, users){
     if(err){ return next(err); }
@@ -109,6 +111,22 @@ router.get('/discussions', function(req, res, next){
   Discussion.find(function(err, discussions){
     if(err){ return next(err); }
     res.json(discussions);
+  });
+});
+
+//Get all contacts
+router.get('/contacts', function(req, res, next){
+  Contact.find(function(err, contacts){
+    if(err){ return next(err); }
+    res.json(contacts);
+  });
+});
+
+//Get all comments
+router.get('/comments', function(req, res, next){
+  UserComment.find(function(err, comments){
+    if(err){ return next(err); }
+    res.json(comments);
   });
 });
 
@@ -131,18 +149,65 @@ router.put('/overall/:user/updatePassword', function(req, res, next){
   });
 });
 
-//Create new user
-router.post('/new-user', function(req, res, next){
-  var user = new User(req.body);
-  
-  user.save(function(err, user){
+//User login
+router.post('/login', function(req, res, next){
+  if(!req.body.username || !req.body.password){
+    return res.status(400).json({message: 'Please fill out all fields'});
+  }
+
+  passport.authenticate('local', function(err, user, info){
     if(err){ return next(err); }
-    res.json(user);
+
+    if(user){
+      return res.json({token: user.generateJWT()});
+    } else {
+      return res.status(401).json(info);
+    }
+  })(req, res, next);
+});
+
+///////////// User Creation //////////////
+
+//Creates a new user and it's necessary collections
+router.post('/register', function(req, res, next){
+  if(!req.body.username || !req.body.password){
+    return res.status(400).json({message: 'Please fill out all fields'});
+  }
+  
+  var contact = new Contact();
+  contact.save(function(err){
+    if(err){ return next(err); }
   });
+  
+  var comment = new UserComment();
+  comment.save(function(err){
+    if(err){ return next(err); }
+  });
+  
+  var user = new User();
+  
+  user.username = req.body.username;
+  user.firstName = req.body.firstName;
+  user.lastName = req.body.lastName;
+  user.email = req.body.email;
+  user.setPassword(req.body.password);
+  
+  user.save(function(err){
+    if(err){ return next(err); }
+    return res.json({token: user.generateJWT()})
+  });
+  
+  contact.user = user;
+  comment.user = user;
+  
+  user.contacts = contact;
+  user.comments = comment;
+  
+  
 });
 
 //Create new discussion
-router.post('/overall/:user/newDiscussion', function(req, res, next){
+router.post('/overall/:user/newdiscussion', function(req, res, next){
   var discussion = new Discussion(req.body);
   discussion.user = req.user;
   
@@ -153,22 +218,8 @@ router.post('/overall/:user/newDiscussion', function(req, res, next){
   });
 });
 
-//Remove discussion
-router.delete('/overall/:user/:discussion/delete', function(res, req, next){
-  var discussion = req.discussion;
-  req.user.discussions.pull(discussion, function(err, data){
-    if(err){ return next(err); }
-    res.json(data);
-  });
-  
-  req.discussion.remove(function(err, data){
-    if(err){ return next(err); }
-    res.json(data);
-  });
-});
-
-//Create new project
-router.post('/overall/:user/newProject', function(req, res, next){
+//Create a new project
+router.post('/overall/:user/newproject', function(req, res, next){
   var project = new Project(req.body);
   project.user = req.user;
   
@@ -178,5 +229,87 @@ router.post('/overall/:user/newProject', function(req, res, next){
     req.json(project);
   });
 });
+
+//Create a new note
+router.post('/overall/:user/newnote', function(req, res, next){
+  var note = new Note(req.body);
+  note.user = req.user;
+  
+  note.save(function(err, note){
+    if(err){ return next(err); }
+    req.user.notes.push(note);
+    res.json(note);
+  });
+});
+
+//Create a new education
+router.post('/overall/:user/neweducation', function(req, res, next){
+  var education = new Education(req.body);
+  education.user = req.user;
+  
+  education.save(function(err, education){
+    if(err){ return next(err); }
+    req.user.education.push(education);
+    res.json(education);
+  });
+});
+
+//Create a new experience
+router.post('/overall/:user/newexperience', function(req, res, next){
+  var experience = new Experience(req.body);
+  experience.user = req.user;
+  
+  experience.save(function(err, experience){
+    if(err){ return next(err); }
+    req.user.experiences.push(experience);
+    res.json(experience);
+  });
+});
+
+//Create a new event
+router.post('/overall/:user/newevent', function(req, res, next){
+  var event = new Event(req.body);
+  event.user = req.user;
+  
+  event.save(function(err, event){
+    if(err){ return next(err); }
+    req.user.events.push(event);
+    res.json(event);
+  });
+});
+
+//Create a new social contact
+router.post('/overall/:user/newsocialcontact', function(req, res, next){
+  var socialcontact = new SocialContact(req.body);
+  socialcontact.user = req.user;
+  
+  socialcontact.save(function(err, socialcontact){
+    if(err){ return next(err); }
+    req.user.socialcontacts.push(socialcontact);
+    res.json(socialcontact);
+  });
+});
+
+//////////// User Removal ///////////
+router.post('/overall/:user/deletediscussion', function(req, res, next){
+  req.user.discussions.pull(req.body);
+});
+
+
+/////////// User to USer Activity ////////////
+
+//Send comment to another user
+router.post('/overall/:user/sendcomment', function(req, res, next){
+  var user = User.findOne(req.body.email, function(err){
+    if(err){ return next(err); }
+  });
+  
+  UserComment.update(user, {$push: {'comments': { text: req.body.text, user: user._id }}}, { multi: false }, 
+  function(err, comment){
+    if(err){ return next(err); }
+    res.json(comment);
+  });
+});
+  
 
 module.exports = router; 
