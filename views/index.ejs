@@ -79,7 +79,7 @@
 						<li class="topbar-devider"></li>
 						<li><a href="page_faq.html">Help</a></li>
 						<li class="topbar-devider"></li>
-						<li><a href="page_login.html">Login</a></li>
+						<li><a ui-sref="login_or_register">Login</a></li>
 					</ul>
 				</div>
 				<!-- End Topbar -->
@@ -94,7 +94,7 @@
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse mega-menu navbar-responsive-collapse" ng-controller="navBarController">
-				<div class="container">
+				<div class="container"0>
 					<ul class="nav navbar-nav">
 						<!-- Main Titles -->
 						<li class="dropdown" ng-repeat="menuContent in menuContents">
@@ -135,93 +135,7 @@
 		</div>
 		<!--=== End Header ===-->
 
-		<!--=== Profile ===-->
-		<div class="container content profile">
-			<div class="row">
-				<!--Left Sidebar-->
-				<div class="col-md-3 md-margin-bottom-40">
-					<img class="img-responsive profile-img margin-bottom-20" src="assets/img/team/img32-md.jpg" alt="">
-
-					<ul class="list-group sidebar-nav-v1 margin-bottom-40" id="sidebar-nav-1" ng-controller="ContentProfileController">
-						<li class="list-group-item">
-							<a ui-sref="overview"><i class="fa fa-bar-chart-o"></i> Overall</a>
-						</li>
-						<li class="list-group-item">
-							<a ui-sref="profile"><i class="fa fa-user"></i> Profile</a>
-						</li>
-						<li class="list-group-item">
-							<a ui-sref="users"><i class="fa fa-group"></i> Users</a>
-						</li>
-						<li class="list-group-item">
-							<a ui-sref="projects"><i class="fa fa-cubes"></i> My Projects</a>
-						</li>
-						<li class="list-group-item">
-							<a ui-sref="comments"><i class="fa fa-comments"></i> Comments</a>
-						</li>
-						<li class="list-group-item">
-							<a ui-sref="history"><i class="fa fa-history"></i> History</a>
-						</li>
-						<li class="list-group-item">
-							<a ui-sref="settings"><i class="fa fa-cog"></i> Settings</a>
-						</li>
-					</ul>
-
-					<div class="panel-heading-v2 overflow-h">
-						<h2 class="heading-xs pull-left"><i class="fa fa-bar-chart-o"></i> Task Progress</h2>
-						<a href="#"><i class="fa fa-cog pull-right"></i></a>
-					</div>
-					<h3 class="heading-xs">Web Design <span class="pull-right">92%</span></h3>
-					<div class="progress progress-u progress-xxs">
-						<div style="width: 92%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="92" role="progressbar" class="progress-bar progress-bar-u">
-						</div>
-					</div>
-					<h3 class="heading-xs">Unify Project <span class="pull-right">85%</span></h3>
-					<div class="progress progress-u progress-xxs">
-						<div style="width: 85%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="85" role="progressbar" class="progress-bar progress-bar-blue">
-						</div>
-					</div>
-					<h3 class="heading-xs">Sony Corporation <span class="pull-right">64%</span></h3>
-					<div class="progress progress-u progress-xxs margin-bottom-40">
-						<div style="width: 64%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="64" role="progressbar" class="progress-bar progress-bar-dark">
-						</div>
-					</div>
-
-					<hr>
-
-					<!--Notifications-->
-					<div class="panel-heading-v2 overflow-h">
-						<h2 class="heading-xs pull-left"><i class="fa fa-bell-o"></i> Notification</h2>
-						<a href="#"><i class="fa fa-cog pull-right"></i></a>
-					</div>
-					<ul class="list-unstyled mCustomScrollbar margin-bottom-20" data-mcs-theme="minimal-dark" ng-controller="NotController">
-						<li class="notification" ng-repeat="notification in notifications">
-							<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
-							<div class="overflow-h">
-								<span><strong>{{ notification.name }}</strong>{{ notification.notice }}</span>
-								<small>{{ notification.date | date }}</small>
-							</div>
-						</li>
-					</ul>
-					<button type="button" class="btn-u btn-u-default btn-u-sm btn-block">Load More</button>
-					<!--End Notification-->
-
-					<div class="margin-bottom-50"></div>
-
-					<!--Datepicker-->
-					<form action="#" id="sky-form2" class="sky-form">
-						<div id="inline-start"></div>
-					</form>
-					<!--End Datepicker-->
-				</div>
-				<!--End Left Sidebar-->
-				
-				<!-- Profile Content-->
-				<ui-view></ui-view>
-					
-				
-			</div>
-		</div><!--/container-->
-		<!--=== End Profile ===-->
+		<ui-view></ui-view>
 
 		<!--=== Footer Version 1 ===-->
 		<div class="footer-v1">

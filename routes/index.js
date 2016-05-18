@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var passport = require('passport');
+var jwt = require('express-jwt');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -22,6 +23,8 @@ var Experience = mongoose.model('Experience');
 var Skill = mongoose.model('Skill');
 var Note = mongoose.model('Note');
 var Event = mongoose.model('Event');
+
+var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 //Param
 router.param('user', function(req, res, next, id){
@@ -133,8 +136,8 @@ router.get('/comments', function(req, res, next){
 ///Retrieve User Info///
 router.get('/overall/:user', function(req, res, next) {
   
-  //retrieve all info for the overall page
-  req.user.populate('notes events contacts discussions', function(err, user){
+//retrieve all info for the overall page
+req.user.populate('notes events contacts discussions', function(err, user){
     if(err){ return next(err); }
     
     res.json(req.user);
