@@ -2,11 +2,15 @@
 			<div class="margin-bottom-60 head">
 				<h1>Login or Register an Account</h1>
 				<p>Login if you already a member. Otherwise please sign up if you want to become a member.</p>
+				<div ng-show="error" class="alert alert-danger row">
+    				<span>{{ error.message }}</span>
+  				</div>
 			</div>
+			
 
 			<div class="row space-xlg-hor equal-height-columns">
 				<!--login Block-->
-				<div class="form-block login-block col-md-6 col-sm-12 rounded-left equal-height-column">
+				<form ng-submit="login()" class="form-block login-block col-md-6 col-sm-12 rounded-left equal-height-column">
 					<div class="form-block-header">
 						<h2 class="margin-bottom-10">Sign In</h2>
 						<p class="margin-bottom-20">Login below.</p>
@@ -14,12 +18,14 @@
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-user color-white"></i></span>
-						<input type="text" class="form-control rounded-right" placeholder="Username">
+						<input type="text" class="form-control rounded-right" placeholder="Username" ng-model="userLogIn.username">
+						</input>
 					</div>
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-lock color-white"></i></span>
-						<input type="password" class="form-control rounded-right" placeholder="Password">
+						<input type="password" class="form-control rounded-right" placeholder="Password" ng-model="userLogIn.password">
+						</input>
 					</div>
 
 					<div class="row margin-bottom-70">
@@ -27,54 +33,64 @@
 							<button type="submit" class="btn-u btn-block rounded">Sign In</button>
 						</div>
 					</div>
-				</div>
+				</form>
 				<!--End login Block-->
-
+				
 				<!--Reg Block-->
-				<div class="form-block reg-block col-md-6 col-sm-12 rounded-right equal-height-column">
+				<form ng-submit="register()" class="form-block reg-block col-md-6 col-sm-12 rounded-right equal-height-column">
 					<div class="form-block-header">
 						<h2 class="margin-bottom-10">Sign Up</h2>
 						<p class="margin-bottom-20">Sign up today!</p>
 					</div>
-
+					
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
-						<input type="text" class="form-control rounded-right" placeholder="Your name">
+						<input type="text" class="form-control rounded-right" placeholder="First name" 
+							ng-model="userRegister.firstName"></input>
+					</div>
+					
+					<div class="input-group margin-bottom-20">
+						<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
+						<input type="text" class="form-control rounded-right" placeholder="Last name"
+							ng-model="userRegister.lastName"></input>
 					</div>
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-user"></i></span>
-						<input type="text" class="form-control rounded-right" placeholder="Username">
+						<input type="text" class="form-control rounded-right" placeholder="Username"
+							ng-model="userRegister.username"></input>
 					</div>
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-envelope"></i></span>
-						<input type="email" class="form-control rounded-right" placeholder="Your email">
+						<input type="email" class="form-control rounded-right" placeholder="Your email"
+							ng-model="userRegister.email"></input>
 					</div>
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-lock"></i></span>
-						<input type="password" class="form-control rounded-right" placeholder="Password">
-					</div>
+						<input type="password" class="form-control rounded-right" placeholder="Password"
+							ng-model="userRegister.password"></input>
+					</div> 
 
-					<div class="checkbox margin-bottom-15">
-						<label>
-							<input type="checkbox">
-							<p>I agree to terms &amp; conditions</p>
-						</label>
+					<!--<div class="checkbox margin-bottom-15">-->
+					<!--	<label>-->
+					<!--		<input type="checkbox">-->
+					<!--		<p>I agree to terms &amp; conditions</p>-->
+					<!--	</label>-->
 
-						<label>
-							<input type="checkbox">
-							<p>Subscribe to our newsletter</p>
-						</label>
-					</div>
+					<!--	<label>-->
+					<!--		<input type="checkbox">-->
+					<!--		<p>Subscribe to our newsletter</p>-->
+					<!--	</label>-->
+					<!--</div>-->
 
 					<div class="row">
 						<div class="col-md-12">
 							<button type="submit" class="btn-u btn-block rounded">Continue</button>
 						</div>
 					</div>
-				</div>
+				</form>
 				<!--End Reg Block-->
 			</div>
 		</div><!--/container-->

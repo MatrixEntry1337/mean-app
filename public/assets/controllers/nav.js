@@ -1,5 +1,10 @@
-app.controller('navBarController', ['$scope', 
-function($scope) {
+angular.module('kmm-app').controller('navBarController', ['$scope','auth',
+function($scope, auth) {
+    
+    $scope.isLoggedIn = auth.isLoggedIn;
+    $scope.currentUser = auth.currentUser;
+    $scope.logOut = auth.logOut;
+    
     $scope.menuContents = [
         { title : "Main 1", subtitles: [
             { title: "Option 1", options: [
