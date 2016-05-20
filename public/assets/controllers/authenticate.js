@@ -49,8 +49,8 @@ angular.module('km-app').factory('auth', ['$http', '$window', function($http, $w
 
 angular.module('km-app').controller('authController',['$scope', '$state','auth', 
 function($scope, $state, auth){
-    $scope.userLogIn = {};
     $scope.userRegister = {};
+    $scope.userLogin = {}
 
     $scope.register = function(){
         auth.register($scope.userRegister).error(function(error){
@@ -67,5 +67,4 @@ function($scope, $state, auth){
             $state.go('user_account.overview');
         });
     };
-    
 }]);

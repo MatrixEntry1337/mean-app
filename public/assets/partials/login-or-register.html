@@ -1,14 +1,9 @@
         <div class="container content-md">
-			<div class="margin-bottom-60 head">
+			<div class="margin-bottom-60 heading">
 				<h1>Login or Register an Account</h1>
-				<p>Login if you already a member. Otherwise please sign up if you want to become a member.</p>
-				<div ng-show="error" class="alert alert-danger row">
-    				<span>{{ error.message }}</span>
-  				</div>
 			</div>
-			
 
-			<div class="row space-xlg-hor equal-height-columns">
+			<div class="row space-xlg-hor equal-height-columns heading">
 				<!--login Block-->
 				<form ng-submit="login()" class="form-block login-block col-md-6 col-sm-12 rounded-left equal-height-column">
 					<div class="form-block-header">
@@ -18,13 +13,13 @@
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-user color-white"></i></span>
-						<input type="text" class="form-control rounded-right" placeholder="Username" ng-model="userLogIn.username">
+						<input type="text" class="form-control rounded-right" placeholder="Username" ng-model="userLogin.username">
 						</input>
 					</div>
 
 					<div class="input-group margin-bottom-20">
 						<span class="input-group-addon rounded-left"><i class="icon-lock color-white"></i></span>
-						<input type="password" class="form-control rounded-right" placeholder="Password" ng-model="userLogIn.password">
+						<input type="password" class="form-control rounded-right" placeholder="Password" ng-model="userLogin.password">
 						</input>
 					</div>
 
@@ -35,6 +30,10 @@
 					</div>
 				</form>
 				<!--End login Block-->
+	
+				<div ng-show="error" class="alert alert-danger row">
+    				<span>{{ error.message }}</span>
+  				</div>
 				
 				<!--Reg Block-->
 				<form ng-submit="register()" class="form-block reg-block col-md-6 col-sm-12 rounded-right equal-height-column">
