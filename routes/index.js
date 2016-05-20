@@ -197,7 +197,7 @@ router.post('/register', function(req, res, next){
   
   user.save(function(err){
     if(err){ return next(err); }
-    return res.json({token: user.generateJWT()})
+    return res.json({token: user.generateJWT()});
   });
   
   contact.user = user;

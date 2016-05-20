@@ -41,7 +41,7 @@ angular.module('km-app').factory('auth', ['$http', '$window', function($http, $w
     };
     
     auth.logout = function(){
-        $window.localStorage.removeItem['Kyle-Mean-App'];
+        $window.localStorage.removeItem('Kyle-Mean-App');
     };
     
    return auth;
