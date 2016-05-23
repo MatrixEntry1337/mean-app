@@ -31,7 +31,7 @@ app.factory('overVisitFactory', [function(){
     
     overObject.getStats = function(){
         return stats;
-    }
+    };
     
     return overObject;
 }]);

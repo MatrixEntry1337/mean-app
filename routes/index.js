@@ -26,7 +26,8 @@ var Event = mongoose.model('Event');
 
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
-//Param
+///////////////////////////////// User /////////////////////////////////////////
+// User param
 router.param('user', function(req, res, next, id){
   var query = User.findById(id);
   
@@ -39,140 +40,16 @@ router.param('user', function(req, res, next, id){
   });
 });
 
-router.param('discussion', function(req, res, next, id){
-  var query = Discussion.findById(id);
-  
-  query.exec(function(err, discussion){
-    if(err){ return next(err); }
-    if(!discussion){ return next(new Error('can\'t find discussion')); }
-    
-    req.discussion = discussion;
-    return next();
-  });
-});
-
-
-router.param('project', function(req, res, next, id){
-  var query = Project.findById(id);
-  
-  query.exec(function(err, project){
-    if(err){ return next(err); }
-    if(!project){ return next(new Error('can\'t find project')); }
-    
-    req.project = project;
-    return next();
-  });
-});
-
-router.param('socialcontact', function(req, res, next, id){
-  var query = SocialContact.findById(id);
-  
-  query.exec(function(err, contact){
-    if(err){ return next(err); }
-    if(!contact){ return next(new Error('can\'t find contact')); }
-    
-    req.contact = contact;
-    return next();
-  })
-})
-
-router.param('experience', function(req, res, next, id){
-  var query = Experience.findById(id);
-  
-  query.exec(function(err, experience){
-    if(err){ return next(err); }
-    if(!experience) { return next(new Error('can\'t find experience')); }
-    
-    req.experience = experience;
-    return next();
-  });
-});
-
-router.param('note', function(req, res, next, id){
-  var query = Note.findById(id);
-  
-  query.exec(function(err, note){
-    if(err){ return next(err); }
-    if(!note) { return next(new Error('can\'t find note')); }
-    
-    req.note = note;
-    return next();
-  });
-});
-
-///////Get All users/////////
-router.get('/users', function(req, res, next) {
+// Get all users
+router.get('/all/users', function(req, res, next) {
    User.find(function(err, users){
     if(err){ return next(err); }
-
     res.json(users);
   });
 });
 
-//Get all discussions
-router.get('/discussions', function(req, res, next){
-  Discussion.find(function(err, discussions){
-    if(err){ return next(err); }
-    res.json(discussions);
-  });
-});
-
-//Get all contacts
-router.get('/contacts', function(req, res, next){
-  Contact.find(function(err, contacts){
-    if(err){ return next(err); }
-    res.json(contacts);
-  });
-});
-
-//Get all comments
-router.get('/comments', function(req, res, next){
-  UserComment.find(function(err, comments){
-    if(err){ return next(err); }
-    res.json(comments);
-  });
-});
-
-///Retrieve User Info///
-router.get('/overall/:user', function(req, res, next) {
-  
-//retrieve all info for the overall page
-req.user.populate('notes events contacts discussions', function(err, user){
-    if(err){ return next(err); }
-    
-    res.json(req.user);
-  });
-});
-
-//Update user password
-router.put('/overall/:user/updatePassword', function(req, res, next){
-  req.user.update(req.body, function(err, user){
-    if(err){ return next(err); }
-    res.json(user);
-  });
-});
-
-//User login
-router.post('/login', function(req, res, next){
-  if(!req.body.username || !req.body.password){
-    return res.status(400).json({message: 'Please fill out all fields'});
-  }
-
-  passport.authenticate('local', function(err, user, info){
-    if(err){ return next(err); }
-
-    if(user){
-      return res.json({token: user.generateJWT()});
-    } else {
-      return res.status(401).json(info);
-    }
-  })(req, res, next);
-});
-
-///////////// User Creation //////////////
-
 //Creates a new user and it's necessary collections
-router.post('/register', function(req, res, next){
+router.post('/user/register', function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
@@ -209,20 +86,131 @@ router.post('/register', function(req, res, next){
   
 });
 
+//User login
+router.post('/user/login', function(req, res, next){
+  if(!req.body.username || !req.body.password){
+    return res.status(400).json({message: 'Please fill out all fields'});
+  }
+
+  passport.authenticate('local', function(err, user, info){
+    if(err){ return next(err); }
+
+    if(user){
+      return res.json({token: user.generateJWT()});
+    } else {
+      return res.status(401).json(info);
+    }
+  })(req, res, next);
+});
+
+///Retrieve User Info - notes, events, discussions ///
+router.get('/retrieve/user/notes-events-discussions', auth, function(req, res, next) {
+
+  var user = User.findOne({username: req.payload.username});
+
+  user.exec(function(err, user){
+    if(err){ return next(err); }
+    if(!user){ console.log('Something went wrong!'); }
+    
+    user.populate('notes events discussions', function(err, user){
+      if(err){ return next(err); }
+      res.json(user);
+    });
+  });
+});
+
+//Retrieve contacts
+router.get('/retrieve/user/contacts', auth, function(req, res, next){
+  
+  var user = User.findOne({username : req.payload.username});
+  
+  user.exec(function(err, user){
+    if(err){ return next(err); }
+    if(!user){ console.log('Something went wrong!'); }
+    
+    Contact.findOne({user: user._id}, function(err, contact){
+      if(err){ return next(err); }
+      if(!contact){ console.log('Something went wrong!'); }
+      else{
+        contact.populate('contacts', function(err, contact){
+          if(err){ return next(err); }
+          res.json(contact);
+        });
+      }
+    });
+  });
+});
+
+
+//Update user password
+router.put('update/:user/password', function(req, res, next){
+  req.user.update(req.body, function(err, user){
+    if(err){ return next(err); }
+    res.json(user);
+  });
+});
+
+
+///////////////////////////////// Discussion ///////////////////////////////////
+// Discussion param
+router.param('discussion', function(req, res, next, id){
+  var query = Discussion.findById(id);
+  
+  query.exec(function(err, discussion){
+    if(err){ return next(err); }
+    if(!discussion){ return next(new Error('can\'t find discussion')); }
+    
+    req.discussion = discussion;
+    return next();
+  });
+});
+
+//Get all discussions
+router.get('/all/discussions', function(req, res, next){
+  Discussion.find(function(err, discussions){
+    if(err){ return next(err); }
+    res.json(discussions);
+  });
+});
+
 //Create new discussion
-router.post('/overall/:user/newdiscussion', function(req, res, next){
+router.post('/create/:user/discussion', function(req, res, next){
   var discussion = new Discussion(req.body);
   discussion.user = req.user;
   
   discussion.save(function(err, discussion){
     if(err){ return next(err); }
     req.user.discussions.push(discussion);
+    req.user.save(function(err, user){
+      if(err){ return next(err); }
+      console.log(user); //test
+    });
     res.json(discussion);
   });
 });
 
+//////////// User Removal ///////////
+router.post('/delete/:user/discussion', function(req, res, next){
+  req.user.discussions.pull(req.body);
+});
+
+
+///////////////////////////////// Project //////////////////////////////////////
+// Project param
+router.param('project', function(req, res, next, id){
+  var query = Project.findById(id);
+  
+  query.exec(function(err, project){
+    if(err){ return next(err); }
+    if(!project){ return next(new Error('can\'t find project')); }
+    
+    req.project = project;
+    return next();
+  });
+});
+
 //Create a new project
-router.post('/overall/:user/newproject', function(req, res, next){
+router.post('/create/:user/project', function(req, res, next){
   var project = new Project(req.body);
   project.user = req.user;
   
@@ -233,44 +221,9 @@ router.post('/overall/:user/newproject', function(req, res, next){
   });
 });
 
-//Create a new note
-router.post('/overall/:user/newnote', function(req, res, next){
-  var note = new Note(req.body);
-  note.user = req.user;
-  
-  note.save(function(err, note){
-    if(err){ return next(err); }
-    req.user.notes.push(note);
-    res.json(note);
-  });
-});
-
-//Create a new education
-router.post('/overall/:user/neweducation', function(req, res, next){
-  var education = new Education(req.body);
-  education.user = req.user;
-  
-  education.save(function(err, education){
-    if(err){ return next(err); }
-    req.user.education.push(education);
-    res.json(education);
-  });
-});
-
-//Create a new experience
-router.post('/overall/:user/newexperience', function(req, res, next){
-  var experience = new Experience(req.body);
-  experience.user = req.user;
-  
-  experience.save(function(err, experience){
-    if(err){ return next(err); }
-    req.user.experiences.push(experience);
-    res.json(experience);
-  });
-});
-
+////////////////////////////////// Event //////////////////////////////////////
 //Create a new event
-router.post('/overall/:user/newevent', function(req, res, next){
+router.post('/create/:user/event', function(req, res, next){
   var event = new Event(req.body);
   event.user = req.user;
   
@@ -281,8 +234,112 @@ router.post('/overall/:user/newevent', function(req, res, next){
   });
 });
 
+////////////////////////////// Social Contact //////////////////////////////////
+// Social Contact param
+router.param('socialcontact', function(req, res, next, id){
+  var query = SocialContact.findById(id);
+  
+  query.exec(function(err, contact){
+    if(err){ return next(err); }
+    if(!contact){ return next(new Error('can\'t find contact')); }
+    
+    req.contact = contact;
+    return next();
+  });
+});
+
+
+///////////////////////////////// Experience ///////////////////////////////////
+// Experience param
+router.param('experience', function(req, res, next, id){
+  var query = Experience.findById(id);
+  
+  query.exec(function(err, experience){
+    if(err){ return next(err); }
+    if(!experience) { return next(new Error('can\'t find experience')); }
+    
+    req.experience = experience;
+    return next();
+  });
+});
+
+//Create a new experience
+router.post('/create/:user/experience', function(req, res, next){
+  var experience = new Experience(req.body);
+  experience.user = req.user;
+  
+  experience.save(function(err, experience){
+    if(err){ return next(err); }
+    req.user.experiences.push(experience);
+    res.json(experience);
+  });
+});
+
+
+/////////////////////////////// Education /////////////////////////////////////
+
+//Create a new education
+router.post('/create/:user/education', function(req, res, next){
+  var education = new Education(req.body);
+  education.user = req.user;
+  
+  education.save(function(err, education){
+    if(err){ return next(err); }
+    req.user.education.push(education);
+    res.json(education);
+  });
+});
+
+////////////////////////////////// Notes ///////////////////////////////////////
+// Note param
+router.param('note', function(req, res, next, id){
+  var query = Note.findById(id);
+  
+  query.exec(function(err, note){
+    if(err){ return next(err); }
+    if(!note) { return next(new Error('can\'t find note')); }
+    
+    req.note = note;
+    return next();
+  });
+});
+
+//Create a new note
+router.post('/create/:user/note', function(req, res, next){
+  var note = new Note(req.body);
+  note.user = req.user;
+  
+  note.save(function(err, note){
+    if(err){ return next(err); }
+    req.user.notes.push(note);
+    req.user.save(function(err){
+      if(err){ return next(err); }
+    });
+    res.json(req.user);
+  });
+});
+
+//Remove the top note from user
+router.put('/pop/:user/note', function(req, res, next){
+    req.user.notes.pop();
+  req.user.save(function(err){
+    if(err){ return next(err); }
+    res.json(req.user);
+  });
+});
+
+//Get all notes
+router.get('/notes', function(req, res, next){
+  Note.find(function(err, notes){
+    if(err){ return next(err); }
+    res.json(notes);
+  });
+});
+
+
+/////////////////////////////////// Contact ///////////////////////////////////
 //Create a new social contact
-router.post('/overall/:user/newsocialcontact', function(req, res, next){
+router.post('/create/:user/socialcontact', function(req, res, next){
   var socialcontact = new SocialContact(req.body);
   socialcontact.user = req.user;
   
@@ -293,17 +350,72 @@ router.post('/overall/:user/newsocialcontact', function(req, res, next){
   });
 });
 
-//////////// User Removal ///////////
-router.post('/overall/:user/deletediscussion', function(req, res, next){
-  req.user.discussions.pull(req.body);
+router.param('contact', function(req, res, next, id){
+  var query = Contact.findById(id);
+  
+  query.exec(function(err, contact){
+    if(err){ return res.send('An error occured'); } 
+    if(!contact){ return next(new Error('user can\'t be found')); }
+    
+    req.contact = contact;
+    return next();
+  });
 });
 
+//Get all contacts
+router.get('/all/contacts', function(req, res, next){
+  Contact.find(function(err, contacts){
+    if(err){ return next(err); }
+    res.json(contacts);
+  });
+});
 
-/////////// User to USer Activity ////////////
+//Add a contact
+router.post('/create/:user/contact', function(req, res, next){
+  var query = Contact.findOne(req.user.contacts);
+  var addUser;
+  
+  User.findById(req.body.user, function(err, user){
+    if(err){ return next(err); }
+    console.log(user);
+    addUser = user;
+  });
+  
+  query.exec(function(err, contact){
+    if(err){ return next(err); }
+    contact.contacts.push(addUser);
+    contact.save(function(err){
+      if(err){ return next(err); }
+    });
+    contact.populate('contacts', function(err){
+      if(err){ return next(err); }
+    });
+    res.json(contact);
+  });
+  
+});
+
+//Remove the top contact from user
+router.put('/pop/:contact/user', function(req, res, next){
+    req.contact.contacts.pop();
+  req.contact.save(function(err){
+    if(err){ return next(err); }
+    res.json(req.contact);
+  });
+});
+
+/////////////////////////////////// Comment ////////////////////////////////////
+//Get all comments
+router.get('/all/comments', function(req, res, next){
+  UserComment.find(function(err, comments){
+    if(err){ return next(err); }
+    res.json(comments);
+  });
+});
 
 //Send comment to another user
-router.post('/overall/:user/sendcomment', function(req, res, next){
-  var user = User.findOne(req.body.email, function(err){
+router.post('/send/:user/comment', function(req, res, next){
+  var user = User.findOne({email: req.body.email}, function(err){
     if(err){ return next(err); }
   });
   

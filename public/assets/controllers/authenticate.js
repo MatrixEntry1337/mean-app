@@ -1,4 +1,4 @@
-angular.module('km-app').factory('auth', ['$http', '$window', function($http, $window){
+app.factory('auth', ['$http', '$window', function($http, $window){
     var auth = {};
    
     auth.saveToken = function(token){
@@ -47,7 +47,7 @@ angular.module('km-app').factory('auth', ['$http', '$window', function($http, $w
    return auth;
 }]);
 
-angular.module('km-app').controller('authController',['$scope', '$state','auth', 
+app.controller('authController',['$scope', '$state', 'auth', 
 function($scope, $state, auth){
     $scope.userRegister = {};
     $scope.userLogin = {}
