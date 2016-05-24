@@ -2,7 +2,7 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
     
     var overview = {};
     overview.ned = [];
-    overview.contacts = [];
+    overview.friends = [];
     
     overview.getUserInfo = function(){
         $http.get('/retrieve/user/notes-events-discussions', {
@@ -11,10 +11,10 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
             angular.copy(data, overview.ned);
         });
         
-        $http.get('/retrieve/user/contacts', {
+        $http.get('/retrieve/user/friends', {
             headers: {Authorization: 'Bearer '+auth.getToken()}
             }).success(function(data){
-            angular.copy(data, overview.contacts);
+            angular.copy(data, overview.friends);
         });
     };
     
@@ -26,8 +26,8 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
         return this.ned.events;
     };
     
-    overview.getContacts = function(){
-        return this.contacts.contacts;
+    overview.getFriends = function(){
+        return this.friends.friends;
     };
     
     overview.getDiscussions = function(){
@@ -41,7 +41,7 @@ app.controller('overviewController', ['$scope', 'overview', function($scope, ove
 
     $scope.notes = overview.getNotes();
     $scope.events = overview.getEvents();
-    $scope.contacts = overview.getContacts();
+    $scope.friends = overview.getFriends();
     $scope.discussions = overview.getDiscussions();
 
 }]);

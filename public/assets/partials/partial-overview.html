@@ -120,17 +120,17 @@
 						<!--Profile Blog-->
 						<div class="panel panel-profile">
 							<div class="panel-heading overflow-h">
-								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-tasks"></i>Contacts</h2>
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-tasks"></i>friends</h2>
 								<a href="page_profile_users.html" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
 							</div>
 							<div class="panel-body">
 								<div class="row">
-									<div class="col-sm-6" ng-repeat="contact in contacts">
+									<div class="col-sm-6" ng-repeat="friend in friends">
 										<div class="profile-blog blog-border">
 											<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
 											<div class="name-location">
-												<strong>{{ contact.firstName }} {{ contact.lastName }}</strong>
-												<span><i class="fa fa-map-marker"></i><a href="#">{{ contact.address }},</a> <a href="#">{{ contact.country }}</a></span>
+												<strong>{{ friend.firstName }} {{ friend.lastName }}</strong>
+												<span><i class="fa fa-map-marker"></i><a href="#">{{ friend.address }},</a> <a href="#">{{ friend.country }}</a></span>
 											</div>
 											<div class="clearfix margin-bottom-20"></div>
 											<p>Info here</p>

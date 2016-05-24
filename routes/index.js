@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 //Mongoose Models
 var User = mongoose.model('User');
 var UserComment = mongoose.model('UserComment');
-var Contact = mongoose.model('Contact');
+var Friend = mongoose.model('Friend');
 var SocialContact = mongoose.model('SocialContact');
 var Discussion = mongoose.model('Discussion');
 var DiscussionComment = mongoose.model('DiscussionComment');
@@ -54,8 +54,8 @@ router.post('/user/register', function(req, res, next){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
   
-  var contact = new Contact();
-  contact.save(function(err){
+  var friend = new Friend();
+  friend.save(function(err){
     if(err){ return next(err); }
   });
   
@@ -77,10 +77,10 @@ router.post('/user/register', function(req, res, next){
     return res.json({token: user.generateJWT()});
   });
   
-  contact.user = user;
+  friend.owner = user;
   comment.user = user;
   
-  user.contacts = contact;
+  user.friends = friend;
   user.comments = comment;
   
   
@@ -119,8 +119,8 @@ router.get('/retrieve/user/notes-events-discussions', auth, function(req, res, n
   });
 });
 
-//Retrieve contacts
-router.get('/retrieve/user/contacts', auth, function(req, res, next){
+//Retrieve friends
+router.get('/retrieve/user/friends', auth, function(req, res, next){
   
   var user = User.findOne({username : req.payload.username});
   
@@ -128,13 +128,13 @@ router.get('/retrieve/user/contacts', auth, function(req, res, next){
     if(err){ return next(err); }
     if(!user){ console.log('Something went wrong!'); }
     
-    Contact.findOne({user: user._id}, function(err, contact){
+    Friend.findOne({user: user._id}, function(err, friend){
       if(err){ return next(err); }
-      if(!contact){ console.log('Something went wrong!'); }
+      if(!friend){ console.log('Something went wrong!'); }
       else{
-        contact.populate('contacts', function(err, contact){
+        friend.populate('friends', function(err, friend){
           if(err){ return next(err); }
-          res.json(contact);
+          res.json(friend);
         });
       }
     });
@@ -248,6 +248,20 @@ router.param('socialcontact', function(req, res, next, id){
   });
 });
 
+//Create a new social contact
+router.post('/create/:user/socialcontact', function(req, res, next){
+  var socialcontact = new SocialContact(req.body);
+  socialcontact.user = req.user;
+  
+  socialcontact.save(function(err, socialcontact){
+    if(err){ return next(err); }
+    req.user.socialcontacts.push(socialcontact);
+    req.user.save(function(){
+      if(err){ return next(err); }
+    });
+    res.json(socialcontact);
+  });
+});
 
 ///////////////////////////////// Experience ///////////////////////////////////
 // Experience param
@@ -337,42 +351,31 @@ router.get('/notes', function(req, res, next){
 });
 
 
-/////////////////////////////////// Contact ///////////////////////////////////
-//Create a new social contact
-router.post('/create/:user/socialcontact', function(req, res, next){
-  var socialcontact = new SocialContact(req.body);
-  socialcontact.user = req.user;
-  
-  socialcontact.save(function(err, socialcontact){
-    if(err){ return next(err); }
-    req.user.socialcontacts.push(socialcontact);
-    res.json(socialcontact);
-  });
-});
+/////////////////////////////////// Friend ///////////////////////////////////
 
-router.param('contact', function(req, res, next, id){
-  var query = Contact.findById(id);
+router.param('friend', function(req, res, next, id){
+  var query = Friend.findById(id);
   
-  query.exec(function(err, contact){
+  query.exec(function(err, friend){
     if(err){ return res.send('An error occured'); } 
-    if(!contact){ return next(new Error('user can\'t be found')); }
+    if(!friend){ return next(new Error('user can\'t be found')); }
     
-    req.contact = contact;
+    req.friend = friend;
     return next();
   });
 });
 
-//Get all contacts
-router.get('/all/contacts', function(req, res, next){
-  Contact.find(function(err, contacts){
+//Get all friends
+router.get('/all/friends', function(req, res, next){
+  Friend.find(function(err, friends){
     if(err){ return next(err); }
-    res.json(contacts);
+    res.json(friends);
   });
 });
 
-//Add a contact
-router.post('/create/:user/contact', function(req, res, next){
-  var query = Contact.findOne(req.user.contacts);
+//Add a friend
+router.post('/add/:user/friend', function(req, res, next){
+  var query = Friend.findOne(req.user.friends);
   var addUser;
   
   User.findById(req.body.user, function(err, user){
@@ -381,27 +384,24 @@ router.post('/create/:user/contact', function(req, res, next){
     addUser = user;
   });
   
-  query.exec(function(err, contact){
+  query.exec(function(err, friend){
     if(err){ return next(err); }
-    contact.contacts.push(addUser);
-    contact.save(function(err){
+    friend.friends.push(addUser);
+    friend.save(function(err){
       if(err){ return next(err); }
     });
-    contact.populate('contacts', function(err){
-      if(err){ return next(err); }
-    });
-    res.json(contact);
+      res.json(friend);
   });
   
 });
 
-//Remove the top contact from user
-router.put('/pop/:contact/user', function(req, res, next){
-    req.contact.contacts.pop();
-  req.contact.save(function(err){
+//Remove the recently added friend
+router.put('/pop/:friend/user', function(req, res, next){
+  req.friend.friends.pop();
+  req.friend.save(function(err){
     if(err){ return next(err); }
-    res.json(req.contact);
   });
+  res.json(req.friend);
 });
 
 /////////////////////////////////// Comment ////////////////////////////////////

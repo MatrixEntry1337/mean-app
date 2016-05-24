@@ -9,7 +9,7 @@ var passport = require('passport');
 
 
 //Mongoose Models
-var Contact = require('./models/Contact.model');
+var Friend = require('./models/Friend.model');
 var Comment = require('./models/UserComment.model');
 var Project = require('./models/Project.model');
 var ProjectComment = require('./models/ProjectComment.model');
