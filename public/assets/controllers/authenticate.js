@@ -29,15 +29,15 @@ app.factory('auth', ['$http', '$window', function($http, $window){
     };
     
     auth.register = function(user){
-        return $http.post('/register', user).success(function(data){
+        return $http.post('/user/register', user).success(function(data){
             auth.saveToken(data.token);
         });
     };
     
     auth.login = function(user){
-        return $http.post('/login', user).success(function(data){
+        return $http.post('/user/login', user).success(function(data){
             auth.saveToken(data.token);
-        })
+        });
     };
     
     auth.logout = function(){
@@ -50,7 +50,7 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 app.controller('authController',['$scope', '$state', 'auth', 
 function($scope, $state, auth){
     $scope.userRegister = {};
-    $scope.userLogin = {}
+    $scope.userLogin = {};
 
     $scope.register = function(){
         auth.register($scope.userRegister).error(function(error){

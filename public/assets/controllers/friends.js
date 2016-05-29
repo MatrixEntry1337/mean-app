@@ -1,6 +1,6 @@
-app.factory('contactFactory', [function(){
-    var contactObject = {};
-    var contacts = [
+app.factory('friendFactory', [function(){
+    var friendObject = {};
+    var friends = [
         {
             name:"Evan Habersham",
             state:"New York",
@@ -19,14 +19,14 @@ app.factory('contactFactory', [function(){
         }
     ];
     
-    contactObject.getContacts = function(){
-        return contacts;
+    friendObject.getfriends = function(){
+        return friends;
     };
     
-    return contactObject;
+    return friendObject;
 }]);
 
-app.controller('contactController',['$scope', 'contactFactory', 
-function($scope, contactFactory){
-    $scope.contacts = contactFactory.getContacts();
+app.controller('friendController',['$scope', 'friendFactory', 
+function($scope, friendFactory){
+    $scope.friends = friendFactory.getfriends();
 }]);

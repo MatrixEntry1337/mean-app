@@ -1,5 +1,49 @@
                 <!-- partial-overview.html --> 
                 
+                <!-- Modal - Note -->
+	  	<div id="create-note" class="modal fade" role="dialog">
+	    	<div class="modal-dialog">
+		      
+		      <!-- Modal content-->
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal">&times;</button>
+		          <h4 class="modal-title">Create Note</h4>
+		        </div>
+		        
+		        <div class="modal-body">
+		        	<form  ng-submit="createNote()" class="form-block reg-block ">
+						<div class="input-group margin-bottom-20">
+							<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
+							<input type="text" class="form-control rounded-right" placeholder="Note Title" 
+								ng-model="newNote.title"></input>
+						</div>
+					
+						<div class="input-group margin-bottom-20">
+							<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
+							<input type="text" class="form-control rounded-right" placeholder="Description" 
+								ng-model="newNote.summary"></input>
+						</div>
+					
+						<div class="input-group margin-bottom-20">
+							<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
+ 	 						<textarea class="form-control rounded-right" rows="4" placeholder="Enter note here..."
+ 	 							ng-model="newNote.content"></textarea>
+						</div>
+						
+						<div>
+							<button type="submit" class="btn btn-default rounded center-block">Submit</button>
+						</div>
+					</form>
+		        </div>
+		        <div class="modal-footer">
+		          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        </div>
+		      </div>
+		      
+		    </div>
+		 </div>
+                
                 <!-- Profile Content -->
 				<div class="col-md-9">
 					<div class="profile-body">
@@ -76,10 +120,10 @@
 								<div class="panel panel-profile no-bg">
 									<div class="panel-heading overflow-h">
 										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-pencil"></i>Notes</h2>
-										<a href="#"><i class="fa fa-cog pull-right"></i></a>
+										<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-note">Create</button>
 									</div>
 									<div id="scrollbar" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-										<div class="profile-post color-{{ $index + 1 }}" ng-repeat='note in notes | limitTo:4'>
+										<div class="profile-post color-{{ $index + 1 }}" ng-repeat="note in notes.slice().reverse() | limitTo:5 track by $index">
 											<span class="profile-post-numb">{{ $index + 1 }}</span>
 											<div class="profile-post-in">
 												<h3 class="heading-xs"><a href="#">{{ note.title }}</a></h3>
@@ -96,13 +140,13 @@
 								<div class="panel panel-profile no-bg">
 									<div class="panel-heading overflow-h">
 										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Upcoming Events</h2>
-										<a href="#"><i class="fa fa-cog pull-right"></i></a>
+										<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-event">Create</button>
 									</div>
 									<div id="scrollbar2" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-										<div class="profile-event" ng-repeat="event in events">
+										<div class="profile-event" ng-repeat="event in events|limitTo:5">
 											<div class="date-formats">
-												<span>25</span>
-												<small>05, 2014</small>
+												<span>{{ eventDate.day[$index] }}</span>
+												<small>{{ eventDate.month[$index] }}, {{ eventDate.year[$index] }}</small>
 											</div>
 											<div class="overflow-h">
 												<h3 class="heading-xs"><a href="#">{{ event.title }}</a></h3>
@@ -136,9 +180,8 @@
 											<p>Info here</p>
 											<hr>
 											<ul class="list-inline share-list">
-												<li><i class="fa fa-bell"></i><a href="#"> Notifications</a></li>
-												<li><i class="fa fa-group"></i><a href="#"> Followers</a></li>
-												<li><i class="fa fa-twitter"></i><a href="#">Retweet</a></li>
+												<li><i class="fa fa-bell"></i><a href="#"> </a></li>
+												<li><i class="fa fa-group"></i><a href="#">{{ numFriends }} Friends</a></li>
 											</ul>
 										</div>
 									</div>
@@ -178,14 +221,13 @@
 										<a href="page_profile_comments.html" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
 									</div>
 									<div id="scrollbar4" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-										<div class="comment">
-											<img src="assets/img/testimonials/user.jpg" alt="">
+										<div class="comment" ng-repeat="discussion in discussions | limitTo:5">
 											<div class="overflow-h">
-												<strong>Taylor Lee<small class="pull-right"> 25m</small></strong>
-												<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+												<strong>{{ discussion.title }}<small class="pull-right"> 25m</small></strong>
+												<p>{{ discussion.description }}</p>
 												<ul class="list-inline comment-list">
-													<li><i class="fa fa-heart"></i> <a href="#">23</a></li>
-													<li><i class="fa fa-comments"></i> <a href="#">5</a></li>
+													<li><i class="fa fa-heart"></i> <a href="#">{{ discussion.upvote }} </a></li>
+													<li><i class="fa fa-comments"></i> <a href="#">{{ numComments }}</a></li>
 												</ul>
 											</div>
 										</div>

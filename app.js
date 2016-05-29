@@ -11,16 +11,11 @@ var passport = require('passport');
 //Mongoose Models
 var Friend = require('./models/Friend.model');
 var Comment = require('./models/UserComment.model');
-var Project = require('./models/Project.model');
 var ProjectComment = require('./models/ProjectComment.model');
 var Discussion = require('./models/Discussion.model');
 var DiscussionComment = require('./models/DiscussionComment.model');
-var Education = require('./models/Education.model');
 var Note = require('./models/Note.model');
 var Event = require('./models/Event.model');
-var Experience = require('./models/Experience.model');
-var Skill = require('./models/Skill.model');
-var SocialContact = require('./models/SocialContact.model');
 var User = require('./models/User.model');
 
 //Passport config

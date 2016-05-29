@@ -108,5 +108,14 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $url
                         $state.go('login_or_register');
                     }
                 }]
-            });
+            })
+            
+        .state('new_note', {
+            views: {
+                'modal': {
+                    url: '/create_note',
+                    templateUrl: 'assets/partials/partial-notecreation.html'
+                }
+            }
+        });
 }]);
