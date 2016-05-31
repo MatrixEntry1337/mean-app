@@ -4,14 +4,6 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
     overview.ned = [];
     overview.friends = {};
     
-    overview.newNote = function(note){
-        return $http.post('/create/new/note', note, {
-            headers: { Authorization: 'Bearer '+auth.getToken() }
-        }).success(function(data){
-            overview.ned.notes.push(note);
-        });
-    };
-    
     overview.getUserInfo = function(){
         $http.get('/retrieve/user/notes-events-discussions', {
             headers: { Authorization: 'Bearer '+auth.getToken() }
@@ -64,18 +56,12 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
 }]);
 
 app.controller('overviewController', ['$scope', 'overview', function($scope, overview){
-    $scope.newNote = {};
+    
     $scope.notes = overview.getNotes();
     $scope.events = overview.getEvents();
     $scope.eventDate = overview.getEventDate();
     $scope.friends = overview.getFriends();
     $scope.discussions = overview.getDiscussions();
     $scope.numComments = overview.getDiscussionComments();
-    
-    $scope.createNote = function(){
-      overview.newNote($scope.newNote).error(function(error){
-          $scope.error = error;
-      });
-    }; 
    
 }]);

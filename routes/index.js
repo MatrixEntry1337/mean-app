@@ -22,7 +22,7 @@ var Event = mongoose.model('Event');
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 ///////////////////////////////// User /////////////////////////////////////////
-// User param
+// User param - test function
 router.param('user', function(req, res, next, id){
   var query = User.findById(id);
   
@@ -35,13 +35,14 @@ router.param('user', function(req, res, next, id){
   });
 });
 
-// Get all users
+// Get all users - test function
 router.get('/all/users', function(req, res, next) {
    User.find(function(err, users){
     if(err){ return next(err); }
     res.json(users);
   });
 });
+
 
 //Creates a new user and it's necessary collections
 router.post('/user/register', function(req, res, next){
@@ -102,7 +103,7 @@ router.get('/retrieve/user/notes-events-discussions', auth, function(req, res, n
 
   query.exec(function(err, user){
     if(err){ return next(err); }
-    if(!user){ console.log('Something went wrong!'); }
+    if(!user){ console.log('Something went wrong with accessing the user account'); }
     
     user.populate('notes events discussions', function(err, user){
       if(err){ return next(err); }
@@ -111,7 +112,7 @@ router.get('/retrieve/user/notes-events-discussions', auth, function(req, res, n
   });
 });
 
-//Update user profile with additional info
+//Update user profile with additional info - test function
 router.put('/update/:user/profile', function(req, res, next){
   req.user.line1 = req.body.line1;
   req.user.line2 = req.body.line2;
@@ -125,7 +126,7 @@ router.put('/update/:user/profile', function(req, res, next){
   });
 });
 
-//Update user password
+//Update user password - test function
 router.put('update/:user/password', function(req, res, next){
   req.user.update(req.body, function(err, user){
     if(err){ return next(err); }
@@ -136,30 +137,67 @@ router.put('update/:user/password', function(req, res, next){
 
 ///////////////////////////////// Discussion ///////////////////////////////////
 
-////Change!////
+//Create new Discussion
+router.post('/create/new/discussion', auth, function(req, res, next){
 
-// Discussion param
+  var discussion = new Discussion(req.body);
+  
+  var query = User.findOne({username: req.payload.username});
+  query.exec(function(err, user){
+    if(err) return next(err); 
+    if(!user) console.log('Something went wrong with accessing the user account'); 
+    user.discussions.push(discussion);
+    discussion.user = user;
+    user.save(function(err){
+      if(err) return next(err);
+    });
+    discussion.save(function(err,discussion){
+      if(err) return next(err);
+      res.json(discussion);
+    });
+  });
+});
+
+//Create a new discussion comment
+router.post('/create/discussion/comment', auth, function(req, res, next){
+  var discussion;
+  var query = User.findOne({username: req.payload.username});
+  var discussionComment = new Discussion();
+  
+  query.exec(function(err, user){
+    if(err) return next(err);
+    if(!user) console.log('Something went wrong with the ');
+    else{
+      discussion.user = user;
+      discussionComment.discussion = req.body.discussion;
+      discussionComment.text = req.body.text;
+    }
+  });
+  
+});
+
+// Discussion param - test function
 router.param('discussion', function(req, res, next, id){
   var query = Discussion.findById(id);
   
   query.exec(function(err, discussion){
-    if(err){ return next(err); }
-    if(!discussion){ return next(new Error('can\'t find discussion')); }
-    
+    if(err) return next(err); 
+    if(!discussion) return next(new Error('can\'t find discussion')); 
     req.discussion = discussion;
     return next();
   });
 });
 
-//Get all discussions
+
+//Get all discussions - test function
 router.get('/all/discussions', function(req, res, next){
   Discussion.find(function(err, discussions){
-    if(err){ return next(err); }
+    if(err) return next(err); 
     res.json(discussions);
   });
 });
 
-//Create new discussion
+//Create new discussion - test function
 router.post('/create/:user/discussion', function(req, res, next){
   var discussion = new Discussion(req.body);
   discussion.user = req.user;
@@ -211,7 +249,28 @@ router.post('/delete/:user/discussion', function(req, res, next){
 // });
 
 ////////////////////////////////// Event //////////////////////////////////////
-//Get all events
+//Create a new event
+router.post('/create/new/event', auth, function(req, res, next){
+
+  var event = new Event(req.body);
+  
+  var query = User.findOne({username: req.payload.username});
+  query.exec(function(err, user){
+    if(err) return next(err); 
+    if(!user) console.log('Something went wrong with accessing the user account'); 
+    user.events.push(event);
+    event.user = user;
+    user.save(function(err){
+      if(err) return next(err);
+    });
+    event.save(function(err,event){
+      if(err) return next(err);
+      res.json(event);
+    });
+  });
+});
+
+//Get all events - test function
 router.get('/all/events', function(req, res, next){
   Event.find(function(err, events){
     if(err){ return next(err); }
@@ -219,7 +278,7 @@ router.get('/all/events', function(req, res, next){
   });
 });
 
-//Create a new event
+//Create a new event - test function
 router.post('/create/:user/event', function(req, res, next){
   var event = new Event(req.body);
   event.user = req.user;
@@ -313,7 +372,7 @@ router.post('/create/:user/event', function(req, res, next){
 // });
 
 ////////////////////////////////// Notes ///////////////////////////////////////
-// Note param
+// Note param - test fucntion
 router.param('note', function(req, res, next, id){
   var query = Note.findById(id);
   
@@ -333,13 +392,10 @@ router.post('/create/new/note', auth, function(req, res, next){
   
   var query = User.findOne({username: req.payload.username});
   query.exec(function(err, user){
-    
     if(err) return next(err); 
-    if(!user) console.log('Something is wrong with the create a note function'); 
-    
+    if(!user) console.log('Something went wrong with accessing the user account'); 
     user.notes.push(note);
     note.user = user;
-    
     user.save(function(err){
       if(err) return next(err);
     });
@@ -347,7 +403,6 @@ router.post('/create/new/note', auth, function(req, res, next){
       if(err) return next(err);
       res.json(note);
     });
-    
   });
 });
 
@@ -366,7 +421,7 @@ router.post('/create/:user/note', function(req, res, next){
   });
 });
 
-//Remove the top note from user
+//Remove the top note from user - test function
 router.put('/pop/:user/note', function(req, res, next){
     req.user.notes.pop();
   req.user.save(function(err){
@@ -375,7 +430,7 @@ router.put('/pop/:user/note', function(req, res, next){
   });
 });
 
-//Get all notes
+//Get all notes - test function
 router.get('/notes', function(req, res, next){
   Note.find(function(err, notes){
     if(err){ return next(err); }
@@ -386,6 +441,7 @@ router.get('/notes', function(req, res, next){
 
 /////////////////////////////////// Friend ///////////////////////////////////
 
+//Friend param - test function
 router.param('friend', function(req, res, next, id){
   var query = Friend.findById(id);
   
@@ -398,7 +454,7 @@ router.param('friend', function(req, res, next, id){
   });
 });
 
-//Get all friends
+//Get all friends - test function
 router.get('/all/friends', function(req, res, next){
   Friend.find(function(err, friends){
     if(err){ return next(err); }
@@ -406,7 +462,7 @@ router.get('/all/friends', function(req, res, next){
   });
 });
 
-//Add a friend
+//Add a friend - test function
 router.post('/add/:user/friend', function(req, res, next){
   var query = Friend.findOne(req.user.friends);
   var addUser;
@@ -450,7 +506,46 @@ router.get('/retrieve/user/friends', auth, function(req, res, next){
   });
 });
 
-//Remove the recently added friend
+//Find a friend
+router.get('/find/friend', auth, function(req, res, next){
+  var query = User.find(req.body.searchParams);
+  
+  query.exec(function(err, users){
+    if(err) return next(err);
+    console.log(users);
+    res.json(users);
+  });
+});
+
+//Send Friend Request
+router.post('/send/friend/request', auth, function(req, res, next){
+  var current;
+  
+  var query = User.findOne({username: req.payload.username});
+  var query2 = User.findById(req.body._id);
+    
+  query.exec(function(err, user){
+    if(err) return next(err);
+    if(!user) console.log('Something went wrong with accessing the user account');
+    else{
+      if(!user.notifications) current = 0;
+      else current = user.notifications.length;
+      query2.exec(function(err, user2){
+        if(err) return next(err);
+        if(!user) return console.log('Something went wrong with accessing the user to be added account');
+        else{
+          user.notifications[current].user = user2;
+          user.notifications[current].notType = 0;
+          user.notifiacations[current].notSummary = "You have sent the user "  +  user2.username + " a friend request.";
+          user.notifications[current].notStatus = "Sent";
+        }
+      });
+    }
+  });
+});
+
+
+//Remove the recently added friend - test function
 router.put('/pop/:friend/user', function(req, res, next){
   req.friend.friends.pop();
   req.friend.save(function(err){
@@ -460,7 +555,7 @@ router.put('/pop/:friend/user', function(req, res, next){
 });
 
 /////////////////////////////////// Comment ////////////////////////////////////
-//Get all comments
+//Get all comments - test function
 router.get('/all/comments', function(req, res, next){
   UserComment.find(function(err, comments){
     if(err){ return next(err); }
@@ -468,7 +563,7 @@ router.get('/all/comments', function(req, res, next){
   });
 });
 
-//Send comment to another user
+//Send comment to another user - test function
 router.post('/send/:user/comment', function(req, res, next){
   var user = User.findOne({email: req.body.email}, function(err){
     if(err){ return next(err); }

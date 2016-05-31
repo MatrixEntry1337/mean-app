@@ -6,7 +6,13 @@ var DiscussionSchema = new mongoose.Schema({
    description: { type: String, required: true },
    content: { type: String, required: true },
    upvote: { type: Number, default: 0 },
-   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiscussionComments' }],
+   comments: [{ 
+      text: { type: String, required: true },
+      date: { type: Date, default: Date.now },
+      upvotes: { type: Number, default: 0 },
+      discussion: { type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' },
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+   }],
    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 

@@ -24,7 +24,7 @@ var UserSchema = new mongoose.Schema({
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       notType: { type: Number, required: true}, 
       notSummary: { type: String, required: true},
-      status: { type: String, required: true},
+      notStatus: { type: String, required: true},
       date: { type: Date, default: Date.now }
     }],
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
@@ -33,7 +33,7 @@ var UserSchema = new mongoose.Schema({
       date: { type: Date, default: Date.now },
       summary: { type: String, required: true }
     }],
-    friends: { type: mongoose.Schema.Types.ObjectId, ref: 'Friend' },
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     numFriends: { type: Number, default: 0 },
     experiences: [{
       companyName: { type: String, required: true },
@@ -49,24 +49,14 @@ var UserSchema = new mongoose.Schema({
       end: { type: String, required: true },
       description: { type: String }
     }],
-    projects: [{
-      title: { type: String, required: true },
-      link: { type: String, required: true },
-      date: { type: Date, default: Date.now },
-      description: { type: String , required: true},
-      content: { type: String, required: true },
-      upvotes: { type: Number, default: 0 },
-      comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProjectComment' }]
-    }],
-    projectComments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProjectComment' }],
-    discussions: [ {type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+    discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
     recentDiscussions: [{
       title: { type: String, required: true },
       date: { type: Date, default: Date.now },
       description: { type: String, required: true },
       content: { type: String, required: true }
     }],
-    discussionComments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DiscussionComment' }],
     comments: { type: mongoose.Schema.Types.ObjectId, ref: 'UserComment' },
     socialContacts: [{
       socialSite: { type: String, required: true },

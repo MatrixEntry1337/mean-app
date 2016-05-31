@@ -20,6 +20,7 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $url
             abstract: true,
             url: '/user_account',
             templateUrl: 'assets/partials/abstract-user-account.html',
+            controller: 'accountController',
             onEnter: ['$state', 'auth', function($state, auth){
                 if(!auth.isLoggedIn()){
                     $state.go('login_or_register');
