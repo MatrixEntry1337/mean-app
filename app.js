@@ -9,12 +9,8 @@ var passport = require('passport');
 
 
 //Mongoose Models
-var Friend = require('./models/Friend.model');
-var Comment = require('./models/UserComment.model');
-var ProjectComment = require('./models/ProjectComment.model');
+var Project = require('./models/Project.model');
 var Discussion = require('./models/Discussion.model');
-var DiscussionComment = require('./models/DiscussionComment.model');
-var Note = require('./models/Note.model');
 var Event = require('./models/Event.model');
 var User = require('./models/User.model');
 

@@ -22,52 +22,51 @@ var UserSchema = new mongoose.Schema({
     dateJoined: { type: Date, default: Date.now },
     notifications: [{
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      notType: { type: Number, required: true}, 
-      notSummary: { type: String, required: true},
-      notStatus: { type: String, required: true},
+      notType: { type: Number }, 
+      notSummary: { type: String},
+      notStatus: { type: String},
       date: { type: Date, default: Date.now }
     }],
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
-    recentEvents: [{  
-      title: { type: String, required: true },
-      date: { type: Date, default: Date.now },
-      summary: { type: String, required: true }
-    }],
     friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     numFriends: { type: Number, default: 0 },
     experiences: [{
-      companyName: { type: String, required: true },
-      role: { type: String, rewuired: true },
-      start: { type: String, required: true },
-      end: { type: String, required: true },
-      description: { type: String, required: true }
+      companyName: { type: String },
+      role: { type: String},
+      start: { type: String },
+      end: { type: String},
+      description: { type: String }
     }],
     education: [{
-      schoolName: { type: String, required: true },
-      program: { type: String, required: true },
-      start: { type: String, required: true },
-      end: { type: String, required: true },
+      schoolName: { type: String},
+      program: { type: String},
+      start: { type: String },
+      end: { type: String },
       description: { type: String }
     }],
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
-    recentDiscussions: [{
-      title: { type: String, required: true },
+    comments: { 
+      text:{ type: String}, 
       date: { type: Date, default: Date.now },
-      description: { type: String, required: true },
-      content: { type: String, required: true }
-    }],
-    comments: { type: mongoose.Schema.Types.ObjectId, ref: 'UserComment' },
+      upvotes: { type: Number, default: 0 },
+      postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } 
+    },
     socialContacts: [{
-      socialSite: { type: String, required: true },
-      socialName: { type: String, required: true },
+      socialSite: { type: String},
+      socialName: { type: String},
       notes: { type: String }
     }],
     skills: [{ 
-      skillName: { type: String, required: true },
-      skillLevel: { type: Number, required: true },
+      skillName: { type: String},
+      skillLevel: { type: Number},
     }],
-    notes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Note' }]
+    notes: [{ 
+      title: { type: String},
+      summary: { type: String},
+      date: { type: String, default: Date.now },
+      content: { type: String }
+    }]
 });
 
 
@@ -103,7 +102,7 @@ UserSchema.methods.generateJWT = function() {
   return jwt.sign({
     _id: this._id,
     username: this.username,
-    exp: parseInt(exp.getTime() / 1000),
+    exp: parseInt(exp.getTime() / 1000)
   }, 'SECRET');
 };
 

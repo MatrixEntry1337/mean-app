@@ -11,13 +11,9 @@ router.get('/', function(req, res, next) {
 
 //Mongoose Models
 var User = mongoose.model('User');
-var UserComment = mongoose.model('UserComment');
-var Friend = mongoose.model('Friend');
 var Discussion = mongoose.model('Discussion');
-var DiscussionComment = mongoose.model('DiscussionComment');
-var ProjectComment = mongoose.model('ProjectComment');
-var Note = mongoose.model('Note');
 var Event = mongoose.model('Event');
+var Project = mongoose.model('Project');
 
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
@@ -50,9 +46,6 @@ router.post('/user/register', function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
-  
-  var friend = new Friend();
-  var comment = new UserComment();
   var user = new User();
   
   user.username = req.body.username;
@@ -60,20 +53,10 @@ router.post('/user/register', function(req, res, next){
   user.lastName = req.body.lastName;
   user.email = req.body.email;
   user.setPassword(req.body.password);
-  user.friends = friend;
-  
-  friend.owner = user;
-  comment.user = user;
-  
-  user.save(function(err){
-    if(err){ return next(err); }
-    return res.json({token: user.generateJWT()});
-  });
-  friend.save(function(err){
-    if(err){ return next(err); }
-  });
-  comment.save(function(err){
-    if(err){ return next(err); }
+
+  user.save(function(err, user){
+    if(err) return next(err); 
+    return res.json({ token: user.generateJWT() });
   });
   
 });
@@ -96,19 +79,20 @@ router.post('/user/login', function(req, res, next){
   })(req, res, next);
 });
 
-//Retrieve User Info - notes
-router.get('/retrieve/user/notes-events-discussions', auth, function(req, res, next) {
+//Populate User Info - events, discussions and projects
+router.get('/retrieve/user/populate', auth, function(req, res, next) {
 
   var query = User.findOne({username: req.payload.username});
 
   query.exec(function(err, user){
     if(err){ return next(err); }
-    if(!user){ console.log('Something went wrong with accessing the user account'); }
-    
-    user.populate('notes events discussions', function(err, user){
-      if(err){ return next(err); }
-      res.json(user);
-    });
+    if(!user){ console.log('/retrieve/user/populate - something went wrong with accessing the user account'); }
+    else{
+      user.populate('events discussions projects', function(err, user){
+        if(err) return next(err); 
+        res.json(user);
+      });
+    }
   });
 });
 
@@ -145,32 +129,42 @@ router.post('/create/new/discussion', auth, function(req, res, next){
   var query = User.findOne({username: req.payload.username});
   query.exec(function(err, user){
     if(err) return next(err); 
-    if(!user) console.log('Something went wrong with accessing the user account'); 
-    user.discussions.push(discussion);
-    discussion.user = user;
-    user.save(function(err){
-      if(err) return next(err);
-    });
-    discussion.save(function(err,discussion){
-      if(err) return next(err);
-      res.json(discussion);
-    });
+    if(!user) console.log('/create/new/discussion - something went wrong with accessing the user in the database'); //test function
+    else {
+      user.discussions.push(discussion);
+      discussion.createdBy = user;
+      user.save(function(err){
+        if(err) return next(err);
+      });
+      discussion.save(function(err,discussion){
+        if(err) return next(err);
+        res.json(discussion);
+      });
+    }
   });
 });
 
 //Create a new discussion comment
 router.post('/create/discussion/comment', auth, function(req, res, next){
-  var discussion;
-  var query = User.findOne({username: req.payload.username});
-  var discussionComment = new Discussion();
   
-  query.exec(function(err, user){
+  var query = Discussion.findById( req.body.discussion );
+  var query2 = User.findOne({ username: req.payload.username });
+  
+  query.exec(function(err, discussion){
     if(err) return next(err);
-    if(!user) console.log('Something went wrong with the ');
+    if(!discussion) console.log('CreateDiscussionComment - something went wrong with accessing the discussion in the database');
     else{
-      discussion.user = user;
-      discussionComment.discussion = req.body.discussion;
-      discussionComment.text = req.body.text;
+      query2.exec(function(err, user){
+        if(err) return next(err);
+        if(!user) console.log('CreateDiscussionComment - something went wrong with accessing the user in the database');
+        else{
+          discussion.commments.push({ content: req.body.content,  postedBy: user });
+          discussion.save(function(err, discussion){
+            if(err) return next(err);
+            res.json(discussion.comments);
+          });
+        }
+      });
     }
   });
   
@@ -221,32 +215,80 @@ router.post('/delete/:user/discussion', function(req, res, next){
 
 ///////////////////////////////// Project //////////////////////////////////////
 
-/////Change!/////
 
-// Project param
-// router.param('project', function(req, res, next, id){
-//   var query = Project.findById(id);
+//Create new Project
+router.post('/create/new/project', auth, function(req, res, next){
+
+  var project = new Project(req.body);
   
-//   query.exec(function(err, project){
-//     if(err){ return next(err); }
-//     if(!project){ return next(new Error('can\'t find project')); }
+  var query = User.findOne({username: req.payload.username});
+  query.exec(function(err, user){
+    if(err) return next(err); 
+    if(!user) console.log('/create/new/project - something went wrong with accessing the user in the database'); //test function
+    else {
+      user.projects.push(project);
+      project.createdBy = user;
+      user.save(function(err){
+        if(err) return next(err);
+      });
+      project.save(function(err,project){
+        if(err) return next(err);
+        res.json(project);
+      });
+    }
+  });
+});
+
+//Create a new project comment
+router.post('/create/project/comment', auth, function(req, res, next){
+  
+  var query = Project.findById(req.body.project);
+  var query2 = User.findOne({ username: req.payload.username });
+  
+  query.exec(function(err, project){
+    if(err) return next(err);
+    if(!project) console.log('CreateProjectComment - something went wrong with accessing the project in the database');
+    else{
+      query2.exec(function(err, user){
+        if(err) return next(err);
+        if(!user) console.log('CreateProjectComment - something went wrong with accessing the user in the database');
+        else{
+          project.commments.push({ content: req.body.content,  postedBy: user });
+          project.save(function(err, project){
+            if(err) return next(err); 
+            res.json(project.comments);
+          });
+        }
+      });
+    }
+  });
+  
+});
+
+//Project param - test function
+router.param('project', function(req, res, next, id){
+  var query = Project.findById(id);
+  
+  query.exec(function(err, project){
+    if(err){ return next(err); }
+    if(!project){ return next(new Error('can\'t find project')); }
     
-//     req.project = project;
-//     return next();
-//   });
-// });
+    req.project = project;
+    return next();
+  });
+});
 
-// //Create a new project
-// router.post('/create/:user/project', function(req, res, next){
-//   var project = new Project(req.body);
-//   project.user = req.user;
+//Create a new project - test function
+router.post('/create/:user/project', function(req, res, next){
+  var project = new Project(req.body);
+  project.user = req.user;
   
-//   project.save(function(err, project){
-//     if(err){ return next(err); }
-//     req.user.projects.push(project);
-//     req.json(project);
-//   });
-// });
+  project.save(function(err, project){
+    if(err){ return next(err); }
+    req.user.projects.push(project);
+    req.json(project);
+  });
+});
 
 ////////////////////////////////// Event //////////////////////////////////////
 //Create a new event
@@ -257,9 +299,9 @@ router.post('/create/new/event', auth, function(req, res, next){
   var query = User.findOne({username: req.payload.username});
   query.exec(function(err, user){
     if(err) return next(err); 
-    if(!user) console.log('Something went wrong with accessing the user account'); 
+    if(!user) console.log('/create/new/event - something went wrong with accessing the user in the database'); 
     user.events.push(event);
-    event.user = user;
+    event.createdBy = user;
     user.save(function(err){
       if(err) return next(err);
     });
@@ -268,6 +310,32 @@ router.post('/create/new/event', auth, function(req, res, next){
       res.json(event);
     });
   });
+});
+
+//Create a new event comment
+router.post('/create/event/comment', auth, function(req, res, next){
+  
+  var query = Event.findById( req.body.event );
+  var query2 = User.findOne({username: req.payload.username });
+  
+  query.exec(function(err, event){
+    if(err) return next(err);
+    if(!event) console.log('create/event/comment - something went wrong with accessing the event in the database');
+    else{
+      query2.exec(function(err, user){
+        if(err) return next(err);
+        if(!user) console.log('create/event/comment - something went wrong with accessing the user in the database');
+        else{
+          event.commments.push({ content: req.body.content,  postedBy: user });
+          event.save(function(err, event){
+            if(err) return next(err);
+            res.json(event.comments);
+          });
+        }
+      });
+    }
+  });
+  
 });
 
 //Get all events - test function
@@ -372,118 +440,26 @@ router.post('/create/:user/event', function(req, res, next){
 // });
 
 ////////////////////////////////// Notes ///////////////////////////////////////
-// Note param - test fucntion
-router.param('note', function(req, res, next, id){
-  var query = Note.findById(id);
-  
-  query.exec(function(err, note){
-    if(err){ return next(err); }
-    if(!note) { return next(new Error('can\'t find note')); }
-    
-    req.note = note;
-    return next();
-  });
-});
 
 //Create a new note
 router.post('/create/new/note', auth, function(req, res, next){
-
-  var note = new Note(req.body);
   
   var query = User.findOne({username: req.payload.username});
   query.exec(function(err, user){
     if(err) return next(err); 
-    if(!user) console.log('Something went wrong with accessing the user account'); 
-    user.notes.push(note);
-    note.user = user;
-    user.save(function(err){
-      if(err) return next(err);
-    });
-    note.save(function(err,note){
-      if(err) return next(err);
-      res.json(note);
-    });
-  });
-});
-
-//Create a new note - test function
-router.post('/create/:user/note', function(req, res, next){
-  var note = new Note(req.body);
-  note.user = req.user;
-  
-  note.save(function(err, note){
-    if(err){ return next(err); }
-    req.user.notes.push(note);
-    req.user.save(function(err){
-      if(err){ return next(err); }
-    });
-    res.json(req.user);
-  });
-});
-
-//Remove the top note from user - test function
-router.put('/pop/:user/note', function(req, res, next){
-    req.user.notes.pop();
-  req.user.save(function(err){
-    if(err){ return next(err); }
-    res.json(req.user);
-  });
-});
-
-//Get all notes - test function
-router.get('/notes', function(req, res, next){
-  Note.find(function(err, notes){
-    if(err){ return next(err); }
-    res.json(notes);
+    if(!user) console.log('/createa/new/note - something went wrong with accessing the user in the database'); 
+    else{
+      user.notes.push({ title: req.body.title, summary: req.body.summary, content: req.body.content });
+      user.save(function(err, user){
+        if(err) return next(err);
+        res.json(user.notes);
+      });
+    }
   });
 });
 
 
 /////////////////////////////////// Friend ///////////////////////////////////
-
-//Friend param - test function
-router.param('friend', function(req, res, next, id){
-  var query = Friend.findById(id);
-  
-  query.exec(function(err, friend){
-    if(err){ return res.send('An error occured'); } 
-    if(!friend){ return next(new Error('user can\'t be found')); }
-    
-    req.friend = friend;
-    return next();
-  });
-});
-
-//Get all friends - test function
-router.get('/all/friends', function(req, res, next){
-  Friend.find(function(err, friends){
-    if(err){ return next(err); }
-    res.json(friends);
-  });
-});
-
-//Add a friend - test function
-router.post('/add/:user/friend', function(req, res, next){
-  var query = Friend.findOne(req.user.friends);
-  var addUser;
-  
-  User.findById(req.body.user, function(err, user){
-    if(err){ return next(err); }
-    addUser = user;
-  });
-  
-  query.exec(function(err, friend){
-    if(err){ return next(err); }
-    req.user.addUser(function(err){
-      if(err){ return next(err); }
-    });
-    friend.friends.push(addUser);
-    friend.save(function(err){
-      if(err){ return next(err); }
-    });
-      res.json(friend);
-  });
-});
 
 //Retrieve friends for a given user
 router.get('/retrieve/user/friends', auth, function(req, res, next){
@@ -491,90 +467,130 @@ router.get('/retrieve/user/friends', auth, function(req, res, next){
   var query = User.findOne({username : req.payload.username});
   query.exec(function(err, user){
     if(err){ return next(err); }
-    if(!user){ console.log('Something went wrong!'); }
-    
-    Friend.findOne({owner: user._id}, function(err, friend){
-      if(err){ return next(err); }
-      if(!friend){ console.log('No friends!'); }
-      else{
-        friend.populate('friends', function(err, friends){
-          if(err){ return next(err); }
-          res.json(friends);
-        });
-      }
-    });
+    if(!user){ console.log('/retrieve/user/friends - something went wrong!'); }
+    else{    
+      user.populate('friends', function(err, friends){
+      if(err) return next(err); 
+      res.json(user.friends);
+      });
+    }
   });
 });
 
 //Find a friend
-router.get('/find/friend', auth, function(req, res, next){
-  var query = User.find(req.body.searchParams);
+router.post('/find/friend', function(req, res, next){
+ 
+  
+  // var firstNameQuery = User.findOne({ firstName: req.body.entry });
+  // var lastNameQuery = User.findOne({ lastName: req.body.entry });
+  // var emailQuery = User.findOne({ email: req.body.entry });
+  // var usernameQuery = User.findOne({ username: req.body.entry});
+  
+  var query = User.find({ username: new RegExp( req.body.entry + '+', 'i' )}, 'username firstName lastName');
+  
+  // var userFound = [];
+  
+  // firstNameQuery.exec(function(err, user){
+  //   if(err) return next(err);
+  //   if(!user) console.log('/find/friend - unable to find user by first name');
+  //   else{
+  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
+     
+     
+  //   }
+  // });
+  
+  // lastNameQuery.exec(function(err, user){
+  //   if(err) return next(err);
+  //   if(!user) console.log('/find/friend - unable to find user by last name');
+  //   else{
+  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
+     
+   
+  //   }
+  // });
+  
+  // emailQuery.exec(function(err, user){
+  //   if(err) return next(err);
+  //   if(!user) console.log('/find/friend - unable to find user by email');
+  //   else{
+  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
+   
+    
+  //   }
+  // });
+  
+  // usernameQuery.exec(function(err, user){
+  //   if(err) return next(err);
+  //   if(!user) console.log('/find/friend - unable to find user by username');
+  //   else{
+  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
+  //   }
+  // });
+  
   
   query.exec(function(err, users){
     if(err) return next(err);
-    console.log(users);
-    res.json(users);
+    if(!users) return console.log("No users found!");
+    else
+      res.json(users);
   });
+  
+  
 });
 
 //Send Friend Request
 router.post('/send/friend/request', auth, function(req, res, next){
-  var current;
-  
+  console.log("here");
+  console.log(req.body.username);
   var query = User.findOne({username: req.payload.username});
-  var query2 = User.findById(req.body._id);
+  var query2 = User.findOne({username: req.body.username});
     
   query.exec(function(err, user){
     if(err) return next(err);
     if(!user) console.log('Something went wrong with accessing the user account');
     else{
-      if(!user.notifications) current = 0;
-      else current = user.notifications.length;
-      query2.exec(function(err, user2){
+      query2.exec(function(err, requestUser){
         if(err) return next(err);
-        if(!user) return console.log('Something went wrong with accessing the user to be added account');
+        if(!requestUser) return console.log('Something went wrong with accessing the user to be added account');
         else{
-          user.notifications[current].user = user2;
-          user.notifications[current].notType = 0;
-          user.notifiacations[current].notSummary = "You have sent the user "  +  user2.username + " a friend request.";
-          user.notifications[current].notStatus = "Sent";
+          user.notifications.push({ 
+            user: requestUser,  
+            notType: 0, 
+            notSummary: "You have sent the user "  +  requestUser.username + " a friend request.",
+            notStatus: "Sent"
+          });
+          requestUser.notifications.push({
+            user: user,  
+            notType: 1, 
+            notSummary: "You have received a friend request from the user "  +  user.username,
+            notStatus: "Received"
+          });
+          user.save(function(err){
+            if(err) return next(err);
+          });
+          requestUser.save(function(){
+            if(err) return next(err);
+          });
+          res.json("Request Sent!");
         }
       });
     }
   });
 });
 
-
-//Remove the recently added friend - test function
-router.put('/pop/:friend/user', function(req, res, next){
-  req.friend.friends.pop();
-  req.friend.save(function(err){
-    if(err){ return next(err); }
-  });
-  res.json(req.friend);
-});
-
 /////////////////////////////////// Comment ////////////////////////////////////
-//Get all comments - test function
-router.get('/all/comments', function(req, res, next){
-  UserComment.find(function(err, comments){
-    if(err){ return next(err); }
-    res.json(comments);
+//Get all comments for user
+router.get('/all/user/comments', auth, function(req, res, next){
+  var query = User.findOne({username: req.payload.username});
+  query.exec(function(err, user){
+    if(err) return next(err);
+    if(!user) console.log("/all/user/comments - something went wrong when accessing this user in the database");
+    res.json(user.comments);
   });
 });
 
-//Send comment to another user - test function
-router.post('/send/:user/comment', function(req, res, next){
-  var user = User.findOne({email: req.body.email}, function(err){
-    if(err){ return next(err); }
-  });
-  
-  UserComment.update(user, {$push: {'comments': { text: req.body.text, user: user._id }}}, { multi: false }, 
-  function(err, comment){
-    if(err){ return next(err); }
-    res.json(comment);
-  });
-});
-  
+//Send comment to another user
+
 
 module.exports = router; 

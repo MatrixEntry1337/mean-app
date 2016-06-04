@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 var ProjectSchema = mongoose.Schema({
+    createdBy: { type: String, required: true },
     title: { type: String, required: true },
     link: { type: String, required: true },
     date: { type: Date, default: Date.now },
@@ -8,7 +9,7 @@ var ProjectSchema = mongoose.Schema({
     content: { type: String, required: true },
     upvotes: { type: Number, default: 0 },
     comments: [{
-        text: { type: String, required: true },
+        content: { type: String, required: true },
         date: { type: Date, default: Date.now },
         upvote: { type: Number, default: 0},
         postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }

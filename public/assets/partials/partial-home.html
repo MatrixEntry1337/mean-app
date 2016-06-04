@@ -121,7 +121,7 @@
 						<div class="panel panel-profile">
 							<div class="panel-heading overflow-h">
 								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-tasks"></i>friends</h2>
-								<a href="page_profile_users.html" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#add-friend" >+add</a>
+								<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#add-friend" >+add</button>
 							</div>
 							<div class="panel-body">
 								<div class="row">
@@ -151,13 +151,13 @@
 						<div class="row">
 							<!--Alert-->
 							<div class="col-sm-7 sm-margin-bottom-30">
-								<div class="panel panel-profile" ng-controller="alarmController">
+								<div class="panel panel-profile">
 									<div class="panel-heading overflow-h">
-										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-send"></i> Alarm Notification</h2>
+										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-send"></i> Notifications</h2>
 										<a href="#"><i class="fa fa-cog pull-right"></i></a>
 									</div>
 									<div id="scrollbar3" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-										<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="alarm in alarms">
+										<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="notification in notifications">
 											<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
 											<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
 											<div class="overflow-h">

@@ -31,8 +31,8 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $url
         //child
             .state('user_account.overview',{
                 url: '/overview',
-                templateUrl: 'assets/partials/partial-overview.html',
-                controller: 'overviewController',
+                templateUrl: 'assets/partials/partial-home.html',
+                controller: 'homeController',
                 onEnter: ['$state', 'auth', function($state, auth){
                     if(!auth.isLoggedIn()){
                         $state.go('login_or_register');
