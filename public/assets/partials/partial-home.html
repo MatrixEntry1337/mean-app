@@ -76,7 +76,7 @@
 								<div class="panel panel-profile no-bg">
 									<div class="panel-heading overflow-h">
 										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-pencil"></i>Notes</h2>
-										<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-note">Create</button>
+										<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-note">+add</button>
 									</div>
 									<div id="scrollbar" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
 										<div class="profile-post color-{{ $index + 1 }}" ng-repeat="note in notes.slice().reverse() | limitTo:5 track by $index">
@@ -96,7 +96,7 @@
 								<div class="panel panel-profile no-bg">
 									<div class="panel-heading overflow-h">
 										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Upcoming Events</h2>
-										<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-event">Create</button>
+										<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-event">+add</button>
 									</div>
 									<div id="scrollbar2" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
 										<div class="profile-event" ng-repeat="event in events.slice().reverse() | limitTo:5 track by $index">
@@ -117,7 +117,7 @@
 
 						<hr>
 
-						<!--Profile Blog-->
+						<!--Friends-->
 						<div class="panel panel-profile">
 							<div class="panel-heading overflow-h">
 								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-tasks"></i>friends</h2>
@@ -144,12 +144,12 @@
 								</div>
 							</div>
 						</div>
-						<!--End Profile Blog-->
+						<!--End Friends-->
 
 						<hr>
 
 						<div class="row">
-							<!--Alert-->
+							<!--Notification-->
 							<div class="col-sm-7 sm-margin-bottom-30">
 								<div class="panel panel-profile">
 									<div class="panel-heading overflow-h">
@@ -157,29 +157,30 @@
 										<a href="#"><i class="fa fa-cog pull-right"></i></a>
 									</div>
 									<div id="scrollbar3" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-										<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="notification in notifications">
+										<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="notification in notifications.slice().reverse() | limitTo:5 track by Index">
 											<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
 											<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
 											<div class="overflow-h">
-												<strong>{{ alarm.name }}</strong><strong class="{{ alarm.color }}"> - {{ alarm.status }}<small class="pull-right"><em>{{ alarm.time }}</em></small></strong>
-												<p>{{ alarm.message }}</p>
+												<strong class="color-yellow">{{notification.status}}<small class="pull-right">
+													<em>{{ notificationElapsedTime($index) }}</em></small></strong>
+												<p>{{ notification.summary }}</p>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<!--End Alert-->
+							<!--End Notification-->
 
 							<div class="col-sm-5">
 								<div class="panel panel-profile">
 									<div class="panel-heading overflow-h">
 										<h2 class="panel-title heading-sm pull-left"><i class="fa fa-comments-o"></i> Discussions</h2>
-										<a href="page_profile_comments.html" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right">View All</a>
+										<button class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-discussion">+add</button>
 									</div>
 									<div id="scrollbar4" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-										<div class="comment" ng-repeat="discussion in discussions | limitTo:5">
+										<div class="comment" ng-repeat="discussion in discussions.slice().reverse() | limitTo:5 track by $index">
 											<div class="overflow-h">
-												<strong>{{ discussion.title }}<small class="pull-right"> 25m</small></strong>
+												<strong>{{ discussion.title }}<small class="pull-right">{{ discussionElapsedTime($index) }}</small></strong>
 												<p>{{ discussion.description }}</p>
 												<ul class="list-inline comment-list">
 													<li><i class="fa fa-heart"></i> <a href="#">{{ discussion.upvote }} </a></li>

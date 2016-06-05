@@ -25,24 +25,24 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $url
                 if(!auth.isLoggedIn()){
                     $state.go('login_or_register');
                 }
-            }]
+            }],
+            resolve: {
+                    postPromise: ['account', function(user){
+                        return user.getUserInfo();
+                    }]
+                }
         })
         
         //child
             .state('user_account.overview',{
                 url: '/overview',
                 templateUrl: 'assets/partials/partial-home.html',
-                controller: 'homeController',
                 onEnter: ['$state', 'auth', function($state, auth){
                     if(!auth.isLoggedIn()){
                         $state.go('login_or_register');
                     }
-                }],
-                resolve: {
-                    postPromise: ['overview', function(user){
-                        return user.getUserInfo();
-                    }]
-                }
+                }]
+                
             })
             
         //child

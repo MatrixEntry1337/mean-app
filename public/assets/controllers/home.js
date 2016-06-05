@@ -1,7 +1,7 @@
 app.factory('overview', ['$http', 'auth', function($http, auth){
     
     var overview = {};
-    overview.user = [];
+    overview.user = {};
     
     overview.getUserInfo = function(){
         $http.get('/retrieve/user/populate', {
@@ -25,9 +25,8 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
     
     overview.getEventDate = function(){
         var dateInfo = [], temp; 
-        dateInfo.day = [], dateInfo.month = [], dateInfo.year = [];
         for(var i = 0; i < this.user.events.length; i++){
-            temp = new Date(this.ned.events[i].date);
+            temp = new Date(this.user.events[i].date);
             dateInfo.push({day: temp.getDay(), month: temp.getMonth(), year: temp.getFullYear()}); 
         }
         return dateInfo;
@@ -35,6 +34,15 @@ app.factory('overview', ['$http', 'auth', function($http, auth){
     
     overview.getNotifications = function(){
       return this.user.notifications;  
+    };
+    
+    overview.getNotificationDate = function(){
+        var dateInfo = [], temp;
+        for(var i = 0; i < this.user.notifications.length; i++){
+            temp = new Date(this.user.notifications[i].date);
+            dateInfo.push({minutes: temp.getMinutes(), hours: temp.getHours(), day: temp.getDay(), month: temp.getMonth(), year: temp.getFullYear()}); 
+        }
+        return dateInfo;
     };
     
     overview.getNotes = function(){
@@ -60,5 +68,6 @@ app.controller('homeController', ['$scope', 'overview', function($scope, overvie
     $scope.friends = overview.getFriends();
     $scope.discussions = overview.getDiscussions();
     $scope.notifications = overview.getNotifications();
+    $scope.notificationDate = overview.getNotificationDate();
    
 }]);

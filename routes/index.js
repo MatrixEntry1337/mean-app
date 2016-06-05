@@ -452,7 +452,7 @@ router.post('/create/new/note', auth, function(req, res, next){
       user.notes.push({ title: req.body.title, summary: req.body.summary, content: req.body.content });
       user.save(function(err, user){
         if(err) return next(err);
-        res.json(user.notes);
+        res.json(user.notes[(user.notes.length)-1]);
       });
     }
   });
@@ -556,15 +556,15 @@ router.post('/send/friend/request', auth, function(req, res, next){
         else{
           user.notifications.push({ 
             user: requestUser,  
-            notType: 0, 
-            notSummary: "You have sent the user "  +  requestUser.username + " a friend request.",
-            notStatus: "Sent"
+            type: 0, 
+            summary: "Your friend request has been sent.",
+            status: "Pending..."
           });
           requestUser.notifications.push({
             user: user,  
-            notType: 1, 
-            notSummary: "You have received a friend request from the user "  +  user.username,
-            notStatus: "Received"
+            type: 1, 
+            summary: "You have a new friend request.",
+            status: "Pending..."
           });
           user.save(function(err){
             if(err) return next(err);

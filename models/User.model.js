@@ -22,9 +22,9 @@ var UserSchema = new mongoose.Schema({
     dateJoined: { type: Date, default: Date.now },
     notifications: [{
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      notType: { type: Number }, 
-      notSummary: { type: String},
-      notStatus: { type: String},
+      type: { type: Number }, 
+      summary: { type: String},
+      status: { type: String},
       date: { type: Date, default: Date.now }
     }],
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
