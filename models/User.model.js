@@ -19,39 +19,6 @@ var UserSchema = new mongoose.Schema({
     companyName: { type: String },
     role: { type: String },
     summary: {type: String},
-    dateJoined: { type: Date, default: Date.now },
-    notifications: [{
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      type: { type: Number }, 
-      summary: { type: String},
-      status: { type: String},
-      date: { type: Date, default: Date.now }
-    }],
-    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    numFriends: { type: Number, default: 0 },
-    experiences: [{
-      companyName: { type: String },
-      role: { type: String},
-      start: { type: String },
-      end: { type: String},
-      description: { type: String }
-    }],
-    education: [{
-      schoolName: { type: String},
-      program: { type: String},
-      start: { type: String },
-      end: { type: String },
-      description: { type: String }
-    }],
-    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
-    discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
-    comments: { 
-      text:{ type: String}, 
-      date: { type: Date, default: Date.now },
-      upvotes: { type: Number, default: 0 },
-      postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } 
-    },
     socialContacts: [{
       socialSite: { type: String},
       socialName: { type: String},
@@ -61,14 +28,63 @@ var UserSchema = new mongoose.Schema({
       skillName: { type: String},
       skillLevel: { type: Number},
     }],
+    education: [{
+      schoolName: { type: String},
+      program: { type: String},
+      start: { type: String },
+      end: { type: String },
+      description: { type: String }
+    }],
+    experiences: [{
+      companyName: { type: String },
+      role: { type: String},
+      start: { type: String },
+      end: { type: String},
+      description: { type: String }
+    }],
+    
+    dateJoined: { type: Date, default: Date.now },
+    
+    discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
+    eventInvites: [{
+	    sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+	    eventRef: {type: mongoose.Schema.Types.ObjectId, ref: 'Event'},
+	    acceptDeny: {type: Boolean},
+    }],
     notes: [{ 
       title: { type: String},
       summary: { type: String},
       date: { type: String, default: Date.now },
       content: { type: String }
-    }]
+    }],
+    
+    notifications: [{
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      type: { type: Number }, 
+      summary: { type: String},
+      status: { type: String},
+      date: { type: Date, default: Date.now }
+    }],
+    
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    
+    comments: [{ 
+      text:{ type: String}, 
+      date: { type: Date, default: Date.now },
+      upvotes: { type: Number, default: 0 },
+      postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } 
+    }],
+    latestFriendComments: [{
+	    sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+	    sentTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+	    message: { type: String },
+	    date: { type: Date }
+    }],
+    
+    
 });
-
 
 UserSchema.methods.addUser = function(cb) {
   this.numFriends += 1;

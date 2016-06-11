@@ -1,0 +1,21 @@
+<!--Profile Event-->
+<div class="col-sm-6 md-margin-bottom-20">
+	<div class="panel panel-profile no-bg">
+		<div class="panel-heading overflow-h">
+			<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Upcoming Events</h2>
+			<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-event">+add</button>
+		</div>
+		<div id="scrollbar2" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
+			<div class="profile-event" ng-repeat="event in events.slice().reverse() | limitTo:5 track by $index">
+				<div class="date-formats">
+					<span>{{ eventDate.day[$index] }}</span>
+					<small>{{ eventDate.month[$index] }}, {{ eventDate.year[$index] }}</small>
+				</div>
+				<div class="overflow-h">
+					<h3 class="heading-xs"><a href="#">{{ event.title }}</a></h3>
+					<p>{{ event.summary }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

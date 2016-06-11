@@ -1,0 +1,1 @@
+var projectModule = angular.module('project', ['account', 'auth']);

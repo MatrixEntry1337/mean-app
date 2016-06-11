@@ -1,4 +1,4 @@
-app.controller('ContentProfileController', ['$scope', 
+mainModule.controller('ContentProfileController', ['$scope', 
 function($scope) {
     $scope.menus = [
         { title: " Overall", className: "fa fa-bar-chart-o", sref: "overall" },

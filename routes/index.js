@@ -338,6 +338,24 @@ router.post('/create/event/comment', auth, function(req, res, next){
   
 });
 
+//Invite friend to event****
+router.post('/invite/friend/event', auth, function(req, res, next){
+	var query = User.findOne({username: req.payload.username}, '_id');
+	var query2 = User.findOne({username: req.body.friend}, 'eventInvites');
+	
+	 query.exec(function(err, user){
+		if(err) return next(err);
+		if(!user) console.log("/send/friend/comment - something went wrong when trying to access this user in the database");
+		else{
+			query2.exec(function(err, friend){
+			  if(err) return next(err);
+				friend.eventInvites.push({sentBy: User, eventRef: req.body.event});
+			});
+		}
+  });
+});
+
+
 //Get all events - test function
 router.get('/all/events', function(req, res, next){
   Event.find(function(err, events){
@@ -590,7 +608,50 @@ router.get('/all/user/comments', auth, function(req, res, next){
   });
 });
 
-//Send comment to another user
+//Get friend comments ****
+router.get('/friend/comments', auth, function(req, res, next){
+	var query = User.findOne({username: req.payload.username}, 'latestFriendComments');
+	
+	query.exec(function(err, user){
+		if(err) return next(err);
+		if(!user) console.log("/friend/comments - something went wrong when trying to access this user in the database");
+		else{
+			res.json(user.latestFriendComments);
+		}
+	});
+});
 
+//Send comment to another user
+//public comments to profile******
+router.post('/send/friend/comment', auth, function(req, res, next){
+	var query = User.findOne({username: req.payload.username}, 'friends');
+	var query2 = User.findOne({username: req.body.friend});
+	
+	query.exec(function(err, user){
+		if(err) return next(err);
+		if(!user) console.log("/send/friend/comment - something went wrong when trying to access this user in the database");
+		else{
+			query2.exec(function(err,friend){
+				if(err) return next(err);
+				if(!friend) console.log("/send/friend/comment - something went wrong when trying to access this user in the database");
+				else{
+					//send comment to friend
+					var dateNow = Date.now();
+					friend.comments.push({sentBy: user, message: req.body.message, date: dateNow});
+					friend.save(function(err){
+						if(err) return next(err);
+					});
+					//notify other friends of comments
+					user.populate('friends', function(err, user){
+						if(err) return next(err);
+						for(var i = 0; i < user.friends.length; i++){
+							user.friends[i].latestFriendComments.push({sentBy: user, sentTo: friend, message: req.body.message, date: dateNow});
+						}
+					});
+				}
+		  });
+		} 
+	});
+});
 
 module.exports = router; 

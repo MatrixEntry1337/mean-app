@@ -51,7 +51,7 @@
 </head>
 
 
-<body ng-app="km-app">
+<body ng-app="main">
 	<div class="wrapper">
 		<!--=== Header ===-->
 		<div class="header" ng-controller="navBarController">
@@ -74,60 +74,11 @@
 					</ul>
 				</div>
 				<!-- End Topbar -->
-
-				<!-- Toggle get grouped for better mobile display -->
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="fa fa-bars"></span>
-				</button>
-				<!-- End Toggle -->
-			</div><!--/end container-->
-
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse mega-menu navbar-responsive-collapse">
-				<div class="container"0>
-					<ul class="nav navbar-nav">
-						<!-- Main Titles -->
-						<li class="dropdown" ng-repeat="menuContent in menuContents">
-							<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-								{{ menuContent.title }}
-							</a>
-							<ul class="dropdown-menu">
-								
-								<!-- Options -->
-								<li class="dropdown-submenu" ng-repeat="content in menuContent.subtitles">
-									<a href="javascript:void(0);">{{ content.title }}</a>
-									<ul class="dropdown-menu">
-										<li ng-repeat="option in content.options"><a target="_blank" href="#">{{ option.title }}</a></li>
-									</ul>
-								</li>
-								<!-- End Options -->
-								
-							</ul>
-						</li>
-						<!-- End Main Titles -->
-
-						<!-- Search Block -->
-						<li>
-							<i class="search fa fa-search search-btn"></i>
-							<div class="search-open">
-								<div class="input-group animated fadeInDown">
-									<input type="text" class="form-control" placeholder="Search">
-									<span class="input-group-btn">
-										<button class="btn-u" type="button">Go</button>
-									</span>
-								</div>
-							</div>
-						</li>
-						<!-- End Search Block -->
-					</ul>
-				</div><!--/end container-->
-			</div><!--/navbar-collapse-->
 		</div>
 		<!--=== End Header ===-->
 
 		<ui-view></ui-view>
-
+		
 		<!--=== Footer Version 1 ===-->
 		<div class="footer-v1">
 			<div class="footer">
@@ -256,19 +207,15 @@
 	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 	
 	<!-- Modules -->
-    <script type="text/javascript" src="assets/modules/app.js"></script>
+    <script type="text/javascript" src="assets/modules/main.js"></script>
+    <script type="text/javascript" src="assets/modules/login.js"></script>
 	
 	<!-- Controllers -->
 	<script type="text/javascript" src="assets/controllers/authenticate.js"></script>
 	<script type="text/javascript" src="assets/controllers/account.js"></script>
-	<script type="text/javascript" src="assets/controllers/nav.js"></script>
 	<script type="text/javascript" src="assets/controllers/profile-content.js"></script>
-	<script type="text/javascript" src="assets/controllers/notifications.js" ></script>
-	<script type="text/javascript" src="assets/controllers/overall.js"></script>
-	<script type="text/javascript" src="assets/controllers/notes.js"></script>
-	<script type="text/javascript" src="assets/controllers/events.js"></script>
-	<script type="text/javascript" src="assets/controllers/friends.js"></script>
-	<script type="text/javascript" src="assets/controllers/alarms.js"></script>
+	<script type="text/javascript" src="assets/controllers/settings.js"></script>
+	<script type="text/javascript" src="assets/controllers/calendar.js"></script>
 	
 	<!-- JS Implementing Plugins -->
 	<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>

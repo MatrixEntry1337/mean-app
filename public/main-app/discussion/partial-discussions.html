@@ -1,0 +1,22 @@
+<!-- Discussions -->
+<div class="col-sm-5">
+	<div class="panel panel-profile">
+		<div class="panel-heading overflow-h">
+			<h2 class="panel-title heading-sm pull-left"><i class="fa fa-comments-o"></i> Discussions</h2>
+			<button class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#create-discussion">+add</button>
+		</div>
+		<div id="scrollbar4" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
+			<div class="comment" ng-repeat="discussion in discussions.slice().reverse() | limitTo:5 track by $index">
+				<div class="overflow-h">
+					<strong>{{ discussion.title }}<small class="pull-right">{{ discussionElapsedTime($index) }}</small></strong>
+					<p>{{ discussion.description }}</p>
+					<ul class="list-inline comment-list">
+						<li><i class="fa fa-heart"></i> <a href="#">{{ discussion.upvote }} </a></li>
+						<li><i class="fa fa-comments"></i> <a href="#">{{ numComments }}</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Discusssions -->

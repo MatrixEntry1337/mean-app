@@ -1,0 +1,21 @@
+<!--Notification-->
+<div class="col-sm-7 sm-margin-bottom-30">
+	<div class="panel panel-profile">
+		<div class="panel-heading overflow-h">
+			<h2 class="panel-title heading-sm pull-left"><i class="fa fa-send"></i> Notifications</h2>
+			<a href="#"><i class="fa fa-cog pull-right"></i></a>
+		</div>
+		<div id="scrollbar3" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
+			<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="notification in notifications.slice().reverse() | limitTo:5 track by Index">
+				<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+				<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
+				<div class="overflow-h">
+					<strong class="color-yellow">{{notification.status}}<small class="pull-right">
+						<em>{{ notificationElapsedTime($index) }}</em></small></strong>
+					<p>{{ notification.summary }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Notification-->

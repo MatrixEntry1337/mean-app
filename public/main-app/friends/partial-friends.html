@@ -1,0 +1,28 @@
+<!--Friends-->
+<div class="panel panel-profile">
+	<div class="panel-heading overflow-h">
+		<h2 class="panel-title heading-sm pull-left"><i class="fa fa-tasks"></i>friends</h2>
+		<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" data-toggle="modal" data-target="#add-friend" >+add</button>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-sm-6" ng-repeat="friend in friends">
+				<div class="profile-blog blog-border">
+					<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
+					<div class="name-location">
+						<strong>{{ friend.firstName }} {{ friend.lastName }}</strong>
+						<span><i class="fa fa-map-marker"></i><a href="#">{{ friend.address }},</a> <a href="#">{{ friend.country }}</a></span>
+					</div>
+					<div class="clearfix margin-bottom-20"></div>
+					<p>Info here</p>
+					<hr>
+					<ul class="list-inline share-list">
+						<li><i class="fa fa-bell"></i><a href="#"> </a></li>
+						<li><i class="fa fa-group"></i><a href="#">{{ numFriends }} Friends</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--End Friends-->

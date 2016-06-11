@@ -1,0 +1,23 @@
+        		<!-- section-settings -->
+        		<!-- Profile Content -->
+				<div class="col-md-9">
+					<div class="profile-body margin-bottom-20">
+						<div class="tab-v1">
+							<ul class="nav nav-justified nav-tabs">
+								<li ui-sref-active="active">
+									<a ui-sref="user_account.settings.profile">Edit Profile</a>
+								</li>
+								<li ui-sref-active="active">
+									<a  ui-sref="user_account.settings.password">Change Password</a>
+								</li>
+								<li ui-sref-active="active">
+									<a  ui-sref="user_account.settings.notification" >Notification Settings</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<ui-view></ui-view>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End Profile Content -->

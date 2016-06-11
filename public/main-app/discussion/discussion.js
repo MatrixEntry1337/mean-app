@@ -1,0 +1,1 @@
+var discussionModule = angular.module('discussion', ['account', 'login']);
