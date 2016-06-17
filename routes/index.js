@@ -65,7 +65,9 @@ router.post('/user/register', function(req, res, next){
 router.post('/user/login', function(req, res, next){
   
   if(!req.body.username || !req.body.password){
+      console.log("It is somewhere here");
     return res.status(400).json({message: 'Please fill out all fields'});
+  
   }
 
   passport.authenticate('local', function(err, user, info){

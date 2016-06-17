@@ -1,5 +1,5 @@
 authModule.controller('loginController', 
-['$scope', '$state', 'authFactory', function($state, $scope, authFactory){
+['$scope', '$state', 'authFactory', function($scope, $state, authFactory){
 	$scope.userRegister = {};
     $scope.userLogin = {};
 

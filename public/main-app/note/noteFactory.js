@@ -6,7 +6,7 @@ noteModule.factory('noteFactory',
 	
 	//Notes
     notes.getNotes = function(){
-        return this.notes.data;
+        return this.data;
     };
     
     notes.newNote = function(note){

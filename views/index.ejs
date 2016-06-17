@@ -45,8 +45,8 @@
 	<link rel="stylesheet" href="assets/css/custom.css">
 	
 	<!-- Angular, UI Router-->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-	<script type-"text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.js"></script>
+	<script type-"text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>	
 		
 </head>
 
@@ -54,10 +54,10 @@
 <body ng-app="main">
 	<div class="wrapper">
 		<!--=== Header ===-->
-		<div class="header" ng-controller="navBarController">
+		<div class="header" ng-controller="authController">
 			<div class="container">
 				<!-- Logo -->
-				<a class="logo" ui-sref="user_account.overview">
+				<a class="logo" ui-sref="user_account.home">
 					<img src="assets/img/logo1-default.png" alt="Logo">
 				</a>
 				<!-- End Logo -->
@@ -74,6 +74,7 @@
 					</ul>
 				</div>
 				<!-- End Topbar -->
+			</div>
 		</div>
 		<!--=== End Header ===-->
 
@@ -207,15 +208,32 @@
 	<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 	
 	<!-- Modules -->
-    <script type="text/javascript" src="assets/modules/main.js"></script>
-    <script type="text/javascript" src="assets/modules/login.js"></script>
+    <script type="text/javascript" src="main-app/main.js"></script>
+    <script type="text/javascript" src="main-app/authenticate/auth.js"></script>
+    <script type="text/javascript" src="main-app/account/account.js"></script>
+    <script type="text/javascript" src="main-app/note/note.js"></script>
+    <script type="text/javascript" src="main-app/discussion/discussion.js"></script>
+    <script type="text/javascript" src="main-app/event/event.js"></script>
+    <script type="text/javascript" src="main-app/friend/friend.js"></script>
+    <script type="text/javascript" src="main-app/notification/notification.js"></script>
+	
+	<!-- Services -->
+	<script type="text/javascript" src="main-app/authenticate/authFactory.js"></script>
+	<script type="text/javascript" src="main-app/account/accountFactory.js"></script>
+	<script type="text/javascript" src="main-app/note/noteFactory.js"></script>
+	<script type="text/javascript" src="main-app/discussion/discussionFactory.js"></script>
+	<script type="text/javascript" src="main-app/event/eventFactory.js"></script>
+	<script type="text/javascript" src="main-app/friend/friendFactory.js"></script>
+	<script type="text/javascript" src="main-app/notification/notificationFactory.js"></script>
 	
 	<!-- Controllers -->
-	<script type="text/javascript" src="assets/controllers/authenticate.js"></script>
-	<script type="text/javascript" src="assets/controllers/account.js"></script>
-	<script type="text/javascript" src="assets/controllers/profile-content.js"></script>
-	<script type="text/javascript" src="assets/controllers/settings.js"></script>
-	<script type="text/javascript" src="assets/controllers/calendar.js"></script>
+	<script type="text/javascript" src="main-app/authenticate/authController.js"></script>
+	<script type="text/javascript" src="main-app/account/accountController.js"></script>
+	<script type="text/javascript" src="main-app/note/noteController.js"></script>
+	<script type="text/javascript" src="main-app/discussion/discussionController.js"></script>
+	<script type="text/javascript" src="main-app/event/eventController.js"></script>
+	<script type="text/javascript" src="main-app/friend/friendController.js"></script>
+	<script type="text/javascript" src="main-app/notification/notificationController.js"></script>
 	
 	<!-- JS Implementing Plugins -->
 	<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>

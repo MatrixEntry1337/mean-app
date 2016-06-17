@@ -1,2 +1,2 @@
-var eventModule = angular.module('event', ['account', 'login']);
+var eventModule = angular.module('event', []);
 

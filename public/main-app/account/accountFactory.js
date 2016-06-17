@@ -1,5 +1,6 @@
 accountModule.factory('accountFactory', ['$http', 'authFactory', function($http, authFactory){
 	var account = {};
+	account.user = {};
 	
 	 //Get user info 
     account.getUserInfo = function(){

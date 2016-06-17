@@ -1,53 +1,67 @@
-var mainModule = angular.module("main", ['ui.router', 'account', 'comment', 'discussion', 'event', 'friend', 'note', 'notification', 'project']);
+var mainModule = angular.module("main", ['ui.router', 'auth', 'account', 'discussion', 'event', 'friend', 'note', 'notification']);
 
 mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider){
    $urlRouterProvider.otherwise('login_or_register');
     
     //states 
     $stateProvider
-        //abstract parent
+        .state('login_or_register', {
+            url: '/login_or_register',
+            templateUrl: 'main-app/sections/login-or-register.html',
+            controller: 'authController',
+            onEnter: ['$state', 'authFactory', function($state, authFactory){
+                if(authFactory.isLoggedIn()){
+                    $state.go('user_account.home');
+                }
+            }]
+        })
+        //abstract parent 
         .state('user_account', {
             abstract: true,
             url: '/user_account',
             templateUrl: 'main-app/sections/abstract-user-account.html',
-            onEnter: ['$state', 'auth', function($state, auth){
-                if(!auth.isLoggedIn()){
+            onEnter: ['$state', 'authFactory', function($state, authFactory){
+                if(!authFactory.isLoggedIn()){
                     $state.go('login_or_register');
                 }
             }],
             resolve: {
-                    postPromise: ['account', function(user){
+                    postPromise: ['accountFactory', function(user){
                         return user.getUserInfo();
                     }]
                 }
         })
         
-        //child
+        //child 
             .state('user_account.home',{
                 views: {
-                    'notes': { 
-                        url: '/home',
-                        templateUrl: 'main-app/data/note/'
+                    '':{
+                        templateUrl: 'main-app/sections/section-home.html',
                     },
-                    'comments': {
-                         url: '/home',
-                        templateUrl: 'main-app/data/comment/'
+                    'notes@user_account.home': {
+                        templateUrl: 'main-app/note/partial-notes.html',
+                        controller: 'noteController'
                     },
-                    'discussions': {
-                         url: '/home',
-                        templateUrl: 'main-app/data/discussion/'
+                    'events@user_account.home': {
+                        templateUrl: 'main-app/event/partial-events.html',
+                        controller: 'eventController'
                     },
-                    'events': {
-                         url: '/home',
-                        templateUrl: 'main-app/data/event/'
+                    'friends@user_account.home': {
+                        templateUrl: 'main-app/friend/partial-friends.html',
+                        controller: 'friendController'
                     },
-                    'friends': {
-                         url: '/home',
-                        templateUrl: 'main-app/data/comment/'
+                    'notifications@user_account.home': {
+                        templateUrl: 'main-app/notification/partial-notifications.html',
+                        controller: 'notificationController'
                     },
+                    'discussions@user_account.home': {
+                        templateUrl: 'main-app/discussion/partial-discussions.html',
+                        controller: 'discussionController'
+                    }
                 },
-                onEnter: ['$state', 'auth', function($state, auth){
-                        if(!auth.isLoggedIn()){
+                url: '/home',  
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                        if(!authFactory.isLoggedIn()){
                             $state.go('login_or_register');
                         }
                     }]
@@ -56,9 +70,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         //child
             .state('user_account.profile',{
                 url:'/profile',
-                templateUrl: 'assets/partials/partial-profile.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-profile.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -67,9 +81,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         //child
             .state('user_account.users', {
                 url:'/users',
-                templateUrl: 'assets/partials/partial-users.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-users.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -78,9 +92,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         //child
             .state('user_account.projects', {
                 url:'/projects',
-                templateUrl: 'assets/partials/partial-projects.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-projects.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -89,9 +103,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         //child
             .state('user_account.comments', {
                 url:'/comments',
-                templateUrl: 'assets/partials/partial-comments.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-comments.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -100,9 +114,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         //child
             .state('user_account.history', {
                 url:'/history',
-                templateUrl: 'assets/partials/partial-history.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-history.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -112,10 +126,10 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.settings', {
                 abstract: true,
                 url:'/settings',
-                templateUrl: 'assets/partials/partial-settings.html',
+                templateUrl: 'main-app/sections/section-settings.html',
              
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -124,9 +138,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             //child
             .state('user_account.settings.profile', {
                 url:'/profile',
-                templateUrl: 'assets/partials/partial-settings-profile.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-settings-profile.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -135,9 +149,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             //child
             .state('user_account.settings.password', {
                 url:'/password',
-                templateUrl: 'assets/partials/partial-settings-password.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-settings-password.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -146,20 +160,11 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             //child
             .state('user_account.settings.notification', {
                 url:'/notification',
-                templateUrl: 'assets/partials/partial-settings-notification.html',
-                onEnter: ['$state', 'auth', function($state, auth){
-                    if(!auth.isLoggedIn()){
+                templateUrl: 'main-app/sections/section-settings-notification.html',
+                onEnter: ['$state', 'authFactory', function($state, authFactory){
+                    if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
-            })
-            
-        .state('new_note', {
-            views: {
-                'modal': {
-                    url: '/create_note',
-                    templateUrl: 'assets/partials/partial-notecreation.html'
-                }
-            }
-        });
+            });
 }]);

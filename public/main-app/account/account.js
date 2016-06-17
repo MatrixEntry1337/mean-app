@@ -1,2 +1,2 @@
-var accountModule = angular.module('account', ['ui.router', 'login']);
+var accountModule = angular.module('account', []);
 

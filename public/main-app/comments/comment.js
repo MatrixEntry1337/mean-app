@@ -1,1 +1,0 @@
-var commentModule = angular.module('comment', ['auth', 'account']);

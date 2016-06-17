@@ -1,1 +1,1 @@
-var notificationModule = angular.module('notification', ['login', 'account']);
+var notificationModule = angular.module('notification', []);

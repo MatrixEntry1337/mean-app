@@ -5,7 +5,7 @@ eventModule.factory('eventFactory',
 	
 	//Events
     events.getEvents = function(){
-        return events.data;
+        return this.data;
     };
     
     events.newEvent = function(event){

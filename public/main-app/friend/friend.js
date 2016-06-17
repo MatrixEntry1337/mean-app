@@ -1,0 +1,1 @@
+var friendModule = angular.module('friend', []);

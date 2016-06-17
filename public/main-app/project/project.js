@@ -1,1 +1,1 @@
-var projectModule = angular.module('project', ['account', 'auth']);
+var projectModule = angular.module('project', []);

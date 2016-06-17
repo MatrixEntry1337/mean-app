@@ -1,4 +1,4 @@
-discussion.Module.factory('discussionFactory', 
+discussionModule.factory('discussionFactory', 
 ['$http', 'accountFactory', 'authFactory', function($http, accountFactory, authFactory){
 	
 	var discussions = {};

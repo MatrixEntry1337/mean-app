@@ -1,4 +1,4 @@
-notificationModule.factory('nofiticationFactory', 
+notificationModule.factory('notificationFactory', 
 ['$http', 'authFactory', 'accountFactory', function($http, authFactory, accountFactory){
 	var notifications = {};
 	notifications.data = accountFactory.user.notifications;
