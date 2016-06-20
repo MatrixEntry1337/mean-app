@@ -1,7 +1,7 @@
 friendModule.factory('friendFactory', 
 ['$http', 'authFactory', 'accountFactory', function($http, authFactory, accountFactory){
 	var friends = {};
-	friends.searchResult;
+	friends.searchResult = [];
 	friends.requestMessage;
 	friends.data = accountFactory.user.friends;
 	
@@ -11,7 +11,6 @@ friendModule.factory('friendFactory',
     };
     
     friends.friendSearch = function(searchParams){
-        
         return $http.post('/find/friend', searchParams, {
             headers: { Authorization: 'Bearer '+authFactory.getToken() }
         }).success(function(data){
@@ -21,7 +20,7 @@ friendModule.factory('friendFactory',
     
     friends.friendRequest = function(user){
         return $http.post('/send/friend/request', user, {
-            headers: { Authorization: 'Bearer '+auth.getToken() }
+            headers: { Authorization: 'Bearer '+authFactory.getToken() }
         }).success(function(data){
             angular.copy(data, friends.requestMessage);    
         });

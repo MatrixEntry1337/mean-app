@@ -127,7 +127,6 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                 abstract: true,
                 url:'/settings',
                 templateUrl: 'main-app/sections/section-settings.html',
-             
                 onEnter: ['$state', 'authFactory', function($state, authFactory){
                     if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
@@ -139,6 +138,7 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.settings.profile', {
                 url:'/profile',
                 templateUrl: 'main-app/sections/section-settings-profile.html',
+                controller: 'accountController',
                 onEnter: ['$state', 'authFactory', function($state, authFactory){
                     if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
@@ -150,6 +150,7 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.settings.password', {
                 url:'/password',
                 templateUrl: 'main-app/sections/section-settings-password.html',
+                controller: 'passwordController',
                 onEnter: ['$state', 'authFactory', function($state, authFactory){
                     if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');
