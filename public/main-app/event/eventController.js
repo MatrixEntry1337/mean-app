@@ -2,6 +2,7 @@ eventModule.controller('eventController', ['$scope', 'eventFactory', function($s
 
 	$scope.newEvent = {};
     $scope.events = eventFactory.getEvents();
+    
     $scope.eventDate = function(index){
     	eventFactory.getEventDate(index);
 	};

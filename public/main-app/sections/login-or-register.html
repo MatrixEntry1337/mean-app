@@ -23,17 +23,19 @@
 				</input>
 			</div>
 
-			<div class="row margin-bottom-70">
+			<div class="row margin-bottom-20">
 				<div class="col-md-12">
 					<button type="submit" class="btn-u btn-block rounded">Sign In</button>
 				</div>
 			</div>
+			
+			<div class="row margin-bottom-70">
+				<div class="col-md-12">
+					<strong class="alert-danger">{{ logError.message }}</strong>
+				</div>
+			</div>
 		</form>
 		<!--End login Block-->
-
-		<div ng-show="error" class="alert alert-danger row">
-			<span>{{ error.message }}</span>
-  		</div>
 		
 		<!--Reg Block-->
 		<form ng-submit="register()" class="form-block reg-block col-md-6 col-sm-12 rounded-right equal-height-column">
@@ -85,8 +87,14 @@
 			<!--</div>-->
 
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-12 margin-bottom-20">
 					<button type="submit" class="btn-u btn-block rounded">Continue</button>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-12">
+					<strong class="alert-danger">{{ regError.message }}</strong>
 				</div>
 			</div>
 		</form>

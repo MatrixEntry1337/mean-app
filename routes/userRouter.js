@@ -16,21 +16,40 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 router.post('/user/register', function(req, res, next){
   
   if(!req.body.username || !req.body.password){
-    return res.status(400).json({message: 'Please fill out all fields'});
+    return res.status(400).json({ message: 'Please fill out all fields' });
   }
-  var user = new User();
   
-  user.username = req.body.username;
-  user.firstName = req.body.firstName;
-  user.lastName = req.body.lastName;
-  user.email = req.body.email;
-  user.setPassword(req.body.password);
+  //check for other users with the same email address and username
+  var query = User.findOne({ email: req.body.email });
+  var query2 = User.findOne({ username: req.body.username });
+  
+  query.exec(function(err, user){
+    if(err) return next(err);
+    query2.exec(function(err2, user2){
+      if(err2) return next(err2);
+      if(user) {
+        return res.status(400).json({ message: "This email address is already in use by another account: " + req.body.email });
+      }
+      else if(user2){ 
+        return res.status(400).json({ message: "This username is already taken: " + req.body.username });
+      }
+      else{
+        var user = new User();
+  
+        user.username = req.body.username;
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        user.email = req.body.email;
+        user.setPassword(req.body.password);
 
-  user.save(function(err, user){
-    if(err) return next(err); 
-    return res.json({ token: user.generateJWT() });
+        user.save(function(err, user){
+          if(err) return next(err);
+          console.log("/user/register - still get to here");
+          return res.json({ token: user.generateJWT() });
+        });
+      }
+    });
   });
-  
 });
 
 //User Login
@@ -80,17 +99,18 @@ router.post('/change/password', auth, function(req, res, next){
         user.setPassword(req.body.newPassword);
         user.save(function(err){
           if(err) return next(err);
-          console.log("here");
           return res.json({ message: "Password has been changed." });
         });
     }
     else
-      return res.json({ message: "Unable to verify user." });
+      return res.status(400).json({ message: "Unable to verify user." });
   });
 });
 
 //Account Info
 router.post('/update/account', auth, function(req, res, next){
+
+  var data = {};
   
   var query = User.findOne({username: req.payload.username}, 'firstName lastName');
   
@@ -99,32 +119,28 @@ router.post('/update/account', auth, function(req, res, next){
     if(!user) return next(new Error('user can\'t be found'));
     
     //name
-    if(req.body.firstName) user.firstName = req.body.firstName;
-    if(req.body.lastName) user.lastName = req.body.lastName;
-    
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
     //email
-    if(req.body.email) user.email = req.body.email;
-    
+    user.email = req.body.email;
     //company name
-    if(req.body.companyName) user.companyName = req.body.companyName;
-    
+    user.companyName = req.body.companyName;
     //mobile phone
-    if(req.body.cellPhone) user.cellPhone = req.body.cellPhone;
-    
+    user.cellPhone = req.body.cellPhone;
     //office Phone
-    if(req.body.officePhone) user.officePhone = req.body.officePhone;
-    
+    user.officePhone = req.body.officePhone;
     //address
-    if(req.body.line1) user.line1 = req.body.line1;
-    if(req.body.line2) user.line2 = req.body.line2;
-    if(req.body.city) user.city = req.body.city;
-    if(req.body.state) user.state = req.body.state;
-    if(req.body.zip) user.zip = req.body.zip;
-    
+    user.line1 = req.body.line1;
+    user.line2 = req.body.line2;
+    user.city = req.body.city;
+    user.state = req.body.state;
+    user.zip = req.body.zip;
     //commit
     user.save(function(err, user){
       if(err) return next(err);
-      res.json(user); 
+      data.message = "Saved Changes";
+      data.user = user;
+      res.json(data); 
     });
   });
 });

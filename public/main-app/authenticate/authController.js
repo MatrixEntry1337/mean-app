@@ -9,7 +9,7 @@ authModule.controller('authController',
 
     $scope.register = function(){
         authFactory.register($scope.userRegister).error(function(error){
-            $scope.error = error;
+            $scope.regError = error;
         }).then(function(){
             $state.go('user_account.home');
         });
@@ -17,7 +17,7 @@ authModule.controller('authController',
 
     $scope.login = function(){
         authFactory.login($scope.userLogin).error(function(error){
-            $scope.error = error;
+            $scope.logError = error;
         }).then(function(){
             $state.go('user_account.home');
         });

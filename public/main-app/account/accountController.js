@@ -7,20 +7,13 @@ accountModule.controller('accountController',
 		$scope.user = accountFactory.getAccountInfo();
 	};
 	
-	//Changes
-	$scope.changesMade = false;
-	$scope.changes = function(){
-		return this.changesMade;
-	};
-	
 	$scope.updateAccount = function(){
-		var original = accountFactory.getAccountInfo();
-		
-		if(!(JSON.stringify(original) === JSON.stringify($scope.user))){
-			accountFactory.updateAccount($scope.user);
-			this.changesMade = true;
-		}
-		else this.changesMade = false;
+		accountFactory.updateAccount($scope.user);
+		setTimeout(function(){
+			$scope.$apply(function(){
+            	$scope.updateAlert = accountFactory.getUpdateAlert();
+            });
+		}, 1000);
 	};
 	
 }]);

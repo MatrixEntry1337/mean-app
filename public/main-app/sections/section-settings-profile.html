@@ -76,7 +76,7 @@
 	</dl>
 	<button type="button" ng-click="getOriginal()" class="btn-u btn-u-default">Cancel</button>
 	<button type="button" ng-click="updateAccount()" class="btn-u">Save Changes</button>
-	<p ng-show="changes()">Changes Saved!</p>
+	<strong class="text-danger">{{ updateAlert }}</strong>
 </div>
 <!--End Profile Settings-->
 

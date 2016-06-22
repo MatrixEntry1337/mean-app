@@ -3,6 +3,7 @@ accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', functio
 	account.user = {};
 	
 	account.passwordAlert;
+	account.updateAlert;
 	
 	 //Get user info 
     account.getUserInfo = function(){
@@ -24,6 +25,10 @@ accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', functio
     
     account.getPasswordAlert = function(){
         return this.passwordAlert;  
+    };
+    
+    account.getUpdateAlert = function(){
+        return this.updateAlert;
     };
     
     //All Info
@@ -48,29 +53,26 @@ accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', functio
         $http.post('/update/account', accountInfo, {
             headers: { Authorization: 'Bearer '+authFactory.getToken() }
             }).success(function(data){
-            
+                
+            account.updateAlert = data.message;    
+                
             //name
-            if(data.firstName) account.user.firstName = data.firstName;
-            if(data.lastName) account.user.lastName = data.lastName;
-            
+            account.user.firstName = data.user.firstName;
+            account.user.lastName = data.user.lastName;
             //companyName
-            if(data.companyName) account.user.companyName = data.companyName;
-            
+            account.user.companyName = data.user.companyName;
             //mobile phone
-            if(data.cellPhone) account.user.cellPhone = data.cellPhone;
-            
+            account.user.cellPhone = data.user.cellPhone;
             //company phone
-            if(data.officePhone) account.user.officePhone = data.officePhone;
-            
+            account.user.officePhone = data.user.officePhone;
             //email
-            if(data.email) account.user.email = data.email;
-            
+            account.user.email = data.user.email;
             //address
-            if(data.line1) account.user.line1 = data.line1;
-            if(data.line2) account.user.line2 = data.line2;
-            if(data.city) account.user.city = data.city;
-            if(data.state) account.user.state = data.state;
-            if(data.zip) account.user.zip = data.zip;
+            account.user.line1 = data.user.line1;
+            account.user.line2 = data.user.line2;
+            account.user.city = data.user.city;
+            account.user.state = data.user.state;
+            account.user.zip = data.user.zip;
         });
     };
     
