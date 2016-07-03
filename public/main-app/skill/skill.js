@@ -1,0 +1,1 @@
+var skillModule = angular.module('skill', []);

@@ -17,12 +17,12 @@ var UserSchema = new mongoose.Schema({
     cellPhone: { type: String },
     officePhone: { type: String }, 
     companyName: { type: String },
-    role: { type: String },
+    job: { type: String },
+    position: { type: String },
     summary: {type: String},
     socialContacts: [{
       socialSite: { type: String},
-      socialName: { type: String},
-      notes: { type: String }
+      socialName: { type: String}
     }],
     skills: [{ 
       skillName: { type: String},
@@ -31,15 +31,15 @@ var UserSchema = new mongoose.Schema({
     education: [{
       schoolName: { type: String},
       program: { type: String},
-      start: { type: String },
-      end: { type: String },
+      start: { type: Date },
+      end: { type: Date },
       description: { type: String }
     }],
     experiences: [{
       companyName: { type: String },
       role: { type: String},
-      start: { type: String },
-      end: { type: String},
+      start: { type: Date },
+      end: { type: Date },
       description: { type: String }
     }],
     
@@ -56,7 +56,7 @@ var UserSchema = new mongoose.Schema({
     notes: [{ 
       title: { type: String},
       summary: { type: String},
-      date: { type: String, default: Date.now },
+      date: { type: Date, default: Date.now },
       content: { type: String }
     }],
     

@@ -75,8 +75,8 @@ router.get('/retrieve/user/populate', auth, function(req, res, next) {
   var query = User.findOne({username: req.payload.username});
 
   query.exec(function(err, user){
-    if(err){ return next(err); }
-    if(!user){ console.log('/retrieve/user/populate - something went wrong with accessing the user account'); }
+    if(err) return next(err); 
+    if(!user) console.log('/retrieve/user/populate - something went wrong with accessing the user account'); 
     else{
       user.populate('events discussions projects', function(err, user){
         if(err) return next(err); 

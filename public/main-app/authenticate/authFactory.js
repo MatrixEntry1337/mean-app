@@ -1,4 +1,5 @@
-authModule.factory('authFactory', ['$http', '$window', '$log', function($http, $window, $log){
+authModule.factory('authFactory', 
+['$http', '$window', '$log', function($http, $window, $log){
     var auth = {};
    
     auth.saveToken = function(token){

@@ -8,6 +8,8 @@ router.use(require('./eventRouter'));
 router.use(require('./friendRouter'));
 router.use(require('./noteRouter'));
 router.use(require('./projectRouter'));
+router.use(require('./educationRouter'));
+router.use(require('./experienceRouter'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

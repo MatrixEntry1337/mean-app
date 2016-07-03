@@ -1,4 +1,5 @@
-accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', function($http, authFactory, $log){
+accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', 
+function($http, authFactory, $log){
 	var account = {};
 	account.user = {};
 	
@@ -31,7 +32,7 @@ accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', functio
         return this.updateAlert;
     };
     
-    //All Info
+    //account page info
     account.getAccountInfo = function(){
         return { 
             firstName: account.user.firstName, 
@@ -48,11 +49,25 @@ accountModule.factory('accountFactory', ['$http', 'authFactory', '$log', functio
         };
     };
     
+    //profile page info
+    account.getProfileInfo = function(){
+        return {
+            firstName: account.user.firstName,
+            lastName: account.user.lastName,
+            job: account.user.job,
+            position: account.user.position,
+            socialContacts: account.user.socialContacts,
+            skills: account.user.skills,
+            experiences: account.user.experiences,
+            education: account.user.education
+        };  
+    };
+    
     //Update Account
     account.updateAccount = function(accountInfo){
         $http.post('/update/account', accountInfo, {
-            headers: { Authorization: 'Bearer '+authFactory.getToken() }
-            }).success(function(data){
+        headers: { Authorization: 'Bearer '+authFactory.getToken() }
+        }).success(function(data){
                 
             account.updateAlert = data.message;    
                 

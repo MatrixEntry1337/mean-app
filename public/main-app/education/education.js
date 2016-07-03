@@ -1,0 +1,1 @@
+var educationModule = angular.module('education', []);

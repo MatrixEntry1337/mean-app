@@ -1,0 +1,22 @@
+<!-- Partial Experience -->
+
+<div class="panel panel-profile">
+	<div class="panel-heading overflow-h">
+		<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i> Experience</h2>
+		<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" 
+		ng-click="open()">+add</button>
+	</div>
+	<div class="panel-body margin-bottom-40">
+		<ul class="timeline-v2 timeline-me">
+			<li ng-repeat="experience in experiences">
+				<time datetime="" class="cbp_tmtime"><span>{{ experience.role }}</span> 
+				<span>{{ experience.start | date }} - {{ experience.end | date  }}</span></time>
+				<i class="cbp_tmicon rounded-x hidden-xs"></i>
+				<div class="cbp_tmlabel">
+					<h2>{{ experience.companyName }}</h2>
+					<p>{{ experience.description }}</p>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

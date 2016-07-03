@@ -142,7 +142,6 @@ body.header-fixed-space-default {
 	z-index: 99;
 	background: #fff;
 	position: relative;
-	border-bottom: solid 2px #eee;
 }
 
 /*Header Container*/

@@ -1,0 +1,22 @@
+<!-- Partial Education -->
+
+<div class="panel panel-profile">
+	<div class="panel-heading overflow-h">
+		<h2 class="panel-title heading-sm pull-left"><i class="fa fa-mortar-board"></i> Education</h2>
+		<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" 
+			ng-click="open()">+add</button>
+	</div>
+	<div class="panel-body">
+		<ul class="timeline-v2 timeline-me">
+			<li ng-repeat="school in education">
+				<time datetime="" class="cbp_tmtime"><span>{{ school.program }}</span>
+				<span>{{ school.start | date }} - {{ school.end | date }}</span></time>
+				<i class="cbp_tmicon rounded-x hidden-xs"></i>
+				<div class="cbp_tmlabel">
+					<h2>{{ school.schoolName }}</h2>
+					<p>{{ school.description }}</p>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

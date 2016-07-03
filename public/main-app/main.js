@@ -1,4 +1,7 @@
-var mainModule = angular.module("main", ['ui.router', 'auth', 'account', 'discussion', 'event', 'friend', 'note', 'notification']);
+var mainModule = angular.module("main", 
+['ui.router', 'ui.bootstrap', 'kmaModule', 'auth', 'account', 
+'discussion', 'event', 'friend', 'note', 'notification', 'profile', 'education', 
+'experience', 'skill', 'socialContact']);
 
 mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider){
    $urlRouterProvider.otherwise('login_or_register');
@@ -34,6 +37,7 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         
         //child 
             .state('user_account.home',{
+                url: '/home',
                 views: {
                     '':{
                         templateUrl: 'main-app/sections/section-home.html',
@@ -59,7 +63,6 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                         controller: 'discussionController'
                     }
                 },
-                url: '/home',  
                 onEnter: ['$state', 'authFactory', function($state, authFactory){
                         if(!authFactory.isLoggedIn()){
                             $state.go('login_or_register');
@@ -70,7 +73,28 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         //child
             .state('user_account.profile',{
                 url:'/profile',
-                templateUrl: 'main-app/sections/section-profile.html',
+                views: {
+                    '':{
+                        templateUrl: 'main-app/sections/section-profile.html',
+                        controller: 'profileController'
+                    },
+                    'socialContacts@user_account.profile': {
+                        templateUrl: 'main-app/socialContact/partial-social-contacts.html',
+                        controller: 'socialContactController'
+                    },
+                    'skills@user_account.profile': {
+                        templateUrl: 'main-app/skill/partial-skills.html',
+                        controller: 'skillController'
+                    },
+                    'experiences@user_account.profile': {
+                        templateUrl: 'main-app/experience/partial-experiences.html',
+                        controller: 'experienceController'
+                    },
+                    'education@user_account.profile': {
+                        templateUrl: 'main-app/education/partial-education.html',
+                        controller: 'educationController'
+                    }
+                },
                 onEnter: ['$state', 'authFactory', function($state, authFactory){
                     if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');

@@ -8,12 +8,13 @@ accountModule.controller('accountController',
 	};
 	
 	$scope.updateAccount = function(){
-		accountFactory.updateAccount($scope.user);
-		setTimeout(function(){
+		accountFactory.updateAccount($scope.user).error(function(error){
+			$scope.error = error;
+		}).then(function(){
 			$scope.$apply(function(){
             	$scope.updateAlert = accountFactory.getUpdateAlert();
-            });
-		}, 1000);
+            });	
+		});
 	};
 	
 }]);

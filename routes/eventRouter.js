@@ -37,11 +37,34 @@ router.post('/create/new/event', auth, function(req, res, next){
   });
 });
 
+//Delete a router
+router.post('/delte/event', auth, function(req, res, next){
+  
+  var query = User.findOne({ username: req.payload.username });
+  var query2 = Event.findById(req.body.eventId).remove();
+  
+  query.exec(function(err, user){
+    if(err) return next(err);
+    if(!user) console.log("/delete/event - something went wrong when trying to connect to this user" + req.payload.username);
+    else{
+      user.event.splice(req.body.event, 1);
+      user.save(function(err){
+        if(err) return next(err);
+      });
+      query2.exec(function(err, user){
+        if(err) return next(err);
+        if(!user) console.log("/delete/event - something went wrong when tryint to connect to this event");
+        else return res.message("The event was deleted.");
+      });
+    }
+  });
+});
+
 //Create a new event comment
 router.post('/create/event/comment', auth, function(req, res, next){
   
   var query = Event.findById( req.body.event );
-  var query2 = User.findOne({username: req.payload.username });
+  var query2 = User.findOne({ username: req.payload.username });
   
   query.exec(function(err, event){
     if(err) return next(err);
@@ -80,7 +103,7 @@ router.post('/invite/friend/event', auth, function(req, res, next){
   });
 });
 
-
+/******* Test Functions ******/
 //Get all events - test function
 router.get('/all/events', function(req, res, next){
   Event.find(function(err, events){
@@ -103,5 +126,7 @@ router.post('/create/:user/event', function(req, res, next){
     res.json(event);
   });
 });
+
+
 
 module.exports = router;

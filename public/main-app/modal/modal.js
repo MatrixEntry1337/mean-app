@@ -1,0 +1,1 @@
+var modalModule = angular.module('kmaModule', []);
