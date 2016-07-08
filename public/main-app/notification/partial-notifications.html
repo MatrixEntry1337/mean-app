@@ -6,7 +6,7 @@
 			<a href="#"><i class="fa fa-cog pull-right"></i></a>
 		</div>
 		<div id="scrollbar3" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-			<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="notification in notifications.slice().reverse() | limitTo:5 track by Index">
+			<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-repeat="notification in notifications.slice().reverse() | limitTo:5 track by $index">
 				<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
 				<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
 				<div class="overflow-h">

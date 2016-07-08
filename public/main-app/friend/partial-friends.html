@@ -39,29 +39,29 @@
         </div>
         
         <div class="modal-body">
-        	<form  ng-submit="findFriend()" class="form-block reg-block ">
-				<div class="input-group margin-bottom-20">
-					<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
-					<input type="text" class="form-control rounded-right" placeholder="Search by user..." 
-						ng-model="searchEntry.entry"></input>
-					<div>
-						<button type="submit" class="btn btn-default rounded center-block">Search</button>
-					</div>							
-				</div>
-				
-			</form>
+        	<form  ng-submit="findFriend()" class="form-block reg-block margin-bottom-5">
+						<div class="input-group margin-bottom-20">
+							<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
+							<input type="text" class="form-control rounded-right" placeholder="Search by user..." 
+								ng-model="searchEntry.entry"></input>
+						</div>
+						<div>
+								<button type="submit" class="btn btn-default rounded center-block">Search</button>
+						</div>
+					</form>
 			
 			<div ng-repeat="person in searchResults track by $index">
-					<div class="profile-blog blog-border">
+					<div class="profile-blog">
 						<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
-							<div class="name-location">
-								<strong>{{ person.firstName }} {{ person.lastName }}</strong>
-							</div>
-							<div class="clearfix margin-bottom-20"></div>
+						<div class="name-location">
+							<strong>{{ person.username }}</strong>
+						</div>
+						
+						<div>
+							<button ng-disabled="disableInvite(person.username)" ng-click="friendRequest(person.username)"  class="btn btn-default rounded center-block">Friend Request</button>
+						</div>
 					</div>
-					<div >
-						<button ng-click="friendRequest(person.username)"  class="btn btn-default rounded center-block">Friend Request</button>
-					</div>
+				
 					<hr>
 			</div>
         </div>

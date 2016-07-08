@@ -12,30 +12,26 @@ eventModule.controller('eventController', ['$scope', '$uibModal', 'eventFactory'
     //Modal
 	$scope.animationsEnabled = true;
 	
+	$scope.items = { title: 'Events', objects: [{ name:'Title' }, 
+		{ name:'Summary' }, { name:'Event Content' }], singleDate: true};
+	
 	$scope.open = function (size) {
 	    var modalInstance = $uibModal.open({
 			animation: $scope.animationsEnabled,
-			templateUrl: 'main-app/modal/modal-template.html',
-			controller: 'modalInstanceCtrl',
+			templateUrl: 'main-app/modal/modal-template-form.html',
+			controller: 'modalFormCtrl',
 			size: size,
 			resolve: {
 				items: function() {
-					return [
-						{ name: 'Title' },
-						{ name: 'Summary' }, 
-						{ name: 'Event Content' },
-					];
-				},
-				singleDate: function(){
-					return true;
+					return $scope.items;
 				}
 			}
     	});
 
     	modalInstance.result.then(function(items) {
-    		$scope.newEvent.title = items[0].data;
-    		$scope.newEvent.summary = items[1].data;
-    		$scope.newEvent.content = items[2].data;
+    		$scope.newEvent.title = items.objects[0].data;
+    		$scope.newEvent.summary = items.objects[1].data;
+    		$scope.newEvent.content = items.objects[2].data;
     		$scope.newEvent.date = items.date;
     		$scope.createEvent();
     	});

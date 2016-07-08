@@ -69,7 +69,7 @@ router.post('/user/login', function(req, res, next){
   })(req, res, next);
 });
 
-//Populate User Info - events, discussions and projects
+//Get all user info
 router.get('/retrieve/user/populate', auth, function(req, res, next) {
 
   var query = User.findOne({username: req.payload.username});

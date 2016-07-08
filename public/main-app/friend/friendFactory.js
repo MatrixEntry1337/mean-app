@@ -1,5 +1,6 @@
 friendModule.factory('friendFactory', 
-['$http', 'authFactory', 'accountFactory', function($http, authFactory, accountFactory){
+['$http', 'authFactory', 'accountFactory', 'notificationFactory', 
+function($http, authFactory, accountFactory, notificationFactory){
 	var friends = {};
 	friends.searchResult = [];
 	friends.requestMessage;
@@ -22,12 +23,19 @@ friendModule.factory('friendFactory',
         return $http.post('/send/friend/request', user, {
             headers: { Authorization: 'Bearer '+authFactory.getToken() }
         }).success(function(data){
-            angular.copy(data, friends.requestMessage);    
+            notificationFactory.data.push(data);
         });
     };
     
+    friends.checkUser = function(username){
+      for(var i = 0; i < notificationFactory.data.length; i++){
+          if(notificationFactory.data[i].user == username && notificationFactory.data[i].type == 0)
+          return true;
+      }  
+      return false;
+    };
+    
     friends.getSearchResult = function(){
-       
         return this.searchResult;
     };
     

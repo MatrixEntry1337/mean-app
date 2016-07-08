@@ -22,11 +22,12 @@ var UserSchema = new mongoose.Schema({
     summary: {type: String},
     socialContacts: [{
       socialSite: { type: String},
-      socialName: { type: String}
+      socialName: { type: String},
+      socialWebsite: { type: String}
     }],
     skills: [{ 
       skillName: { type: String},
-      skillLevel: { type: Number},
+      skillLevel: { type: String},
     }],
     education: [{
       schoolName: { type: String},
@@ -42,9 +43,7 @@ var UserSchema = new mongoose.Schema({
       end: { type: Date },
       description: { type: String }
     }],
-    
     dateJoined: { type: Date, default: Date.now },
-    
     discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
@@ -59,17 +58,18 @@ var UserSchema = new mongoose.Schema({
       date: { type: Date, default: Date.now },
       content: { type: String }
     }],
-    
     notifications: [{
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      user: { type: String },
       type: { type: Number }, 
       summary: { type: String},
       status: { type: String},
       date: { type: Date, default: Date.now }
     }],
-    
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    
+    friends: [{ 
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        accepted: { type: Boolean },  
+        blocked: { type: Boolean }
+    }],
     comments: [{ 
       text:{ type: String}, 
       date: { type: Date, default: Date.now },
@@ -82,8 +82,6 @@ var UserSchema = new mongoose.Schema({
 	    message: { type: String },
 	    date: { type: Date }
     }],
-    
-    
 });
 
 UserSchema.methods.addUser = function(cb) {

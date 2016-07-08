@@ -28,14 +28,23 @@ router.get('/retrieve/user/friends', auth, function(req, res, next){
 });
 
 //Find a friend
-router.post('/find/friend', function(req, res, next){
+router.post('/find/friend', auth, function(req, res, next){
+ 
+  var query = User.find().and([
+      {username: new RegExp( req.body.entry + '+', 'i' )},
+      {username: { $ne: req.payload.username}}]).select( 'username firstName lastName');
+ 
+  query.exec(function(err, users){
+    if(err) return next(err);
+    if(!users) return console.log("No users found!");
+    else res.json(users);
+  });
  
   // var firstNameQuery = User.findOne({ firstName: req.body.entry });
   // var lastNameQuery = User.findOne({ lastName: req.body.entry });
   // var emailQuery = User.findOne({ email: req.body.entry });
   // var usernameQuery = User.findOne({ username: req.body.entry});
   
-  var query = User.find({ username: new RegExp( req.body.entry + '+', 'i' )}, 'username firstName lastName');
   
   // var userFound = [];
   
@@ -77,55 +86,47 @@ router.post('/find/friend', function(req, res, next){
   //   }
   // });
   
-  
-  query.exec(function(err, users){
-    if(err) return next(err);
-    if(!users) return console.log("No users found!");
-    else{
-      console.log(users);
-      res.json(users);
-    }
-  });
-  
 });
 
 //Send Friend Request
 router.post('/send/friend/request', auth, function(req, res, next){
   
-  var query = User.findOne({username: req.payload.username});
-  var query2 = User.findOne({username: req.body.username});
-    
-  query.exec(function(err, user){
+  var query = User.findOne({username: req.body.username}, 'notifications');
+  var query2 = User.findOne({username: req.payload.username}, 'notifications');
+  
+  query.exec(function(err, requestUser){
+    if(err) return next(err);
+    if(!requestUser) return console.log('Something went wrong with accessing the user to be added account');
+    else{
+      requestUser.notifications.push({
+        user: req.payload.username,  
+        type: 1, 
+        summary: "You have a new friend request from " + req.payload.username + ".",
+        status: "Pending..."
+      });
+      requestUser.save(function(){
+        if(err) return next(err);
+      }); 
+    }
+  });
+  
+  query2.exec(function(err, user){
     if(err) return next(err);
     if(!user) console.log('Something went wrong with accessing the user account');
     else{
-      query2.exec(function(err, requestUser){
+      user.notifications.push({ 
+        user: req.body.username,  
+        type: 0, 
+        summary: "Your friend request has been sent to " + req.body.username +".",
+        status: "Pending..."
+      });
+      user.save(function(err, user){
         if(err) return next(err);
-        if(!requestUser) return console.log('Something went wrong with accessing the user to be added account');
-        else{
-          user.notifications.push({ 
-            user: requestUser,  
-            type: 0, 
-            summary: "Your friend request has been sent.",
-            status: "Pending..."
-          });
-          requestUser.notifications.push({
-            user: user,  
-            type: 1, 
-            summary: "You have a new friend request.",
-            status: "Pending..."
-          });
-          user.save(function(err){
-            if(err) return next(err);
-          });
-          requestUser.save(function(){
-            if(err) return next(err);
-          });
-          res.json("Request Sent!");
-        }
+        res.json(user.notifications[user.notifications.length-1]);
       });
     }
   });
+  
 });
 
 /////////////////////////////////// Comment ////////////////////////////////////

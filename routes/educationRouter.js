@@ -31,13 +31,16 @@ router.post('/add/school', auth, function(req, res, next){
 router.post('/remove/school', auth,  function(req, res, next){
 	var query = User.findOne({ username: req.payload.username });
 	
-		query.exec(function(err, user){
+	query.exec(function(err, user){
 		if(err) return next(err);
 		if(!user) console.log('/add/School/ - something went wrong with accessing the user');
-		else{
-				user.education.splice(req.body.index, 1);
-			}
-		});
+		else{ 
+			user.education.splice(req.body.index, 1);
+			user.save(function(err){
+				if(err) return next(err);	
+			});
+		}
+	});
 });
 
 module.exports = router;

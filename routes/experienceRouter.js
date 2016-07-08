@@ -15,13 +15,32 @@ router.post('/add/experience', auth, function(req, res, next){
 	
 	query.exec(function(err, user){
 		if(err) return next(err);
-		if(!user) console.log('/add/School/ - something went wrong with accessing the user');
+		if(!user) console.log('/add/S/ - something went wrong with accessing the user');
 		else{
 			user.experiences.push(req.body);
 			user.save(function(err){
 				if(err) return next(err);
 				data.exp = req.body;
 				data.message = 'Experience successfully added.';
+				res.json(data);
+			});
+		}
+	});
+});
+
+router.post('add/skill', auth, function(req, res, next){
+	var query = User.findOne({ username: req.payload.username });
+	var data = {};
+	
+	query.exec(function(err, user){
+		if(err) return next(err);
+		if(!user) console.log('/add/skills/ - something went wrong with accessing the user');
+		else{
+			user.skills.push(req.body);
+			user.save(function(err){
+				if(err) return next(err);
+				data.skill = req.body;
+				data.message = "Skill successfully added.";			
 				res.json(data);
 			});
 		}

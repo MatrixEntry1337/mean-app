@@ -13,31 +13,26 @@ experienceModule.controller('experienceController',
 	//Modal
 	$scope.animationsEnabled = true;
 	
+	$scope.items = { title: 'Experience', objects: [{ name:'Company Name' }, 
+		{ name:'Role' }, { name:'Description' }], singleDate: false};
+	
 	$scope.open = function (size) {
-
 	    var modalInstance = $uibModal.open({
 			animation: $scope.animationsEnabled,
-			templateUrl: 'main-app/modal/modal-template.html',
-			controller: 'modalInstanceCtrl',
+			templateUrl: 'main-app/modal/modal-template-form.html',
+			controller: 'modalFormCtrl',
 			size: size,
 			resolve: {
 				items: function() {
-					return [
-						{ name: 'Company Name' },
-						{ name: 'Role' }, 
-						{ name: 'Description' },
-					];
-				},
-				singleDate: function(){
-					return false;
+					return $scope.items;
 				}
 			}
     	});
 
     	modalInstance.result.then(function(items) {
-    		$scope.newExperience.companyName = items[0].data;
-    		$scope.newExperience.role = items[1].data;
-    		$scope.newExperience.description = items[2].data;
+    		$scope.newExperience.companyName = items.objects[0].data;
+    		$scope.newExperience.role = items.objects[1].data;
+    		$scope.newExperience.description = items.objects[2].data;
     		$scope.newExperience.start = items.start;
     		$scope.newExperience.end = items.end;
     		$scope.addExperience();

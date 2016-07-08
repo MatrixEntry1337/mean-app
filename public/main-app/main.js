@@ -103,9 +103,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             })
             
         //child
-            .state('user_account.users', {
-                url:'/users',
-                templateUrl: 'main-app/sections/section-users.html',
+            .state('user_account.friends', {
+                url:'/friends',
+                templateUrl: 'main-app/sections/section-friends.html',
                 onEnter: ['$state', 'authFactory', function($state, authFactory){
                     if(!authFactory.isLoggedIn()){
                         $state.go('login_or_register');

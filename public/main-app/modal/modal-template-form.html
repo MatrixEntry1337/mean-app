@@ -1,28 +1,29 @@
-<!-- Modal content-->
+<!-- Modal content -->
+<!-- reg form date -->
 <div class="modal-content">
     
     <div class="modal-header">
       <button type="button" class="close" ng-click="cancel()">&times;</button>
-      <h4 class="modal-title">Add Education</h4>
+      <h4 class="modal-title">Add {{ items.title }}</h4>
     </div>
     <strong class=text-danger>{{ error.message }}</strong>
     <div class="modal-body">
       	<form ng-submit="submit()" class="form-block reg-block">
-			<div class="input-group margin-bottom-20" ng-repeat="item in items">
+			<div class="input-group margin-bottom-20" ng-repeat="object in items.objects">
 				<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
-				<textarea type="text" class="form-control rounded-right" placeholder="{{ item.name }}" 
-				rows="1" ng-required="true" ng-model="item.data"></textarea>
+				<textarea type="text" class="form-control rounded-right" placeholder="{{ object.name }}" 
+				rows="1" ng-required="true" ng-model="object.data"></textarea>
 			</div>
 					
-			<h4 ng-hide="singleDate()" class="modal-title">Select Date Range</h4>
-			<h4 ng-show="singleDate()" class="modal-title">Select Date</h4>
+			<h4 ng-hide="items.singleDate" class="modal-title">Select Date Range</h4>
+			<h4 ng-show="itmes.singleDate" class="modal-title">Select Date</h4>
         	<br>
         	
-        	<div ng-show="singleDate()" class="input-group margin-bottom-10">
+        	<div ng-show="items.singleDate" class="input-group margin-bottom-10">
 	          	<p class="input-group">
 	            	<input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
 	            	ng-model="items.date" is-open="popupDate.opened" datepicker-options="dateOptions" 
-	            	ng-required="true" ng-disabled="!singleDate()" close-text="Close" placeholder="example: 2012-08-04"/>
+	            	ng-required="true" ng-disabled="!items.singleDate" close-text="Close" placeholder="ex: 08-June-2012"/>
 	            	<span class="input-group-btn">
 	              		<button type="button" class="btn btn-default" ng-click="openDate()">
 	              		<i class="glyphicon glyphicon-calendar"></i></button>
@@ -30,12 +31,12 @@
 	      		</p>
         	</div>
         	
-			<div ng-hide="singleDate()" class="input-group margin-bottom-10">
+			<div ng-hide="items.singleDate" class="input-group margin-bottom-10">
 			  	<h5>Start</h5>
 	          	<p class="input-group">
 	            	<input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
 	            	ng-model="items.start" is-open="popupStart.opened" datepicker-options="dateOptions" 
-	            	ng-required="true" ng-disabled="singleDate()"close-text="Close" placeholder="example: 2012-08-04"/>
+	            	ng-required="true" ng-disabled="items.singleDate"close-text="Close" placeholder="ex: 08-June-2012"/>
 	            	<span class="input-group-btn">
 	              		<button type="button" class="btn btn-default" ng-click="openStart()">
 	              		<i class="glyphicon glyphicon-calendar"></i></button>
@@ -43,12 +44,12 @@
 	      		</p>
         	</div>
         
-        	<div ng-hide="singleDate()"  class="input-group margin-bottom-10">
+        	<div ng-hide="items.singleDate"  class="input-group margin-bottom-10">
 		  		<h5>End</h5>
 			  	<p class="input-group">
                 	<input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
                 	ng-model="items.end" is-open="popupEnd.opened" datepicker-options="dateOptions" 
-                	ng-required="true" ng-disabled="singleDate()"close-text="Close" placeholder="example: 2015-09-10"/>
+                	ng-required="true" ng-disabled="items.singleDate"close-text="Close" placeholder="ex: 23-July-2014"/>
                 	<span class="input-group-btn">
                   		<button type="button" class="btn btn-default" ng-click="openEnd()">
                   		<i class="glyphicon glyphicon-calendar"></i></button>

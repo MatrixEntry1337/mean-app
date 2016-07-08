@@ -8,5 +8,9 @@ socialContactModule.factory('socialContactFactory',
 		return this.data;
 	};
 	
+	// socialContact.addSocialContact = function(social){
+	// 	return $http.post('/add/social');
+	// };
+	
 	return socialContact;
 }]);

@@ -7,7 +7,7 @@ friendModule.controller('friendController', ['$scope', 'friendFactory', function
     $scope.searchResults = friendFactory.getSearchResult();
     $scope.requestMessage = friendFactory.getRequestMessage();
     
-     $scope.findFriend = function(){
+    $scope.findFriend = function(){
         friendFactory.friendSearch($scope.searchEntry).error(function(error){
             $scope.error = error;
         });
@@ -19,4 +19,9 @@ friendModule.controller('friendController', ['$scope', 'friendFactory', function
             $scope.error = error;
         });
     };
+    
+    $scope.disableInvite = function(username){
+        return friendFactory.checkUser(username);
+    };
+    
 }]);

@@ -1,16 +1,14 @@
 <div class="col-sm-6 sm-margin-bottom-30">
 	<div class="panel panel-profile">
 		<div class="panel-heading overflow-h">
-			<h2 class="panel-title heading-sm pull-left"><i class="fa fa-pencil"></i> Social Contacts <small>(option 1)</small></h2>
-			<a href="#"><i class="fa fa-cog pull-right"></i></a>
+			<h2 class="panel-title heading-sm pull-left"><i class="fa fa-pencil"></i> Social Contacts </h2>
+			<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-dark btn-u-xs pull-right" 
+			ng-click="open()">+add</button>
 		</div>
 		<div class="panel-body">
 			<ul class="list-unstyled social-contacts-v2">
-				<li><i class="rounded-x tw fa fa-twitter"></i> <a href="#">edward.rooster</a></li>
-				<li><i class="rounded-x fb fa fa-facebook"></i> <a href="#">Edward Rooster</a></li>
-				<li><i class="rounded-x sk fa fa-skype"></i> <a href="#">edwardRooster77</a></li>
-				<li><i class="rounded-x gp fa fa-google-plus"></i> <a href="#">rooster77edward</a></li>
-				<li><i class="rounded-x gm fa fa-envelope"></i> <a href="#">edward77@gmail.com</a></li>
+				<li ng-repeat="socialContact in socialContacts"><i class="rounded-x tw fa fa-{{ socialContact.socialSite }}"></i>
+				<a href="{{ socialContact.socialWebsite }}">{{ socialContact.socialName }}</a></li>
 			</ul>
 		</div>
 	</div>

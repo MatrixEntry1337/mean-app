@@ -1,0 +1,28 @@
+<!-- Modal content -->
+<!-- reg form no date -->
+<div class="modal-content">
+    
+    <div class="modal-header">
+      <button type="button" class="close" ng-click="cancel()">&times;</button>
+      <h4 class="modal-title">Add {{ items.title }}</h4>
+    </div>
+    
+    <div class="modal-body">
+      	<form ng-submit="submit()" class="form-block reg-block">
+			<div class="input-group margin-bottom-20" ng-repeat="object in items.objects">
+				<span class="input-group-addon rounded-left"><i class="icon-pencil"></i></span>
+				<textarea type="text" class="form-control rounded-right" placeholder="{{ object.name }}" 
+				rows="1" ng-required="true" ng-model="object.data"></textarea>
+			</div>
+			<div>
+				<button type="submit" class="btn btn-default rounded center-block">Submit</button>
+			</div>
+		</form>
+    </div>
+   
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+	
+</div>
+  

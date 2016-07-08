@@ -1,12 +1,8 @@
-modalModule.controller('modalInstanceCtrl', 
-['$scope', '$uibModalInstance', 'items', 'singleDate', 
-function($scope, $uibModalInstance, items, singleDate) {
-
-	$scope.items = items;
+modalModule.controller('modalFormCtrl', 
+['$scope', '$uibModalInstance', 'items', 
+function($scope, $uibModalInstance, items) {
 	
-	$scope.singleDate = function(){
-		return singleDate;	
-	};
+	$scope.items = items;
 	
 	$scope.submit = function () {
     	$uibModalInstance.close($scope.items);
@@ -16,6 +12,11 @@ function($scope, $uibModalInstance, items, singleDate) {
     	$uibModalInstance.dismiss('cancel');
     	$scope.items = {};
 	};
+	
+	// Datepicker //
+	
+	//Datepicker--Format
+	 $scope.format = 'dd-MMMM-yyyy';
 	
 	//Datepicker--Date
 	$scope.popupDate = { opened: false };
