@@ -47,11 +47,6 @@ var UserSchema = new mongoose.Schema({
     discussions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Discussion' }],
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
-    eventInvites: [{
-	    sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-	    eventRef: {type: mongoose.Schema.Types.ObjectId, ref: 'Event'},
-	    acceptDeny: {type: Boolean},
-    }],
     notes: [{ 
       title: { type: String},
       summary: { type: String},
@@ -59,29 +54,19 @@ var UserSchema = new mongoose.Schema({
       content: { type: String }
     }],
     notifications: [{
-      user: { type: String },
+      username: { type: String },
       type: { type: Number }, 
       summary: { type: String},
       status: { type: String},
       date: { type: Date, default: Date.now }
     }],
-    friends: [{ 
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        accepted: { type: Boolean },  
-        blocked: { type: Boolean }
-    }],
-    comments: [{ 
+    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Friend' }],
+    globalComments: [{ 
       text:{ type: String}, 
       date: { type: Date, default: Date.now },
       upvotes: { type: Number, default: 0 },
-      postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } 
-    }],
-    latestFriendComments: [{
-	    sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-	    sentTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-	    message: { type: String },
-	    date: { type: Date }
-    }],
+      postedBy: { type: String , required: true }
+    }]
 });
 
 UserSchema.methods.addUser = function(cb) {

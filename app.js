@@ -12,7 +12,9 @@ var passport = require('passport');
 var Project = require('./models/Project.model');
 var Discussion = require('./models/Discussion.model');
 var Event = require('./models/Event.model');
+var Friend = require('./models/Friend.model');
 var User = require('./models/User.model');
+
 
 //Passport config
 var passConfig = require('./config/passport');

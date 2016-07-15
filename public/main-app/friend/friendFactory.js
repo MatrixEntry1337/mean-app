@@ -1,36 +1,66 @@
 friendModule.factory('friendFactory', 
-['$http', 'authFactory', 'accountFactory', 'notificationFactory', 
-function($http, authFactory, accountFactory, notificationFactory){
+['$http', 'authFactory', 'accountFactory', 'notificationFactory', '$log',  
+function($http, authFactory, accountFactory, notificationFactory, $log){
 	var friends = {};
 	friends.searchResult = [];
+	friends.data = [];
 	friends.requestMessage;
-	friends.data = accountFactory.user.friends;
 	
-	//Friends!!!
+	//Get friends from database
+	friends.findFriends = function(){
+	    return $http.get('/get/friends', {
+            headers: { Authorization: 'Bearer '+ authFactory.getToken() }
+        }).success(function(data){
+            angular.copy(data, friends.data);
+        });
+	}();
+	
+	//Return list of friends!
     friends.getFriends = function(){
-        return friends.data;
+        var returnFriends = [];
+        for(var i = 0; i < this.data.length; i ++){
+            if(this.data[i].accepted == false)
+                returnFriends.push(this.data[i]);
+        }
+        $log.log(returnFriends);
+        return returnFriends;
     };
     
     friends.friendSearch = function(searchParams){
         return $http.post('/find/friend', searchParams, {
-            headers: { Authorization: 'Bearer '+authFactory.getToken() }
+            headers: { Authorization: 'Bearer '+ authFactory.getToken() }
         }).success(function(data){
             angular.copy(data, friends.searchResult); 
         });
     };
     
     friends.friendRequest = function(user){
+        $log.log('test');
         return $http.post('/send/friend/request', user, {
-            headers: { Authorization: 'Bearer '+authFactory.getToken() }
+            headers: { Authorization: 'Bearer '+ authFactory.getToken() }
         }).success(function(data){
-            notificationFactory.data.push(data);
+            $log.log(data);
+            // notificationFactory.data.push(data.notification);
+            // friends.data.push(data.friend);
         });
     };
     
-    friends.checkUser = function(username){
-      for(var i = 0; i < notificationFactory.data.length; i++){
-          if(notificationFactory.data[i].user == username && notificationFactory.data[i].type == 0)
-          return true;
+    friends.acceptFriendRequest = function(user){
+        return $http.post('/accept/friend/request', user, {
+            headers: { Authorization: 'Bearer '+ authFactory.getToken() }
+        }).success(function(data){
+           friends.acceptMessage = data;
+           $log.log(data);
+        });
+    };
+    
+    friends.checkFR = function(username){
+        var check = notificationFactory.getNotifications();
+        $log.log(username);
+      for(var i = 0; i < check.length; i++){
+          $log.log(check[i].username);
+          if(check[i].username == username)
+            return true;
       }  
       return false;
     };

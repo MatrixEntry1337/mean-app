@@ -1,0 +1,27 @@
+<!-- Modal - Confirm -->
+
+<!-- Modal content-->
+<div class="modal-content">
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">&times;</button>
+  	<h4 class="modal-title">{{ items.title }}</h4>
+</div>
+
+<div class="modal-body">
+	<div class="profile-blog">
+		<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
+		<div class="name-location">
+			<strong>{{ person.username }}</strong>
+		</div>
+			
+		<div>
+			<button ng-click="accept()" class="btn btn-default rounded center-block">Accept</button>
+			<button ng-click="deny()" class="btn btn-default rounded center-block">Deny</button>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+</div>
+</div>
+

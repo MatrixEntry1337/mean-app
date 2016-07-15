@@ -27,12 +27,7 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                 if(!authFactory.isLoggedIn()){
                     $state.go('login_or_register');
                 }
-            }],
-            resolve: {
-                    postPromise: ['accountFactory', function(user){
-                        return user.getUserInfo();
-                    }]
-                }
+            }]
         })
         
         //child 
@@ -67,7 +62,12 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                         if(!authFactory.isLoggedIn()){
                             $state.go('login_or_register');
                         }
+                    }],
+                resolve: {
+                    postPromise: ['accountFactory', function(user){
+                        return user.getUserInfo();
                     }]
+                }
             })
             
         //child

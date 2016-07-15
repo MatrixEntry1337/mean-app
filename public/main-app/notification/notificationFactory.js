@@ -1,11 +1,11 @@
 notificationModule.factory('notificationFactory', 
-['$http', 'authFactory', 'accountFactory', function($http, authFactory, accountFactory){
+['$http', 'authFactory', 'accountFactory', '$log', function($http, authFactory, accountFactory, $log){
 	var notifications = {};
 	notifications.data = accountFactory.user.notifications;
 	
 	//Notifications
     notifications.getNotifications = function(){
-      return this.data;  
+        return this.data;  
     };
     
     notifications.getNotificationElapsedTime = function(index){

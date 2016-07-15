@@ -1,0 +1,42 @@
+var express = require('express');
+var router = express.Router();
+var mongoose = require('mongoose');
+var jwt = require('express-jwt');
+
+//Mongoose Models
+var User = mongoose.model('User');
+
+//Authenticate
+var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+
+//////////////////////// Comment ////////////////////////////
+
+router.post('/remove/notifcation', auth, function(req, res, next){
+	var query = User.findOne({ username: req.payload.username }, 'notifcations');
+	
+	query.exec(function(err, user){
+		if(err) return next(err);
+		if(!user) console.log("/remove/notification - There was an error in accessing this user in the db");
+		else{
+			var notification = user.notifications.find(function(notification, index){
+				if(notification._id === req.body._id)
+					return index;
+			});
+			
+			console.log("This is the " + notification);
+			
+			user.notifcations.splice(notification, 1);
+			
+			user.save(function(err, user){
+				if(err) return next(err);
+				if(!user) console.log("/remove/notification - There was an error in saving this user to the db");
+				else{
+					res.send("Notfication has been deleted.");
+				}
+			});
+		}
+	})
+});
+
+
+module.export = router;

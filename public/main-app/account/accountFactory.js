@@ -13,6 +13,7 @@ function($http, authFactory, $log){
             }).success(function(data){
             angular.copy(data, account.user);
         });
+        
     };
     
     account.changePassword = function(verification){

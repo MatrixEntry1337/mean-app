@@ -1,4 +1,6 @@
-friendModule.controller('friendController', ['$scope', 'friendFactory', function($scope, friendFactory){
+friendModule.controller('friendController', 
+['$scope', '$uibModal', 'friendFactory', '$log', 
+function($scope, $uibModal, friendFactory, $log){
 	
 	//Friends
     $scope.requestUser = {};
@@ -20,8 +22,8 @@ friendModule.controller('friendController', ['$scope', 'friendFactory', function
         });
     };
     
-    $scope.disableInvite = function(username){
-        return friendFactory.checkUser(username);
+    $scope.checkFriendRequest = function(username){
+        return friendFactory.checkFR(username);
     };
     
 }]);

@@ -5,35 +5,59 @@ var jwt = require('express-jwt');
 
 //Mongoose Models
 var User = mongoose.model('User');
+var Friend = mongoose.model('Friend');
 
 //Authenticate
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 /////////////////////////////////// Friend ///////////////////////////////////
 
-//Retrieve friends for a given user
-router.get('/retrieve/user/friends', auth, function(req, res, next){
+//test - all friends
+router.get('/all/friends', function(req, res, next){
+  var query = Friend.find().populate('user');
   
-  var query = User.findOne({username : req.payload.username});
+  query.exec(function(err, friends){
+    if(err) return next(err);
+    res.json(friends);
+  });
+  
+});
+
+//Retrieve friends
+router.get('/get/friends', auth, function(req, res, next){
+  var query = Friend.find({ username: req.payload.username })
+    .populate('user', 'firstName lastName discussions projects events friends');
+  
+  query.exec(function(err, friends){
+    if(err) return next(err);
+    if(!friends) console.log("/get/freinds - There was an error in retrieving the friends of this user");
+    else { 
+      console.log(friends);
+      res.json(friends); 
+    }
+  });
+});
+
+//Retrieve friends for a given user
+router.get('/get/user/friends', auth, function(req, res, next){
+  
+  var query = User.findOne({username : req.payload.username}, 'friends').populate('friends');
   query.exec(function(err, user){
     if(err){ return next(err); }
     if(!user){ console.log('/retrieve/user/friends - something went wrong!'); }
-    else{    
-      user.populate('friends', function(err, friends){
-      if(err) return next(err); 
-      res.json(user.friends);
-      });
-    }
+    else res.json(user.friends);
   });
 });
 
 //Find a friend
 router.post('/find/friend', auth, function(req, res, next){
  
-  var query = User.find().and([
-      {username: new RegExp( req.body.entry + '+', 'i' )},
-      {username: { $ne: req.payload.username}}]).select( 'username firstName lastName');
- 
+  var query = User.find({ $and: [
+        {username: new RegExp( req.body.entry + '+', 'i' )},
+        {username: { $ne: req.payload.username}}
+      ]})
+      .select( 'username firstName lastName');
+      
   query.exec(function(err, users){
     if(err) return next(err);
     if(!users) return console.log("No users found!");
@@ -45,89 +69,157 @@ router.post('/find/friend', auth, function(req, res, next){
   // var emailQuery = User.findOne({ email: req.body.entry });
   // var usernameQuery = User.findOne({ username: req.body.entry});
   
-  
-  // var userFound = [];
-  
-  // firstNameQuery.exec(function(err, user){
-  //   if(err) return next(err);
-  //   if(!user) console.log('/find/friend - unable to find user by first name');
-  //   else{
-  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
-     
-     
-  //   }
-  // });
-  
-  // lastNameQuery.exec(function(err, user){
-  //   if(err) return next(err);
-  //   if(!user) console.log('/find/friend - unable to find user by last name');
-  //   else{
-  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
-     
-   
-  //   }
-  // });
-  
-  // emailQuery.exec(function(err, user){
-  //   if(err) return next(err);
-  //   if(!user) console.log('/find/friend - unable to find user by email');
-  //   else{
-  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
-   
-    
-  //   }
-  // });
-  
-  // usernameQuery.exec(function(err, user){
-  //   if(err) return next(err);
-  //   if(!user) console.log('/find/friend - unable to find user by username');
-  //   else{
-  //     userFound.push({firstName: user.firstName, lastName: user.lastName});
-  //   }
-  // });
-  
 });
 
 //Send Friend Request
 router.post('/send/friend/request', auth, function(req, res, next){
+
+  var data = {};
   
-  var query = User.findOne({username: req.body.username}, 'notifications');
-  var query2 = User.findOne({username: req.payload.username}, 'notifications');
-  
-  query.exec(function(err, requestUser){
+  var query = User.find({$or: [
+    {username: req.body.username},
+    {username: req.payload.username}
+    ]})
+    .select('username friends notifications');
+    
+  query.exec(function(err, users){
     if(err) return next(err);
-    if(!requestUser) return console.log('Something went wrong with accessing the user to be added account');
-    else{
-      requestUser.notifications.push({
-        user: req.payload.username,  
-        type: 1, 
-        summary: "You have a new friend request from " + req.payload.username + ".",
-        status: "Pending..."
-      });
-      requestUser.save(function(){
-        if(err) return next(err);
-      }); 
+    if(users.length < 2) {
+      console.log('/send/friend/request - There was an error in accessing the users from the db');
+      res.sendStatus(400);
     }
-  });
-  
-  query2.exec(function(err, user){
-    if(err) return next(err);
-    if(!user) console.log('Something went wrong with accessing the user account');
     else{
-      user.notifications.push({ 
-        user: req.body.username,  
+      
+      //Identify users in array
+      var user = users.findIndex(function(element, index){
+        if(element.username === req.payload.username)
+          return element;
+      });
+      
+      var requestUser = (user + 1) % 2;
+      
+      //create friend document
+      var addRequestUser = new Friend();
+      addRequestUser.user = users[user];
+      addRequestUser.username = users[user].username;
+      addRequestUser.friend = users[requestUser];
+      addRequestUser.sent = true;
+      
+      var addUser = new Friend();
+      addUser.user = users[requestUser];
+      addUser.username = users[requestUser].username;
+      addUser.friend =  users[user];
+      addUser.sent = false;
+      
+      //addFriends
+      users[user].friends.push(addRequestUser);
+      users[requestUser].friends.push(addUser);
+      
+      //notifications
+      users[user].notifications.push({ 
+        username: req.body.username,  
         type: 0, 
         summary: "Your friend request has been sent to " + req.body.username +".",
         status: "Pending..."
       });
-      user.save(function(err, user){
-        if(err) return next(err);
-        res.json(user.notifications[user.notifications.length-1]);
+      
+      users[requestUser].notifications.push({
+        username: req.payload.username,  
+        type: 1, 
+        summary: "You have a new friend request from " + req.payload.username + ".",
+        status: "Pending..."
       });
+      
+      //Save data
+      users[requestUser].save(function(err){
+        if(err) return next(err);
+      });
+      
+      users[user].save(function(err){
+        if(err) return next(err);
+      });
+      
+      addUser.save(function(err){
+        if(err) return next(err);
+      });
+      
+      addRequestUser.save(function(err){
+        if(err) return next(err);
+      });
+      
+      //Return data
+      data.notification = {
+        type: 0, 
+        summary: "Your friend request has been sent to " + req.body.username +".",
+        status: "Pending..."
+      };
+      
+      data.message = "Friend request was successful";
+      res.json(data);
     }
   });
-  
 });
+
+
+//Accept Friend Request
+router.post('/accept/friend/request', auth, function(req, res, next){
+  
+  var query = User.findOne({ username: req.payload.username }, 'friends notifications');
+  var query2 = User.findOne({ username: req.body.user }, 'friends notifications');
+ 
+  query.exec(function(err, user){
+    if(err) return next(err);
+    if(!user) console.log("/accept/friend/request - Something went wrong with trying to access the user account.");
+    else{
+      query2.exec(function(err, friend){
+        if(err) {  return next(err); }
+        if(!friend) console.log("/accept/friend/request - Something went wrong with trying to access the friend's account.");
+        else{
+          //Friends
+          user.friends.push({ user: friend, accepted: true });
+          friend.friends.push({ user: user, accepted: true });
+          
+          //Notifications
+          var notifyUser = user.notifications.find(function(notification){
+          if(notification.user === req.body.user && notification.type === 1)
+              return notification;
+          });
+          
+          if(notifyUser){
+            notifyUser.type = 2;
+            notifyUser.summary = "You are now friends with " + req.body.user;
+            notifyUser.status = "Accepted";
+            notifyUser.date = Date.now();
+          }
+          
+          var notifyFriend = friend.notifications.find(function(notification){
+            if(notification.user === req.payload.username && notification.type === 0)
+              return notification;
+          });
+          
+          if(notifyFriend){
+            notifyFriend.type = 3;
+            notifyFriend.summary = "You are now friends with " + req.payload.username;
+            notifyFriend.status = "Accepted";
+            notifyFriend.date = Date.now();
+          }
+          
+          //Save changes
+          user.save(function(err){
+            if(err) return next(err);
+          });
+          friend.save(function(err){
+            if(err) return next(err);
+          });
+          
+          res.send("User added to friend's list");
+        }
+      });
+      return true;
+    }
+  });
+});
+
 
 /////////////////////////////////// Comment ////////////////////////////////////
 //Get all comments for user

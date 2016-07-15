@@ -12,6 +12,14 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 ///////////////////////////////// User /////////////////////////////////////////
 
+//All users
+router.get('/all/users', function(req, res, next){
+  User.find(function(err, users){
+    if(err) return next(err); 
+    res.json(users);
+  });
+});
+
 //Creates a new user 
 router.post('/user/register', function(req, res, next){
   
@@ -72,16 +80,13 @@ router.post('/user/login', function(req, res, next){
 //Get all user info
 router.get('/retrieve/user/populate', auth, function(req, res, next) {
 
-  var query = User.findOne({username: req.payload.username});
+  var query = User.findOne({username: req.payload.username}).populate("projects discussions events projects");
 
   query.exec(function(err, user){
     if(err) return next(err); 
     if(!user) console.log('/retrieve/user/populate - something went wrong with accessing the user account'); 
     else{
-      user.populate('events discussions projects', function(err, user){
-        if(err) return next(err); 
-        res.json(user);
-      });
+      res.json(user);
     }
   });
 });
