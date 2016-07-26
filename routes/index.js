@@ -10,6 +10,7 @@ router.use(require('./noteRouter'));
 router.use(require('./projectRouter'));
 router.use(require('./educationRouter'));
 router.use(require('./experienceRouter'));
+router.use(require('./notificationRouter'));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

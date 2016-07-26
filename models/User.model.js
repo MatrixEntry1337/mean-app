@@ -54,7 +54,11 @@ var UserSchema = new mongoose.Schema({
       content: { type: String }
     }],
     notifications: [{
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       username: { type: String },
+      firstName: { type: String },
+      lastName: { type: String },
+      friend: { type: mongoose.Schema.Types.ObjectId, ref: 'Friend' },
       type: { type: Number }, 
       summary: { type: String},
       status: { type: String},
@@ -65,7 +69,7 @@ var UserSchema = new mongoose.Schema({
       text:{ type: String}, 
       date: { type: Date, default: Date.now },
       upvotes: { type: Number, default: 0 },
-      postedBy: { type: String , required: true }
+      user: { type: String , required: true }
     }]
 });
 

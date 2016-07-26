@@ -6,19 +6,19 @@
 	</div>
 	<div class="panel-body">
 		<div class="row">
-			<div class="col-sm-6" ng-repeat="friend in friends">
+			<div class="col-sm-6" ng-hide=!friend.accepted ng-repeat="friend in friends">
 				<div class="profile-blog blog-border">
 					<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
 					<div class="name-location">
-						<strong>{{ friend.user.firstName }} {{ friend.user.lastName }}</strong>
-						<span><i class="fa fa-map-marker"></i><a href="#">{{ friend.user.city }},</a> <a href="#">{{ friend.user.country }}</a></span>
+						<strong>{{ friend.friend.firstName }} {{ friend.friend.lastName }}</strong>
+						<span><i class="fa fa-map-marker"></i><a href="#">{{ friend.friend.city }},</a> <a href="#">{{ friend.friend.country }}</a></span>
 					</div>
 					<div class="clearfix margin-bottom-20"></div>
 					<p>Info here</p>
 					<hr>
 					<ul class="list-inline share-list">
-						<li><i class="fa fa-bell"></i><a href="#"> </a></li>
-						<li><i class="fa fa-group"></i><a href="#">{{ numFriends }} Friends</a></li>
+						<li><i class="fa fa-bell"></i></li>
+						<li><i class="fa fa-group"></i>{{ friend.friend.friends.length }} Friends</li>
 					</ul>
 				</div>
 			</div>
@@ -58,8 +58,9 @@
 						</div>
 						
 						<div>
-							<button ng-hide="checkFriendRequest(person.username)" ng-click="friendRequest(person.username)"  class="btn btn-default rounded center-block">Friend Request</button>
-							<em ng-show="checkFriendRequest(person.username)">Friend Request Sent</em>
+							<button ng-hide="checkFriendRequest(person._id) || show" ng-click="friendRequest(person); show=!show"  
+							class="btn btn-default rounded center-block">Friend Request</button>
+							<em ng-show="(checkFriendRequest(person._id) || show) && checkFriend(person._id)">Friend Request Sent</em>
 						</div>
 					</div>
 				

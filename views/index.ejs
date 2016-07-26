@@ -29,7 +29,6 @@
 	<link rel="stylesheet" href="assets/plugins/animate.css">
 	<link rel="stylesheet" href="assets/plugins/line-icons/line-icons.css">
 	<link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.min.css">
-	<link rel="stylesheet" href="assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
 	<link rel="stylesheet" href="assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
 
@@ -42,7 +41,7 @@
 	<link rel="stylesheet" href="assets/css/theme-skins/dark.css">
 
 	<!-- CSS Customization -->
-	<link rel="stylesheet" href="assets/css/custom.css">
+	<link rel="stylesheet" href="assets/css/chat.css">
 	
 	<!-- Angular, UI Router-->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.js"></script>
@@ -54,7 +53,7 @@
 <body ng-app="main">
 	<div class="wrapper">
 		<!--=== Header ===-->
-		<div class="header" ng-controller="authController">
+		<div class="header" ng-controller="authCtrl">
 			<div class="container">
 				<!-- Logo -->
 				<a class="logo" ui-sref="user_account.home">
@@ -223,38 +222,40 @@
 	<script type="text/javascript" src="main-app/skill/skill.js"></script>
 	<script type="text/javascript" src="main-app/socialContact/socialContact.js"></script>
 	<script type="text/javascript" src="main-app/modal/modal.js"></script>
+	<script type="text/javascript" src="main-app/chat/chat.js"></script>
 	
 	<!-- Services -->
-	<script type="text/javascript" src="main-app/authenticate/authFactory.js"></script>
-	<script type="text/javascript" src="main-app/account/accountFactory.js"></script>
-	<script type="text/javascript" src="main-app/note/noteFactory.js"></script>
-	<script type="text/javascript" src="main-app/discussion/discussionFactory.js"></script>
-	<script type="text/javascript" src="main-app/event/eventFactory.js"></script>
-	
-	<script type="text/javascript" src="main-app/friend/friendFactory.js"></script>
-	<script type="text/javascript" src="main-app/notification/notificationFactory.js"></script>
-	<script type="text/javascript" src="main-app/profile/profileFactory.js"></script>
-	<script type="text/javascript" src="main-app/education/educationFactory.js"></script>
-	<script type="text/javascript" src="main-app/experience/experienceFactory.js"></script>
-	<script type="text/javascript" src="main-app/skill/skillFactory.js"></script>
-	<script type="text/javascript" src="main-app/socialContact/socialContactFactory.js"></script>
+	<script type="text/javascript" src="main-app/authenticate/authFtry.js"></script>
+	<script type="text/javascript" src="main-app/account/accountFtry.js"></script>
+	<script type="text/javascript" src="main-app/note/noteFtry.js"></script>
+	<script type="text/javascript" src="main-app/discussion/discussionFtry.js"></script>
+	<script type="text/javascript" src="main-app/event/eventFtry.js"></script>
+	<script type="text/javascript" src="main-app/friend/friendFtry.js"></script>
+	<script type="text/javascript" src="main-app/notification/notificationFtry.js"></script>
+	<script type="text/javascript" src="main-app/profile/profileFtry.js"></script>
+	<script type="text/javascript" src="main-app/education/educationFtry.js"></script>
+	<script type="text/javascript" src="main-app/experience/experienceFtry.js"></script>
+	<script type="text/javascript" src="main-app/skill/skillFtry.js"></script>
+	<script type="text/javascript" src="main-app/socialContact/socialContactFtry.js"></script>
+	<script type="text/javascript" src="main-app/chat/chatFtry.js"></script>
 	
 	<!-- Controllers -->
-	<script type="text/javascript" src="main-app/authenticate/authController.js"></script>
-	<script type="text/javascript" src="main-app/account/accountController.js"></script>
-	<script type="text/javascript" src="main-app/account/passwordController.js"></script>
-	<script type="text/javascript" src="main-app/note/noteController.js"></script>
-	<script type="text/javascript" src="main-app/discussion/discussionController.js"></script>
-	<script type="text/javascript" src="main-app/event/eventController.js"></script>
-	<script type="text/javascript" src="main-app/friend/friendController.js"></script>
-	<script type="text/javascript" src="main-app/notification/notificationController.js"></script>
-	<script type="text/javascript" src="main-app/profile/profileController.js"></script>
-	<script type="text/javascript" src="main-app/education/educationController.js"></script>
-	<script type="text/javascript" src="main-app/experience/experienceController.js"></script>
-	<script type="text/javascript" src="main-app/skill/skillController.js"></script>
-	<script type="text/javascript" src="main-app/socialContact/socialContactController.js"></script>
-	<script type="text/javascript" src="main-app/modal/modalFormController.js"></script>
-	<script type="text/javascript" src="main-app/modal/modalConfirmController.js"></script>
+	<script type="text/javascript" src="main-app/authenticate/authCtrl.js"></script>
+	<script type="text/javascript" src="main-app/account/accountCtrl.js"></script>
+	<script type="text/javascript" src="main-app/account/passwordCtrl.js"></script>
+	<script type="text/javascript" src="main-app/note/noteCtrl.js"></script>
+	<script type="text/javascript" src="main-app/discussion/discussionCtrl.js"></script>
+	<script type="text/javascript" src="main-app/event/eventCtrl.js"></script>
+	<script type="text/javascript" src="main-app/friend/friendCtrl.js"></script>
+	<script type="text/javascript" src="main-app/notification/notificationCtrl.js"></script>
+	<script type="text/javascript" src="main-app/profile/profileCtrl.js"></script>
+	<script type="text/javascript" src="main-app/education/educationCtrl.js"></script>
+	<script type="text/javascript" src="main-app/experience/experienceCtrl.js"></script>
+	<script type="text/javascript" src="main-app/skill/skillCtrl.js"></script>
+	<script type="text/javascript" src="main-app/socialContact/socialContactCtrl.js"></script>
+	<script type="text/javascript" src="main-app/modal/modalFormCtrl.js"></script>
+	<script type="text/javascript" src="main-app/modal/modalConfirmCtrl.js"></script>
+	<script type="text/javascript" src="main-app/chat/chatCtrl.js"></script>
 	
 <!--[if lt IE 9]>
 	<script src="assets/plugins/respond.js"></script>

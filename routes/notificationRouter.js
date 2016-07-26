@@ -11,32 +11,35 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
 //////////////////////// Comment ////////////////////////////
 
-router.post('/remove/notifcation', auth, function(req, res, next){
-	var query = User.findOne({ username: req.payload.username }, 'notifcations');
+router.post('/remove/notification', auth, function(req, res, next){
+	var query = User.findById(req.payload._id, 'notifications');
 	
 	query.exec(function(err, user){
 		if(err) return next(err);
 		if(!user) console.log("/remove/notification - There was an error in accessing this user in the db");
 		else{
-			var notification = user.notifications.find(function(notification, index){
+			var notification = user.notifications.findIndex(function(notification, index){
 				if(notification._id === req.body._id)
 					return index;
 			});
 			
-			console.log("This is the " + notification);
+			console.log("This is the " + user.notifications[notification]);
 			
-			user.notifcations.splice(notification, 1);
+			user.notifications.splice(notification, 1);
 			
 			user.save(function(err, user){
 				if(err) return next(err);
 				if(!user) console.log("/remove/notification - There was an error in saving this user to the db");
 				else{
-					res.send("Notfication has been deleted.");
+					res.json({ 
+						message: "Notification has been deleted.", 
+						notification: notification 
+					});
 				}
 			});
 		}
-	})
+	});
 });
 
 
-module.export = router;
+module.exports = router;

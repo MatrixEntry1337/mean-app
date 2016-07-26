@@ -6,14 +6,16 @@
 			<a href="#"><i class="fa fa-cog pull-right"></i></a>
 		</div>
 		<div id="scrollbar3" ng-click="openFriendRequest" class="panel-body no-padding mCustomScrollbar" data-mcs-theme="minimal-dark">
-			<div class="alert-blocks alert-blocks-pending alert-dismissable" ng-click="open(notification)"
+			<div class="alert-blocks alert-blocks-pending alert-dismissable" 
 			ng-repeat="notification in notifications.slice().reverse() | limitTo:5 track by $index">
-				<button aria-hidden="true" class="close" type="button">×</button>
-				<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
-				<div class="overflow-h">
-					<strong class="color-yellow">{{notification.status}}<small class="pull-right">
-						<em>{{ notificationElapsedTime($index) }}</em></small></strong>
-					<p>{{ notification.summary }}</p>
+				<button aria-hidden="true" class="close" type="button" ng-click="remove(notification)">×</button>
+				<div role="button" ng-click="open(notification)">
+					<img class="rounded-x" src="assets/img/testimonials/user.jpg" alt="">
+					<div class="overflow-h">
+						<strong class="color-yellow">{{notification.status}}<small class="pull-right">
+							<em>{{ notificationElapsedTime($index) }}</em></small></strong>
+						<p>{{ notification.summary }}</p>
+					</div>
 				</div>
 			</div>
 		</div>

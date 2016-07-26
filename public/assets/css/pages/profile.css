@@ -12,12 +12,13 @@
 
 .profile .profile-body {
 	padding: 20px;
-	background: #f7f7f7;
+	/*background: #f7f7f7;*/
 }
 
 /*Scrollbar*/
 .mCustomScrollbar {
 	height: 320px; 
+	background: #f9f9f9;
 }
 
 /*Panel Title Box*/

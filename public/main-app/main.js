@@ -1,7 +1,7 @@
 var mainModule = angular.module("main", 
 ['ui.router', 'ui.bootstrap', 'kmaModule', 'auth', 'account', 
 'discussion', 'event', 'friend', 'note', 'notification', 'profile', 'education', 
-'experience', 'skill', 'socialContact']);
+'experience', 'skill', 'socialContact', 'chat']);
 
 mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider){
    $urlRouterProvider.otherwise('login_or_register');
@@ -11,9 +11,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
         .state('login_or_register', {
             url: '/login_or_register',
             templateUrl: 'main-app/sections/login-or-register.html',
-            controller: 'authController',
-            onEnter: ['$state', 'authFactory', function($state, authFactory){
-                if(authFactory.isLoggedIn()){
+            controller: 'authCtrl',
+            onEnter: ['$state', 'authFtry', function($state, authFtry){
+                if(authFtry.isLoggedIn()){
                     $state.go('user_account.home');
                 }
             }]
@@ -23,11 +23,16 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             abstract: true,
             url: '/user_account',
             templateUrl: 'main-app/sections/abstract-user-account.html',
-            onEnter: ['$state', 'authFactory', function($state, authFactory){
-                if(!authFactory.isLoggedIn()){
+            onEnter: ['$state', 'authFtry', function($state, authFtry){
+                if(!authFtry.isLoggedIn()){
                     $state.go('login_or_register');
                 }
-            }]
+            }],
+            resolve: {
+                userInfo: ['accountFtry', function(accountFtry){
+                    return accountFtry.getUserInfo();
+                }],
+            }
         })
         
         //child 
@@ -39,35 +44,35 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     },
                     'notes@user_account.home': {
                         templateUrl: 'main-app/note/partial-notes.html',
-                        controller: 'noteController'
+                        controller: 'noteCtrl'
                     },
                     'events@user_account.home': {
                         templateUrl: 'main-app/event/partial-events.html',
-                        controller: 'eventController'
+                        controller: 'eventCtrl'
                     },
                     'friends@user_account.home': {
                         templateUrl: 'main-app/friend/partial-friends.html',
-                        controller: 'friendController'
+                        controller: 'friendCtrl',
+                        resolve: {
+                            friends: ['friendFtry', function(friendFtry){
+                                    return friendFtry.getFriends();
+                            }]
+                        }
                     },
                     'notifications@user_account.home': {
                         templateUrl: 'main-app/notification/partial-notifications.html',
-                        controller: 'notificationController'
+                        controller: 'notificationCtrl'
                     },
                     'discussions@user_account.home': {
                         templateUrl: 'main-app/discussion/partial-discussions.html',
-                        controller: 'discussionController'
+                        controller: 'discussionCtrl'
                     }
                 },
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                        if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                        if(!authFtry.isLoggedIn()){
                             $state.go('login_or_register');
                         }
-                    }],
-                resolve: {
-                    postPromise: ['accountFactory', function(user){
-                        return user.getUserInfo();
                     }]
-                }
             })
             
         //child
@@ -76,27 +81,27 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                 views: {
                     '':{
                         templateUrl: 'main-app/sections/section-profile.html',
-                        controller: 'profileController'
+                        controller: 'profileCtrl'
                     },
                     'socialContacts@user_account.profile': {
                         templateUrl: 'main-app/socialContact/partial-social-contacts.html',
-                        controller: 'socialContactController'
+                        controller: 'socialContactCtrl'
                     },
                     'skills@user_account.profile': {
                         templateUrl: 'main-app/skill/partial-skills.html',
-                        controller: 'skillController'
+                        controller: 'skillCtrl'
                     },
                     'experiences@user_account.profile': {
                         templateUrl: 'main-app/experience/partial-experiences.html',
-                        controller: 'experienceController'
+                        controller: 'experienceCtrl'
                     },
                     'education@user_account.profile': {
                         templateUrl: 'main-app/education/partial-education.html',
-                        controller: 'educationController'
+                        controller: 'educationCtrl'
                     }
                 },
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -106,8 +111,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.friends', {
                 url:'/friends',
                 templateUrl: 'main-app/sections/section-friends.html',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -117,8 +122,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.projects', {
                 url:'/projects',
                 templateUrl: 'main-app/sections/section-projects.html',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -128,8 +133,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.comments', {
                 url:'/comments',
                 templateUrl: 'main-app/sections/section-comments.html',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -139,8 +144,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.history', {
                 url:'/history',
                 templateUrl: 'main-app/sections/section-history.html',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -151,8 +156,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                 abstract: true,
                 url:'/settings',
                 templateUrl: 'main-app/sections/section-settings.html',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -162,9 +167,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.settings.profile', {
                 url:'/profile',
                 templateUrl: 'main-app/sections/section-settings-profile.html',
-                controller: 'accountController',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                controller: 'accountCtrl',
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -174,9 +179,9 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.settings.password', {
                 url:'/password',
                 templateUrl: 'main-app/sections/section-settings-password.html',
-                controller: 'passwordController',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                controller: 'passwordCtrl',
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]
@@ -186,8 +191,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             .state('user_account.settings.notification', {
                 url:'/notification',
                 templateUrl: 'main-app/sections/section-settings-notification.html',
-                onEnter: ['$state', 'authFactory', function($state, authFactory){
-                    if(!authFactory.isLoggedIn()){
+                onEnter: ['$state', 'authFtry', function($state, authFtry){
+                    if(!authFtry.isLoggedIn()){
                         $state.go('login_or_register');
                     }
                 }]

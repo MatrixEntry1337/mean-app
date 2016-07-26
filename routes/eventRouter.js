@@ -21,7 +21,7 @@ router.post('/create/new/event', auth, function(req, res, next){
   
   var event = new Event(req.body);
   
-  var query = User.findOne({username: req.payload.username});
+  var query = User.findById(req.payload._id, 'events');
   query.exec(function(err, user){
     if(err) return next(err); 
     if(!user) console.log('/create/new/event - something went wrong with accessing the user in the database'); 
@@ -37,17 +37,20 @@ router.post('/create/new/event', auth, function(req, res, next){
   });
 });
 
-//Delete a router
+//Delete an event
 router.post('/delte/event', auth, function(req, res, next){
   
-  var query = User.findOne({ username: req.payload.username });
-  var query2 = Event.findById(req.body.eventId).remove();
+  var query = User.findById( req.payload._id, 'events');
+  var query2 = Event.findById(req.body._id).remove();
   
   query.exec(function(err, user){
     if(err) return next(err);
     if(!user) console.log("/delete/event - something went wrong when trying to connect to this user" + req.payload.username);
     else{
-      user.event.splice(req.body.event, 1);
+      var toDelete = user.events.findIndex(function(event){
+        return event === req.body._idl;
+      });
+      user.events.splice(toDelete, 1);
       user.save(function(err){
         if(err) return next(err);
       });
@@ -63,27 +66,16 @@ router.post('/delte/event', auth, function(req, res, next){
 //Create a new event comment
 router.post('/create/event/comment', auth, function(req, res, next){
   
-  var query = Event.findById( req.body.event );
-  var query2 = User.findOne({ username: req.payload.username });
+  var query = Event.findById( req.body._id );
   
   query.exec(function(err, event){
     if(err) return next(err);
     if(!event) console.log('create/event/comment - something went wrong with accessing the event in the database');
     else{
-      query2.exec(function(err, user){
-        if(err) return next(err);
-        if(!user) console.log('create/event/comment - something went wrong with accessing the user in the database');
-        else{
-          event.commments.push({ content: req.body.content,  postedBy: user });
-          event.save(function(err, event){
-            if(err) return next(err);
-            res.json(event.comments);
-          });
-        }
-      });
+      event.comments.push({ content: req.body.content, user: req.payload._id});
+      res.json(event.comments[event.comments.length-1]);
     }
   });
-  
 });
 
 //Invite friend to event****

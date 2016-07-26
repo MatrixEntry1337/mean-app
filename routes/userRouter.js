@@ -52,7 +52,6 @@ router.post('/user/register', function(req, res, next){
 
         user.save(function(err, user){
           if(err) return next(err);
-          console.log("/user/register - still get to here");
           return res.json({ token: user.generateJWT() });
         });
       }

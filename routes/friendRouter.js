@@ -25,13 +25,13 @@ router.get('/all/friends', function(req, res, next){
 
 //Retrieve friends
 router.get('/get/friends', auth, function(req, res, next){
-  var query = Friend.find({ username: req.payload.username })
-    .populate('user', 'firstName lastName discussions projects events friends');
-  
+  var query = Friend.find({user: req.payload._id})
+    .populate('friend', 'username firstName lastName discussions projects events friends');
+    
   query.exec(function(err, friends){
     if(err) return next(err);
     if(!friends) console.log("/get/freinds - There was an error in retrieving the friends of this user");
-    else { 
+    else {
       console.log(friends);
       res.json(friends); 
     }
@@ -41,7 +41,9 @@ router.get('/get/friends', auth, function(req, res, next){
 //Retrieve friends for a given user
 router.get('/get/user/friends', auth, function(req, res, next){
   
-  var query = User.findOne({username : req.payload.username}, 'friends').populate('friends');
+  var query = User.findById(req.payload._id, 'friends').populate('friends');
+  console.log(req.payload._id);
+  
   query.exec(function(err, user){
     if(err){ return next(err); }
     if(!user){ console.log('/retrieve/user/friends - something went wrong!'); }
@@ -60,7 +62,7 @@ router.post('/find/friend', auth, function(req, res, next){
       
   query.exec(function(err, users){
     if(err) return next(err);
-    if(!users) return console.log("No users found!");
+    if(!users) return console.log("/find/friend - something went wrong!");
     else res.json(users);
   });
  
@@ -77,10 +79,12 @@ router.post('/send/friend/request', auth, function(req, res, next){
   var data = {};
   
   var query = User.find({$or: [
-    {username: req.body.username},
-    {username: req.payload.username}
+    { _id: req.body._id },
+    { _id: req.payload._id }
     ]})
     .select('username friends notifications');
+    
+    
     
   query.exec(function(err, users){
     if(err) return next(err);
@@ -91,47 +95,51 @@ router.post('/send/friend/request', auth, function(req, res, next){
     else{
       
       //Identify users in array
-      var user = users.findIndex(function(element, index){
-        if(element.username === req.payload.username)
-          return element;
+      var user = users.findIndex(function(element){
+        return element.username == req.payload.username;
       });
       
-      var requestUser = (user + 1) % 2;
+      var user2 = (user + 1) % 2;
       
-      //create friend document
-      var addRequestUser = new Friend();
-      addRequestUser.user = users[user];
-      addRequestUser.username = users[user].username;
-      addRequestUser.friend = users[requestUser];
-      addRequestUser.sent = true;
+      //friends
+      var addUser2 = new Friend();
+      addUser2.user = users[user]._id;
+      addUser2.friend = users[user2]._id;
+      addUser2.sent = true;
       
       var addUser = new Friend();
-      addUser.user = users[requestUser];
-      addUser.username = users[requestUser].username;
-      addUser.friend =  users[user];
+      addUser.user = users[user2]._id;
+      addUser.friend =  users[user]._id;
       addUser.sent = false;
       
-      //addFriends
-      users[user].friends.push(addRequestUser);
-      users[requestUser].friends.push(addUser);
+      users[user].friends.push(addUser2);
+      users[user2].friends.push(addUser);
       
       //notifications
-      users[user].notifications.push({ 
-        username: req.body.username,  
+      users[user].notifications.push({
+        user: users[user2]._id,
+        username: users[user2].username,
+        firstName: users[user2].firstName,
+        lastName: users[user2].lastName,
+        friend: addUser2._id,
         type: 0, 
         summary: "Your friend request has been sent to " + req.body.username +".",
         status: "Pending..."
       });
       
-      users[requestUser].notifications.push({
-        username: req.payload.username,  
+      users[user2].notifications.push({
+        user: users[user]._id,
+        username: users[user].username,
+        firstName: users[user].firstName,
+        lastName: users[user].lastName,
+        friend: addUser._id,
         type: 1, 
         summary: "You have a new friend request from " + req.payload.username + ".",
         status: "Pending..."
       });
       
       //Save data
-      users[requestUser].save(function(err){
+      users[user2].save(function(err){
         if(err) return next(err);
       });
       
@@ -143,16 +151,17 @@ router.post('/send/friend/request', auth, function(req, res, next){
         if(err) return next(err);
       });
       
-      addRequestUser.save(function(err){
+      addUser2.save(function(err){
         if(err) return next(err);
       });
       
+      process.nextTick(function(){
+        
+      });
+      
       //Return data
-      data.notification = {
-        type: 0, 
-        summary: "Your friend request has been sent to " + req.body.username +".",
-        status: "Pending..."
-      };
+      data.notification = users[user].notifications[users[user].notifications.length-1];
+      data.friend = addUser2;
       
       data.message = "Friend request was successful";
       res.json(data);
@@ -164,67 +173,104 @@ router.post('/send/friend/request', auth, function(req, res, next){
 //Accept Friend Request
 router.post('/accept/friend/request', auth, function(req, res, next){
   
-  var query = User.findOne({ username: req.payload.username }, 'friends notifications');
-  var query2 = User.findOne({ username: req.body.user }, 'friends notifications');
- 
-  query.exec(function(err, user){
+  var data = {};
+  
+  var query = User.find({$or: [
+    {_id: req.body.user },
+    {_id: req.payload._id}
+    ]})
+    .select('username friends notifications').populate('friends');
+  
+  query.exec(function(err, users){
     if(err) return next(err);
-    if(!user) console.log("/accept/friend/request - Something went wrong with trying to access the user account.");
+     if(users.length < 2){ 
+      console.log('/accept/friend/request - There was an error in accessing the users from the db');
+      res.sendStatus(400); 
+     }
     else{
-      query2.exec(function(err, friend){
-        if(err) {  return next(err); }
-        if(!friend) console.log("/accept/friend/request - Something went wrong with trying to access the friend's account.");
-        else{
-          //Friends
-          user.friends.push({ user: friend, accepted: true });
-          friend.friends.push({ user: user, accepted: true });
-          
-          //Notifications
-          var notifyUser = user.notifications.find(function(notification){
-          if(notification.user === req.body.user && notification.type === 1)
-              return notification;
-          });
-          
-          if(notifyUser){
-            notifyUser.type = 2;
-            notifyUser.summary = "You are now friends with " + req.body.user;
-            notifyUser.status = "Accepted";
-            notifyUser.date = Date.now();
-          }
-          
-          var notifyFriend = friend.notifications.find(function(notification){
-            if(notification.user === req.payload.username && notification.type === 0)
-              return notification;
-          });
-          
-          if(notifyFriend){
-            notifyFriend.type = 3;
-            notifyFriend.summary = "You are now friends with " + req.payload.username;
-            notifyFriend.status = "Accepted";
-            notifyFriend.date = Date.now();
-          }
-          
-          //Save changes
-          user.save(function(err){
-            if(err) return next(err);
-          });
-          friend.save(function(err){
-            if(err) return next(err);
-          });
-          
-          res.send("User added to friend's list");
-        }
+      
+      //Identify users in array
+      var user = users.findIndex(function(element){
+        if(element._id == req.payload._id)
+          return element;
       });
-      return true;
+      var user2 = (user + 1) % 2;
+      
+      //friend
+      var friend = users[user].friends.findIndex(function(friend){
+        return friend.friend == req.body.user; 
+      });
+      users[user].friends[friend].accepted = true;
+      
+      var friend2 = users[user2].friends.findIndex(function(friend){
+        return friend.friend == req.payload._id;
+      });
+      users[user2].friends[friend2].accepted = true;
+      
+      //notifications
+      
+      var not = users[user].notifications.find(function(notification){
+        return notification.summary == "You have a new friend request from " + users[user2].username + ".";
+      });
+      if(not) not.status = "Accepted.";
+      
+      var not2 = users[user2].notifications.find(function(notification){
+        return notification.summary == "Your friend request has been sent to " + users[user].username +".";
+      });
+      
+      if(not2) not2.status = "Accepted.";
+      
+      users[user].notifications.push({
+        user: users[user2]._id,
+        friend: users[user2].friends[friend]._id,
+        username: users[user2].username,
+        firstName: users[user2].firstName,
+        lastName: users[user2].lastName,
+        type: 3, 
+        summary: "You are now friends with " + users[user2].username,
+        status: "Accepted"
+      });
+      users[user2].notifications.push({
+        user: users[user]._id,
+        friend: users[user].friends[friend2]._id,
+        username: users[user].username,
+        firstName: users[user].firstName,
+        lastName: users[user].lastName,
+        type: 3, 
+        summary: "You are now friends with " + users[user].username,
+        status: "Accepted"
+      });
+      
+      //Save
+      users[user].save(function(err){
+        if(err) return next(err);
+      });
+      users[user2].save(function(err){
+        if(err) return next(err);
+      });
+      users[user].friends[friend].save(function(err){
+        if(err) return next(err); 
+      });
+      users[user2].friends[friend2].save(function(err){
+        if(err) return next(err);
+      });
+     
+      data.notification = users[user].notifications[users[user].notifications.length-1];
+      data.friend = friend;
+      data.message = "Friend was confirmed.";
+      
+      res.json(data);
+      
     }
   });
 });
+  
 
 
 /////////////////////////////////// Comment ////////////////////////////////////
 //Get all comments for user
 router.get('/all/user/comments', auth, function(req, res, next){
-  var query = User.findOne({username: req.payload.username});
+  var query = User.findById(req.payload._id);
   query.exec(function(err, user){
     if(err) return next(err);
     if(!user) console.log("/all/user/comments - something went wrong when accessing this user in the database");
@@ -234,7 +280,7 @@ router.get('/all/user/comments', auth, function(req, res, next){
 
 //Get friend comments ****
 router.get('/friend/comments', auth, function(req, res, next){
-	var query = User.findOne({username: req.payload.username}, 'latestFriendComments');
+	var query = User.findById(req.payload._id, 'latestFriendComments');
 	
 	query.exec(function(err, user){
 		if(err) return next(err);
@@ -248,8 +294,8 @@ router.get('/friend/comments', auth, function(req, res, next){
 //Send comment to another user
 //public comments to profile******
 router.post('/send/friend/comment', auth, function(req, res, next){
-	var query = User.findOne({username: req.payload.username}, 'friends');
-	var query2 = User.findOne({username: req.body.friend});
+	var query = User.findById(req.payload._id, 'friends');
+	var query2 = User.findOne(req.body._id, 'friend');
 	
 	query.exec(function(err, user){
 		if(err) return next(err);
