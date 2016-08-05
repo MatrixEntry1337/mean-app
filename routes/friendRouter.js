@@ -30,7 +30,7 @@ router.get('/get/friends', auth, function(req, res, next){
     
   query.exec(function(err, friends){
     if(err) return next(err);
-    if(!friends) console.log("/get/freinds - There was an error in retrieving the friends of this user");
+    if(!friends) console.log("/get/friends - There was an error in retrieving the friends of this user");
     else {
       console.log(friends);
       res.json(friends); 
@@ -38,7 +38,7 @@ router.get('/get/friends', auth, function(req, res, next){
   });
 });
 
-//Retrieve friends for a given user
+//Retrieve friends for a given user - not complete
 router.get('/get/user/friends', auth, function(req, res, next){
   
   var query = User.findById(req.payload._id, 'friends').populate('friends');

@@ -13,6 +13,11 @@ var FriendSchema = mongoose.Schema({
         date: { type: Date, default: Date.now },
       upvotes: { type: Number, default: 0 }
 	}],
+	chat:[{ 
+		friend: { type: Boolean },
+	    message: { type: String }, 
+	    date: { type: Date, default: Date.now }
+	}],
 	date: { type: Date, default: Date.now }
 });
 

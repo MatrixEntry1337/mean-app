@@ -31,7 +31,7 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
             resolve: {
                 userInfo: ['accountFtry', function(accountFtry){
                     return accountFtry.getUserInfo();
-                }],
+               }]
             }
         })
         
@@ -40,7 +40,7 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                 url: '/home',
                 views: {
                     '':{
-                        templateUrl: 'main-app/sections/section-home.html',
+                        templateUrl: 'main-app/sections/section-home.html'
                     },
                     'notes@user_account.home': {
                         templateUrl: 'main-app/note/partial-notes.html',
@@ -49,6 +49,10 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     'events@user_account.home': {
                         templateUrl: 'main-app/event/partial-events.html',
                         controller: 'eventCtrl'
+                    },
+                    'friendChat@user_account.home': {
+                        templateUrl: 'main-app/chat/partial-friend-chat.html',
+                        controller: 'friendChatCtrl'
                     },
                     'friends@user_account.home': {
                         templateUrl: 'main-app/friend/partial-friends.html',

@@ -6,7 +6,7 @@ function($http, authFtry, $log){
 	account.passwordAlert;
 	account.updateAlert;
 	
-	 //Get user info 
+	//Get user info 
     account.getUserInfo = function(){
         $http.get('/retrieve/user/populate', {
             headers: { Authorization: 'Bearer '+authFtry.getToken() }

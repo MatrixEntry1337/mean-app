@@ -1,6 +1,8 @@
 friendModule.factory('friendFtry', 
 ['$http', 'authFtry', 'accountFtry', '$log',  
 function($http, authFtry, accountFtry, $log){
+	
+	//Friends
 	var friends = {};
 	friends.searchResult = [];
 	friends.data = [];
@@ -92,5 +94,4 @@ function($http, authFtry, accountFtry, $log){
     };
     
     return friends;
-    
 }]);
