@@ -6,8 +6,7 @@ noteModule.factory('noteFtry',
 	
 	notes.getData = function(){
 	  $log.log("Grabbing notes data!");
-	  $log.log("Test: " + accountFtry.user.firstName);
-	  notes.data = accountFtry.user.notes;  
+	  return notes.data = accountFtry.user.notes;  
 	};
 	
 	//send notes to controller

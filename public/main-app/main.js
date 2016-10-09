@@ -47,7 +47,8 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                         controller: 'noteCtrl',
                         resolve: {
                             notes: ['noteFtry', function(noteFtry){
-                                return noteFtry.getData();
+                                noteFtry.getData();
+                                return;
                             }]
                         }
                     },
