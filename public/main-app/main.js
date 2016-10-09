@@ -80,7 +80,13 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     },
                     'discussions@user_account.home': {
                         templateUrl: 'main-app/discussion/partial-discussions.html',
-                        controller: 'discussionCtrl'
+                        controller: 'discussionCtrl',
+                        resolve:{
+                            discussion: ['discussionFtry', function(discussionFtry){
+                                discussionFtry.getData();
+                                return;
+                            }]   
+                        }
                     }
                 },
                 onEnter: ['$state', 'authFtry', function($state, authFtry){

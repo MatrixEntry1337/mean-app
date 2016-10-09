@@ -1,10 +1,11 @@
-eventModule.controller('eventCtrl', ['$scope', '$uibModal', 'eventFtry', function($scope, $uibModal, eventFtry){
+eventModule.controller('eventCtrl', ['$scope', '$uibModal', 'eventFtry', '$log', function($scope, $uibModal, eventFtry, $log){
 
 	$scope.newEvent = {};
     $scope.events = eventFtry.getEvents();
 	
 	$scope.createEvent = function(){
         eventFtry.newEvent($scope.newEvent).error(function(error){
+        	$log.log(error);
             $scope.error = error;
         });
     };
@@ -29,6 +30,11 @@ eventModule.controller('eventCtrl', ['$scope', '$uibModal', 'eventFtry', functio
     	});
 
     	modalInstance.result.then(function(items) {
+    		//Debug
+    		// $log.log("Data from even modal: ");
+    		// $log.log(items.objects[0].data);
+    		// $log.log(items.objects[1].data);
+    		// $log.log(items.objects[2].data);
     		$scope.newEvent.title = items.objects[0].data;
     		$scope.newEvent.summary = items.objects[1].data;
     		$scope.newEvent.content = items.objects[2].data;

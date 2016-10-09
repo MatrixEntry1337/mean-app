@@ -19,6 +19,9 @@ router.post('/create/new/event', auth, function(req, res, next){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
   
+  //Debug
+  // console.log(req.body);
+  
   var event = new Event(req.body);
   
   var query = User.findById(req.payload._id, 'events');
@@ -26,7 +29,7 @@ router.post('/create/new/event', auth, function(req, res, next){
     if(err) return next(err); 
     if(!user) console.log('/create/new/event - something went wrong with accessing the user in the database'); 
     user.events.push(event);
-    event.createdBy = user;
+    event.user = user;
     user.save(function(err){
       if(err) return next(err);
     });
@@ -38,7 +41,7 @@ router.post('/create/new/event', auth, function(req, res, next){
 });
 
 //Delete an event
-router.post('/delte/event', auth, function(req, res, next){
+router.post('/delete/event', auth, function(req, res, next){
   
   var query = User.findById( req.payload._id, 'events');
   var query2 = Event.findById(req.body._id).remove();

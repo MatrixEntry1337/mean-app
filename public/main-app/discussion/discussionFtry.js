@@ -1,10 +1,16 @@
 discussionModule.factory('discussionFtry', 
-['$http', 'accountFtry', 'authFtry', function($http, accountFtry, authFtry){
+['$http', 'accountFtry', 'authFtry', '$log', function($http, accountFtry, authFtry, $log){
 	
 	var discussions = {};
-	discussions.data = accountFtry.user.discussions;
+	discussions.data = {};
 	
-	//Discussions
+	//get discussion data
+	discussions.getData = function(){
+	  $log.log("Grabbing discussion data");
+	  return discussions.data = accountFtry.user.discussions;  
+	};
+	
+	//discussions
     discussions.getDiscussions = function(){
       return this.data;  
     };

@@ -4,6 +4,7 @@ noteModule.factory('noteFtry',
 	var notes = {};
 	notes.data = {};
 	
+	//get notes data
 	notes.getData = function(){
 	  $log.log("Grabbing notes data!");
 	  return notes.data = accountFtry.user.notes;  

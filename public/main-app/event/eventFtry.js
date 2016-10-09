@@ -3,6 +3,11 @@ eventModule.factory('eventFtry',
 	var events = {};
 	events.data = accountFtry.user.events;
 	
+	//get event data
+	events.getData = function(){
+	    return events.data = accountFtry.user.events;
+	};
+	
 	//Events
     events.getEvents = function(){
         return this.data;
