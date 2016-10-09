@@ -6,7 +6,7 @@ discussionModule.factory('discussionFtry',
 	
 	//get discussion data
 	discussions.getData = function(){
-	  $log.log("Grabbing discussion data");
+	  $log.log("Grabbing discussion data!");
 	  return discussions.data = accountFtry.user.discussions;  
 	};
 	

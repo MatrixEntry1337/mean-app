@@ -54,7 +54,13 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     },
                     'events@user_account.home': {
                         templateUrl: 'main-app/event/partial-events.html',
-                        controller: 'eventCtrl'
+                        controller: 'eventCtrl',
+                        resolve: {
+                            events: ['eventFtry', function(eventFtry){
+                                eventFtry.getData();
+                                return;
+                            }]
+                        }
                     },
                     'friendChat@user_account.home': {
                         templateUrl: 'main-app/friend/partial-friend-chat.html',

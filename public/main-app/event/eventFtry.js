@@ -1,10 +1,11 @@
 eventModule.factory('eventFtry', 
 ['$http', '$log', 'authFtry', 'accountFtry', function($http, $log, authFtry, accountFtry){
 	var events = {};
-	events.data = accountFtry.user.events;
+	events.data = {};
 	
 	//get event data
 	events.getData = function(){
+	    $log.log("Grabbing event data!");
 	    return events.data = accountFtry.user.events;
 	};
 	
