@@ -82,7 +82,14 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     // },
                     'notifications@user_account.home': {
                         templateUrl: 'main-app/notification/partial-notifications.html',
-                        controller: 'notificationCtrl'
+                        controller: 'notificationCtrl',
+                        resolve:{
+                            notifications: ['notificationFtry', function(notificationFtry){
+                                notificationFtry.getData();
+                                return;
+                            }]
+                        }
+                        
                     },
                     'discussions@user_account.home': {
                         templateUrl: 'main-app/discussion/partial-discussions.html',

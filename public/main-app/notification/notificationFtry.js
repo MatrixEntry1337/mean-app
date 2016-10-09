@@ -3,8 +3,13 @@ notificationModule.factory('notificationFtry',
 function($http, authFtry, accountFtry, $log){
 	
 	var notifications = {};
-	
-	notifications.data = accountFtry.user.notifications;
+	notifications.data = {};
+
+    //get notification data
+    notifications.getData = function(){
+        $log.log("Grabbing notification data!");
+        notifications.data = accountFtry.user.notifications;
+    };
 
 	//Notifications
     notifications.getNotifications = function(){
