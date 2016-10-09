@@ -62,7 +62,7 @@
 						<div>
 							<button ng-hide="checkFriendRequest(person._id) || show" ng-click="friendRequest(person); show=!show"  
 							class="btn btn-default rounded center-block">Friend Request</button>
-							<em ng-show="(checkFriendRequest(person._id) || show) && checkFriend(person._id)">Friend Request Sent</em>
+							<em ng-show="(checkFriendRequest(person._id) || show) && !checkFriend(person._id)">Friend Request Sent</em>
 						</div>
 					</div>
 				

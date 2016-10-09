@@ -14,8 +14,9 @@ var FriendSchema = mongoose.Schema({
       upvotes: { type: Number, default: 0 }
 	}],
 	chat:[{ 
-		friend: { type: Boolean },
-	    message: { type: String }, 
+		isFriend: { type: Boolean },
+	    message: { type: String },
+	    opened: { type: Boolean, default: false },
 	    date: { type: Date, default: Date.now }
 	}],
 	date: { type: Date, default: Date.now }

@@ -1,5 +1,6 @@
 accountModule.controller('accountCtrl', 
-['$scope', 'accountFtry', function($scope, accountFtry){
+['$scope', 'accountFtry', '$log', function($scope, accountFtry, $log){
+	
 	//Get account info
 	$scope.user = accountFtry.getAccountInfo();
 	

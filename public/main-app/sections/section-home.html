@@ -2,6 +2,16 @@
 <div class="col-md-9">
 	<div class="profile-body">
 		
+		<div class="row">
+		
+			<!--Notification-->
+			<div ui-view="notifications"></div>
+		
+			<!-- Discussions-->
+		<div ui-view="discussions"></div>
+		
+		</div><!--/end row-->
+		
 		<div ui-view="friendChat"></div>
 		
 		<div class="row margin-bottom-20">
@@ -16,19 +26,7 @@
 		<hr>
 
 		<!--Friends-->
-		<div ui-view="friends"></div>
-
-		<hr>
-
-		<div class="row">
-			<!--Notification-->
-			<div ui-view="notifications"></div>
-			
-			<!-- Discussions-->
-			<div ui-view="discussions"></div>
-			
-		</div><!--/end row-->
-
-		<hr>
+		<!--<div ui-view="friends"></div>-->
+		<!--<hr>-->
 	</div>
 </div>

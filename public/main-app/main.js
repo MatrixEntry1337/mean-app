@@ -1,7 +1,7 @@
 var mainModule = angular.module("main", 
 ['ui.router', 'ui.bootstrap', 'kmaModule', 'auth', 'account', 
 'discussion', 'event', 'friend', 'note', 'notification', 'profile', 'education', 
-'experience', 'skill', 'socialContact', 'chat']);
+'experience', 'skill', 'socialContact', 'chat', 'luegg.directives']);
 
 mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvider, $urlRouterProvider){
    $urlRouterProvider.otherwise('login_or_register');
@@ -28,10 +28,10 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     $state.go('login_or_register');
                 }
             }],
-            resolve: {
+             resolve: {
                 userInfo: ['accountFtry', function(accountFtry){
                     return accountFtry.getUserInfo();
-               }]
+                }]
             }
         })
         
@@ -44,18 +44,19 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                     },
                     'notes@user_account.home': {
                         templateUrl: 'main-app/note/partial-notes.html',
-                        controller: 'noteCtrl'
+                        controller: 'noteCtrl',
+                        resolve: {
+                            notes: ['noteFtry', function(noteFtry){
+                                return noteFtry.getData();
+                            }]
+                        }
                     },
                     'events@user_account.home': {
                         templateUrl: 'main-app/event/partial-events.html',
                         controller: 'eventCtrl'
                     },
                     'friendChat@user_account.home': {
-                        templateUrl: 'main-app/chat/partial-friend-chat.html',
-                        controller: 'friendChatCtrl'
-                    },
-                    'friends@user_account.home': {
-                        templateUrl: 'main-app/friend/partial-friends.html',
+                        templateUrl: 'main-app/friend/partial-friend-chat.html',
                         controller: 'friendCtrl',
                         resolve: {
                             friends: ['friendFtry', function(friendFtry){
@@ -63,6 +64,15 @@ mainModule.config(['$stateProvider','$urlRouterProvider', function($stateProvide
                             }]
                         }
                     },
+                    // 'friends@user_account.home': {
+                    //     templateUrl: 'main-app/friend/partial-friends.html',
+                    //     controller: 'friendCtrl',
+                    //     resolve: {
+                    //         friends: ['friendFtry', function(friendFtry){
+                    //                 return friendFtry.getFriends();
+                    //         }]
+                    //     }
+                    // },
                     'notifications@user_account.home': {
                         templateUrl: 'main-app/notification/partial-notifications.html',
                         controller: 'notificationCtrl'

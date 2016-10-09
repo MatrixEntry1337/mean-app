@@ -80,10 +80,12 @@ small, .small {
 .chat {
     list-style: none;
     margin: 0;
+    height: 540px;
+    overflow-y: scroll;
 }
 
 .chat-message{
-    background: #f9f9f9;  
+    background: #f9f9f9;
 }
 
 .chat li img {

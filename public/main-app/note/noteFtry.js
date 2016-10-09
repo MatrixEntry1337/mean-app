@@ -1,10 +1,16 @@
 noteModule.factory('noteFtry', 
-['$http', 'authFtry', 'accountFtry', function($http, authFtry, accountFtry){
+['$http', 'authFtry', 'accountFtry', '$log', function($http, authFtry, accountFtry, $log){
 	
 	var notes = {};
-	notes.data = accountFtry.user.notes;
+	notes.data = {};
 	
-	//Notes
+	notes.getData = function(){
+	  $log.log("Grabbing notes data!");
+	  $log.log("Test: " + accountFtry.user.firstName);
+	  notes.data = accountFtry.user.notes;  
+	};
+	
+	//send notes to controller
     notes.getNotes = function(){
         return this.data;
     };

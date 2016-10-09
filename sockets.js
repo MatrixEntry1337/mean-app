@@ -2,7 +2,7 @@ var socketio = require('socket.io');
 var mongoose = require('mongoose');
 
 //DBs
-var User = mongoose.model('User');
+// var User = mongoose.model('User');
 var Friend = mongoose.model('Friend');
 
 //User Data
@@ -37,59 +37,74 @@ module.exports.listen = function(app){
         	console.log('user disconnected');
     	});
     	
-    	socket.on('newMessage', function(message, user){
-    	    if(users[user]){
-    	        console.log("User " + user + " is logged in");
-    	        
-    	        //queries
-    	        var query = User.findById(handshakeData._query._id);
-    	        var query2 = Friend.findOne({ user: handshakeData._query._id, friend: user });
-    	        var query3 = Friend.findOne({ user: user, friend: handshakeData._query._id });
-    	        
-    	        query.exec(function(err, user){
-    	           if(err) console.log("An error has occured.");
-    	           if(!user) console.log('Could not find user. Please ensure user is connected with correct username');
-    	           else{
-    	               console.log(user);
-    	           }
-    	        });
-    	        
-    	        query2.exec(function(err, friendData){
-    	            if(err) console.log("An error has occured.");
-    	            if(!friendData) console.log("Could not find frined data");
-    	            else{
-    	                friendData.chat.push({ friend: false, message: message });
-    	                friendData.save(function(err, messages){
-    	                    if(err) console.log("An error has occured.");
-    	                    console.log(messages);
-    	                });
-    	            }
-    	        });
-    	        
-    	        query3.exec(function(err, friendData){
-    	           if(err) console.log("An error has occured.");
-    	           if(!friendData) console.log("Could not find friend data");
-    	           else{
-    	             friendData.chat.push({ friend: true, message: message });
-    	             friendData.save(function(err, messages){
-    	                if(err) console.log("An error has occured.");
-    	                else{
-    	                    console.log(messages);
-    	                    clients[users[user]].emit('newMessage', message);
-    	                }
-    	             });
-    	           }
-    	        });
-	        }
-    	    else{
-    	        console.log("User not found");
-    	    }
-    	    io.emit('newMessage', { friend: true, message: message });
+    	//New chat messages
+    	socket.on('newMessage', function(message, user, index){
+    	    
+            console.log("User " + user + " is logged in");
+            
+            //Query database to add messages to friend dbs
+            var query = Friend.findOne({ user: handshakeData._query._id, friend: user });
+            var query2 = Friend.findOne({ user: user, friend: handshakeData._query._id });
+            
+            //Send chat message to self
+            query.exec(function(err, friendData){
+                if(err) console.log("An error has occured.");
+                if(!friendData) console.log("Could not find frined data");
+                else{
+                    friendData.chat.push({ isFriend: false, message: message });
+                    friendData.save(function(err, messages){
+                        if(err) console.log("An error has occured.");
+                        console.log("Message was posted on sender's database: " + message);
+                        clients[users[handshakeData._query._id]].emit('newMessage', 
+                        { messageData:{isFriend: false, message: message, date: Date.now(), opened: false}, index: index });
+                    });
+                }
+            });
+            
+            //Send chat message to friend
+            query2.exec(function(err, friendData){
+               if(err) console.log("An error has occured.");
+               if(!friendData) console.log("Could not find friend data");
+               else{
+                 friendData.chat.push({ isFriend: true, message: message, opened: false });
+                 friendData.save(function(err, friendData){
+                    if(err) console.log("An error has occured.");
+                    else{
+                        console.log("Message was posted on friend's database: " + message);
+                        //Send to user if connected
+                        if(users[user]){
+                            clients[users[user]].emit('newMessage', 
+                            { messageData:{isFriend: true, message: message, opened: false, date: Date.now()}, index: index });
+                        }
+                    }
+                 });
+               }
+            });
     	});
-    
-        socket.on('joinRoom', function(message, roomName){
-           socket.join(roomName);
-        });
+    	
+    	//Read Messages
+    	socket.on('readMessages', function(user, index){
+    	    var query = Friend.findOne({ user: handshakeData._query._id, friend: user });
+    	    
+    	    query.exec(function(err, friendData){
+    	        if(err) console.log("An error has occured.");
+                if(!friendData) console.log("Could not find friend data"); 
+    	        for(var i = 0; i < friendData.chat.length; i++){
+    	            if(!friendData.chat[i].opened) friendData.chat[i].opened = true;
+    	        }
+    	        friendData.save(function(err){
+    	           if(err) console.log("An error has occured.");
+    	           console.log("Chat array was saved.");
+    	        });
+    	        console.log("Read messages");
+    	    });
+    	});
+    	
+    	
+    // 	//Join chat room - add functionality later
+    //     socket.on('joinRoom', function(message, roomName){
+    //       socket.join(roomName);
+    //     });
     
 	});
 	

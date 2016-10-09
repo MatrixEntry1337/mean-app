@@ -1,4 +1,6 @@
-noteModule.controller('noteCtrl', ['$scope', '$uibModal', 'noteFtry', function($scope, $uibModal, noteFtry){
+noteModule.controller('noteCtrl', ['$scope', '$uibModal', 'noteFtry', 'userInfo', '$log',
+	function($scope, $uibModal, noteFtry, userInfo, $log){
+	// $log.log("User Info: " + userInfo);
 	
 	//Notes
     $scope.newNote = {};

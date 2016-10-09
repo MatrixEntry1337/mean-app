@@ -42,6 +42,7 @@ authModule.factory('authFtry',
     };
     
     auth.logout = function(){
+        console.log("Logging out!");
         $window.localStorage.removeItem('Kyle-Mean-App');
     };
     

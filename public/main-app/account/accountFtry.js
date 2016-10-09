@@ -8,12 +8,17 @@ function($http, authFtry, $log){
 	
 	//Get user info 
     account.getUserInfo = function(){
-        $http.get('/retrieve/user/populate', {
+        $log.log("Retrieving user data!");
+        return $http.get('/retrieve/user/populate', {
             headers: { Authorization: 'Bearer '+authFtry.getToken() }
             }).success(function(data){
             angular.copy(data, account.user);
         });
-        
+    };
+    
+    account.clearData = function(){
+        $log.log("Data account cleared!");
+        account.user = {};
     };
     
     account.changePassword = function(verification){

@@ -1,8 +1,7 @@
 authModule.controller('authCtrl', 
-['$scope', '$state', 'authFtry', function($scope, $state, authFtry){
+['$scope', '$state', 'authFtry', 'accountFtry', function($scope, $state, authFtry, accountFtry){
 	$scope.isLoggedIn = authFtry.isLoggedIn;
     $scope.currentUser = authFtry.currentUser;
-    $scope.logout = authFtry.logout;
     
     $scope.userRegister = {};
     $scope.userLogin = {};
@@ -21,6 +20,13 @@ authModule.controller('authCtrl',
         }).then(function(){
             $state.go('user_account.home');
         });
+    };
+    
+    $scope.logout = function(){
+        //Clear Data
+        accountFtry.clearData();
+        //Clear token from local storage
+        authFtry.logout();
     };
 }]);
 

@@ -1,40 +1,13 @@
-friendModule.controller('friendCtrl', 
-['$scope', '$uibModal', 'friendFtry', 'notificationFtry', 'accountFtry', 'chatSocketFtry', 'friends', '$log', 
-function($scope, $uibModal, friendFtry, notificationFtry, accountFtry, chatSocketFtry, friends, $log){
+chatModule.controller('friendChatCtrl',
+['$scope', 'chatSocketFtry', 'friendFtry', 'accountFtry', '$log',
+function($scope, chatSocketFtry, friendFtry, accountFtry, $log){
 	
-	//Friends
-    $scope.requestUser = {};
-    $scope.searchEntry = {};
-    $scope.justSent = {};
-    $scope.friendList = friendFtry.returnFriends();
-    $scope.searchResults = friendFtry.getSearchResult();
-    
-    $scope.findFriend = function(){
-        friendFtry.friendSearch($scope.searchEntry).error(function(error){
-            $scope.error = error;
-        });
-    };
-    
-    $scope.friendRequest = function(user){
-        friendFtry.friendRequest(user).error(function(error){
-            $scope.error = error;
-        }).then(function(){
-            notificationFtry.data.push(friendFtry.notification);
-        });
-    };
-    
-    $scope.checkFriendRequest = function(user){
-      return friendFtry.checkFR(user);
-    };
-    
-    $scope.checkFriend = function(user){
-      return friendFtry.checkFriend(user); 
-    };
-    
-    /////////////////////////////*Chat*//////////////////////////
+	/////////////////////////////*Chat*////////////////////////
     $scope.currentChat = 0;
     
     $scope.newMessage = "";
+    
+    $scope.friendList = friendFtry.returnFriends();
     
     var socket = chatSocketFtry.giveMeSocket();
     
@@ -115,6 +88,5 @@ function($scope, $uibModal, friendFtry, notificationFtry, accountFtry, chatSocke
     $scope.messageDate = function(messageDate){
         return friendFtry.getMessageDate(messageDate);
     };
-    
     
 }]);
