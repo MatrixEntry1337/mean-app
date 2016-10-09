@@ -27,7 +27,7 @@ function($http, authFtry, accountFtry, $log){
         
         time = {seconds: Math.floor(elapsed / 1000), 
             minutes: Math.floor(elapsed / (1000 * 60)), hours: Math.floor(elapsed / (1000*60*60)), 
-            day: Math.floor(elapsed / (1000*60*60*24)), month: Math.floor(elapsed / (1000*60*60*24*30)), 
+            days: Math.floor(elapsed / (1000*60*60*24)), months: Math.floor(elapsed / (1000*60*60*24*30)), 
             years: Math.floor(elapsed / (1000*60*60*24*30*12))}; 
         
         return time;
@@ -35,11 +35,14 @@ function($http, authFtry, accountFtry, $log){
     
     notifications.notificationElapsedTime = function(index){
         var time = this.getNotificationElapsedTime(index);
-        if (time.seconds < 60) return time.seconds + "s";
-        else if(time.minutes < 60) return time.minutes + "m";
-        else if(time.hours < 24) return time.hours + "h " + (time.minutes % 60) + "m";
-        else if(time.days < 31) return time.days + "d";
-        else if(time.months < 21) return time.months + "mon";
+        console.log(time);
+        if (time.seconds < 60) return time.seconds + "s ago";
+        else if(time.minutes < 60) return time.minutes + "m ago";
+        else if(time.hours < 24) return time.hours + "h & " + (time.minutes % 60) + "m ago";
+        else if(time.days == 1) return time.days + " day ago";
+        else if(time.days < 31) return time.days + " days ago";
+        else if(time.months == 1) return time.months + " month ago";
+        else if(time.months < 21) return time.months + " months ago";
         else return time.years + "years";
     };
     
