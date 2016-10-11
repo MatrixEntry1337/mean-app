@@ -40,7 +40,6 @@ function($http, authFtry, accountFtry, $log){
     
     notifications.notificationElapsedTime = function(index){
         var time = this.getNotificationElapsedTime(index);
-        console.log(time);
         if (time.seconds < 60) return time.seconds + "s ago";
         else if(time.minutes < 60) return time.minutes + "m ago";
         else if(time.hours < 24) return time.hours + "h & " + (time.minutes % 60) + "m ago";

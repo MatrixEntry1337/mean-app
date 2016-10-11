@@ -212,17 +212,17 @@ router.post('/accept/friend/request', auth, function(req, res, next){
       var not = users[user].notifications.find(function(notification){
         return notification.summary == "You have a new friend request from " + users[user2].username + ".";
       });
-      if(not) not.status = "Accepted.";
+      if(not) not.status = "Accepted";
       
       var not2 = users[user2].notifications.find(function(notification){
         return notification.summary == "Your friend request has been sent to " + users[user].username +".";
       });
       
-      if(not2) not2.status = "Accepted.";
+      if(not2) not2.status = "Accepted";
       
       users[user].notifications.push({
         user: users[user2]._id,
-        friend: users[user2].friends[friend]._id,
+        friend: users[user].friends[friend]._id,
         username: users[user2].username,
         firstName: users[user2].firstName,
         lastName: users[user2].lastName,
@@ -232,7 +232,7 @@ router.post('/accept/friend/request', auth, function(req, res, next){
       });
       users[user2].notifications.push({
         user: users[user]._id,
-        friend: users[user].friends[friend2]._id,
+        friend: users[user2].friends[friend2]._id,
         username: users[user].username,
         firstName: users[user].firstName,
         lastName: users[user].lastName,

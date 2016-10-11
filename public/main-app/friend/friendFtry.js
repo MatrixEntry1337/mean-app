@@ -114,7 +114,7 @@ function($http, authFtry, accountFtry, $log){
     friends.getMissedMessages = function(index){
         var messages = 0;
         if(friends.data[index].chat.length == 0){
-            $log.log("No missed messages");
+            //$log.log("No missed messages");
             return null;
         }
 	    for(var i = 0; i < friends.data[index].chat.length; i++){

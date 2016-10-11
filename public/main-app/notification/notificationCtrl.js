@@ -16,7 +16,7 @@ function($scope, $uibModal, notificationFtry, friendFtry, $log){
 	$scope.animationsEnabled = true;
 	
 	$scope.open = function (notification) {
-		
+		$log.log("Notification status: " + notification.status);
 		//Friend Request
 		if(notification.type == 1 && notification.status != "Accepted"){
     		var modalInstance = $uibModal.open({
