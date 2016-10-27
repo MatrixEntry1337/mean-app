@@ -32,12 +32,21 @@ function($scope, $uibModal, notificationFtry, friendFtry, $log){
 	    	
 	    	modalInstance.result.then(function(confirm) {
     			if(confirm){
+    				$log.log("Friend request accepted.");
     				friendFtry.acceptFriendRequest(notification).error(function(error){
             			$scope.error = error;
     				}).success(function(){
     					notification.status = "Accepted";
     				});
     			}
+    			else{
+    				$log.log("Friend Request cancelled!");
+    				friendFtry.denyFriendRequest(notification).error(function(error){
+    					$scope.error = error;
+    				}).success(function(){
+    					$log.log("Friend request denied.");
+    				});
+    			} 
 			});
 		}
 

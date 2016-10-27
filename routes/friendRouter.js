@@ -265,6 +265,99 @@ router.post('/accept/friend/request', auth, function(req, res, next){
   });
 });
 
+router.post('/deny/friend/request', auth, function(req, res, next){
+  
+  var data = {};
+  
+  var query = User.find({$or: [
+    {_id: req.body.user },
+    {_id: req.payload._id}
+    ]})
+    .select('username friends notifications').populate('friends');
+  
+  query.exec(function(err, users){
+    if(err) return next(err);
+     if(users.length < 2){ 
+      console.log('/deny/friend/request - There was an error in accessing the users from the db');
+      res.sendStatus(400); 
+     }
+    else{
+      
+      //Identify users in array
+      var user = users.findIndex(function(element){
+        if(element._id == req.payload._id)
+          return element;
+      });
+      var user2 = (user + 1) % 2;
+      
+      //friend
+      var friend = users[user].friends.findIndex(function(friend){
+        return friend.friend == req.body.user; 
+      });
+      users[user].friends[friend].accepted = false;
+      
+      var friend2 = users[user2].friends.findIndex(function(friend){
+        return friend.friend == req.payload._id;
+      });
+      users[user2].friends[friend2].accepted = false;
+      
+      //notifications
+      var not = users[user].notifications.find(function(notification){
+        return notification.summary == "You have a new friend request from " + users[user2].username + ".";
+      });
+      if(not) not.status = "Denied";
+      
+      var not2 = users[user2].notifications.find(function(notification){
+        return notification.summary == "Your friend request has been sent to " + users[user].username +".";
+      });
+      
+      if(not2) not2.status = "Denied";
+      
+      users[user].notifications.push({
+        user: users[user2]._id,
+        friend: users[user].friends[friend]._id,
+        username: users[user2].username,
+        firstName: users[user2].firstName,
+        lastName: users[user2].lastName,
+        type: 3, 
+        summary: "You denied " + users[user2].username + "\'s friendship request.",
+        status: "Denied"
+      });
+      users[user2].notifications.push({
+        user: users[user]._id,
+        friend: users[user2].friends[friend2]._id,
+        username: users[user].username,
+        firstName: users[user].firstName,
+        lastName: users[user].lastName,
+        type: 3, 
+        summary: users[user].username + " denied your friendship request",
+        status: "Denied"
+      });
+      
+      //Save
+      users[user].save(function(err){
+        if(err) return next(err);
+      });
+      users[user2].save(function(err){
+        if(err) return next(err);
+      });
+      users[user].friends[friend].save(function(err){
+        if(err) return next(err); 
+      });
+      users[user2].friends[friend2].save(function(err){
+        if(err) return next(err);
+      });
+     
+      data.notification = users[user].notifications[users[user].notifications.length-1];
+      data.friend = friend;
+      data.message = "Friend was denied.";
+      
+      res.json(data);
+      
+    }
+  });
+});
+
 /////////////////////////////////// Comment ////////////////////////////////////
 // //Get all comments for user
 // router.get('/all/user/comments', auth, function(req, res, next){

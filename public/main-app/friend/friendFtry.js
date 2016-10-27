@@ -40,14 +40,23 @@ function($http, authFtry, accountFtry, $log){
         });
     };
     
-    //Accept outstanding friend requests
-    friends.acceptFriendRequest = function(user){
-        return $http.post('/accept/friend/request', user, {
-            headers: { Authorization: 'Bearer '+ authFtry.getToken() }
+    //Accept outstanding friend request
+    friends.acceptFriendRequest = function(notification){
+        return $http.post('/accept/friend/request', notification, 
+            { headers: { Authorization: 'Bearer '+ authFtry.getToken() }
         }).success(function(data){
             $log.log(data);
-           friends.acceptMessage = data;
-           friends.data[data.friend].accepted = true;
+            friends.acceptMessage = data;
+            friends.data[data.friend].accepted = true;
+        });
+    };
+    
+    //Deny outstanding friend request
+    friends.denyFriendRequest = function(notification){
+        return $http.post('/deny/friend/request', notification, 
+            { headers: { Authorization: 'Bearer ' + authFtry.getToken() }
+        }).success(function(data){
+            $log.log(data);
         });
     };
     
